@@ -5,7 +5,7 @@ const globalForDodo = globalThis as unknown as { dodo: DodoPayments }
 
 function createDodoClient() {
   return new DodoPayments({
-    bearerToken: process.env.DODO_PAYMENTS_API_KEY,
+    bearerToken: process.env.DODO_PAYMENTS_API_KEY || 'dummy_api_key_for_testing',
     environment:
       (process.env.DODO_PAYMENTS_ENVIRONMENT as 'test_mode' | 'live_mode' | undefined) ??
       'test_mode',

@@ -18,6 +18,10 @@ vi.mock('@/lib/logger', () => ({
   logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
 }))
 
+vi.mock('@/services/payment.service', () => ({
+  retrievePayment: vi.fn(),
+}))
+
 import { prisma } from '@/lib/prisma'
 import { markOrderPaid, markOrderFailed, findPaidOrder } from './order.service'
 

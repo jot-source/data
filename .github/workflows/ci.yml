@@ -21,6 +21,10 @@ jobs:
       # touched either, but it's set for the same reason in case that changes.
       DIRECT_URL: postgresql://user:password@localhost:5432/db
       DATABASE_URL: postgresql://user:password@localhost:5432/db
+      DODO_PAYMENTS_API_KEY: dodo_test_placeholder
+      DODO_PAYMENTS_WEBHOOK_KEY: whsec_placeholder
+      NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_placeholder
     steps:
       - uses: actions/checkout@v4
 
