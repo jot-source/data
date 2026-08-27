@@ -1,0 +1,34 @@
+name: CI
+
+# Type checking and linting are already enforced by the Vercel preview build
+# (next build runs tsc + eslint and fails the deployment on either). This
+# workflow only covers what Vercel's build does NOT do: run the test suite.
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      # `.env` is git-ignored and never reaches this runner, but `npm ci`'s
+      # postinstall hook runs `prisma generate`, which needs DIRECT_URL to
+      # exist in prisma.config.ts — it just parses the schema, it never
+      # actually connects. A placeholder is enough; never put a real secret
+      # here. Our tests mock @/lib/prisma entirely, so DATABASE_URL isn't
+      # touched either, but it's set for the same reason in case that changes.
+      DIRECT_URL: postgresql://user:password@localhost:5432/db
+      DATABASE_URL: postgresql://user:password@localhost:5432/db
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24 # matches local dev (node -v) — keep these in sync
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm test

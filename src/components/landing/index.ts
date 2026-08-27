@@ -1,0 +1,10 @@
+// components/landing/index.ts — barrel for landing
+export { Hero } from './hero'
+export { TrustedBy } from './trusted-by'
+export { BrandLogo } from './brand-logo'
+export { DatasetExploreSection } from './dataset-explore-section'
+export { FeaturesSection } from './features-section'
+export { HowItWorksSection } from './how-it-works-section'
+export { SubmitRequirementsSection } from './submit-requirements-section'
+export { FaqSection } from './faq-section'
+export { ProviderCtaSection } from './provider-cta-section'

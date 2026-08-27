@@ -1,0 +1,178 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Users ──────────────────────────────────────────────────
+model User {
+  id        String   @id @default(uuid()) // Supabase auth.users.id
+  email     String   @unique
+  fullName  String?  @map("full_name")
+  role      String   @default("user") // PERMISSION role: user | admin | seller
+
+  // Optional profile fields collected in the (skippable) profile-setup step.
+  // `jobTitle` is the user's self-described job role (e.g. "Project Manager") —
+  // distinct from `role` above, which is the app permission level.
+  organization String? @map("organization")
+  industry     String? @map("industry")
+  jobTitle     String? @map("job_title")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  // @default(now()) gives the column a DB-level default so the Supabase
+  // `handle_new_user` trigger (which INSERTs outside Prisma) doesn't hit a
+  // NOT NULL violation; @updatedAt still bumps it on app-level updates.
+  updatedAt DateTime @updatedAt @default(now()) @map("updated_at")
+
+  // Relations
+  datasets      Dataset[]
+  orders        Order[]
+  downloads     Download[]
+  savedDatasets SavedDataset[]
+
+  @@map("users")
+}
+
+// ─── Datasets ───────────────────────────────────────────────
+model Dataset {
+  id            String   @id @default(uuid())
+  title         String
+  slug          String   @unique
+  description   String
+
+  industry      String?
+  category      String?
+  language      String?
+
+  // ── Filterable facets (free-text, sourced from data — see explore page) ──
+  modality      String?  // Image | Text | Audio | Video | Multimodal …
+  useCase       String?  @map("use_case")     // Object Detection | Sentiment | …
+  licenseType   String?  @map("license_type") // Commercial | Research | CC-BY …
+  qualityScore  Float?   @map("quality_score") // 0–10, drives "9.2 quality" + filter
+
+  // Advanced filters
+  annotationType   String? @map("annotation_type")   // Bounding Box | Segmentation | None …
+  collectionMethod String? @map("collection_method") // Real-world | Synthetic | Crowdsourced …
+
+  // ── Card display fields ──
+  datasetCode   String?  @map("dataset_code") // human ref shown on card, e.g. "DS-1032"
+  recordCount   BigInt?  @map("record_count") // e.g. 1_800_000 → "1.8M scans"
+  recordUnit    String?  @map("record_unit")  // unit label for recordCount, e.g. "scans"
+
+  languages     String[] @default([]) // multi-language coverage ("English, French, +2")
+  countries     String[] @default([]) // ISO-ish country codes for the flag row
+  compliance    String[] @default([]) // e.g. ["IRB-compliant", "GDPR"]
+
+  tags          String[] @default([])
+
+  price         Decimal  @default(0) @db.Decimal(10, 2)
+  currency      String   @default("USD")
+
+  thumbnailUrl  String?  @map("thumbnail_url")
+  binaryUrl     String?  @map("binary_url")
+  sampleUrl     String?  @map("sample_url")
+
+  fileFormat    String?  @map("file_format")
+  fileSizeBytes BigInt?  @map("file_size_bytes")
+  rowCount      Int?     @map("row_count")
+
+  dodoProductId String?  @map("dodo_product_id")
+
+  // Dataset Owner
+uploadedByUserId String? @map("uploaded_by_user_id")
+
+uploadedBy User? @relation(fields: [uploadedByUserId], references: [id], onDelete: SetNull)
+
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  orders        Order[]
+  downloads     Download[]
+  savedByUsers  SavedDataset[]
+
+  @@index([industry])
+  @@index([category])
+  @@index([language])
+  @@index([modality])
+  @@index([useCase])
+  @@index([licenseType])
+  @@index([qualityScore])
+  @@index([uploadedByUserId])
+  @@index([tags], type: Gin)
+  @@index([languages], type: Gin)
+  @@index([compliance], type: Gin)
+
+  @@map("datasets")
+}
+
+// ─── Orders ─────────────────────────────────────────────────
+model Order {
+  id            String    @id @default(uuid())
+
+  userId        String    @map("user_id")
+  datasetId     String    @map("dataset_id")
+
+  amount        Decimal   @db.Decimal(10, 2)
+  currency      String    @default("USD")
+
+  status        String    @default("pending")
+  // pending | paid | failed | refunded
+
+  dodoSessionId String?   @map("dodo_session_id")
+  dodoPaymentId String?   @map("dodo_payment_id")
+
+  createdAt     DateTime  @default(now()) @map("created_at")
+  paidAt        DateTime? @map("paid_at")
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dataset       Dataset   @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+
+  downloads     Download[]
+
+  @@index([userId])
+  @@index([datasetId])
+  @@index([status])
+
+  @@map("orders")
+}
+
+// ─── Downloads ──────────────────────────────────────────────
+model Download {
+  id           String   @id @default(uuid())
+
+  userId       String   @map("user_id")
+  datasetId    String   @map("dataset_id")
+  orderId      String   @map("order_id")
+
+  downloadedAt DateTime @default(now()) @map("downloaded_at")
+  ipAddress    String?  @map("ip_address")
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dataset      Dataset  @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+  order        Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([datasetId])
+  @@index([orderId])
+
+  @@map("downloads")
+}
+
+// ─── Saved Datasets (Wishlist / Bookmarks) ──────────────────
+model SavedDataset {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  datasetId String   @map("dataset_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dataset Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, datasetId])
+  @@index([userId])
+  @@index([datasetId])
+  @@map("saved_datasets")
+}
