@@ -51,7 +51,10 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${publicSans.variable} ${spaceGrotesk.variable} antialiased`}
       data-scroll-behavior="smooth"
     >
-      <body className="min-h-screen flex flex-col bg-[#0a0e1a] text-white font-[family-name:var(--font-geist-sans)]">
+      <body
+        className="min-h-screen flex flex-col bg-[#0a0e1a] text-white font-[family-name:var(--font-geist-sans)]"
+        suppressHydrationWarning
+      >
         <Providers>
           <SiteHeader initialUser={sessionUser} />
           <div className="flex-1 flex flex-col">
