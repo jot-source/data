@@ -64,9 +64,7 @@ export const verifyResetOtpSchema = z.object({
   newPassword,
 })
 
-// Profile-setup step — all fields optional/skippable. `fullName` defaults to the
-// email prefix server-side when left blank. `jobTitle` is the user's self-described
-// role (e.g. "Project Manager"), not the app permission role.
+// Profile-setup step — Skip discards data and continues. Save & Continue requires all 3 fields.
 export const profileSchema = z.object({
   fullName: z.string().trim().max(120, 'Name is too long.').optional(),
   organization: z.string().trim().max(160, 'Organization is too long.').optional(),
@@ -74,7 +72,15 @@ export const profileSchema = z.object({
   jobTitle: z.string().trim().max(120, 'Role is too long.').optional(),
 })
 
+export const profileRequiredSchema = z.object({
+  fullName: z.string().trim().min(1, 'Full name is required.').max(120, 'Name is too long.'),
+  organization: z.string().trim().min(1, 'Organization / University is required.').max(160, 'Organization is too long.'),
+  jobTitle: z.string().trim().min(1, 'Please select your role.').max(120, 'Role is too long.'),
+  industry: z.string().trim().max(120, 'Industry is too long.').optional(),
+})
+
 export type ProfileInput = z.infer<typeof profileSchema>
+export type ProfileRequiredInput = z.infer<typeof profileRequiredSchema>
 export type SignUpInput = z.infer<typeof signUpSchema>
 export type SignInInput = z.infer<typeof signInSchema>
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>

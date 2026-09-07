@@ -25,13 +25,7 @@ export function SaveButton({
   const [isPending, startTransition] = useTransition()
   const { open } = useAuthModal()
 
-  function handleClick() {
-    if (!isLoggedIn) {
-      open('sign-in')
-      return
-    }
-
-    // Optimistic update
+  function performSave() {
     const previousSaved = saved
     setSaved(!saved)
 
@@ -44,6 +38,15 @@ export function SaveButton({
         setSaved(result.saved)
       }
     })
+  }
+
+  function handleClick() {
+    if (!isLoggedIn) {
+      open('sign-in', performSave)
+      return
+    }
+
+    performSave()
   }
 
   const isDark = variant === 'dark'

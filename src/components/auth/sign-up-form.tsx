@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signUp, syncSignupName, updateProfile, checkEmailExists } from '@/actions/auth.actions'
-import { signUpSchema, profileSchema, type SignUpInput, type ProfileInput } from '@/validations/auth.schema'
+import { signUpSchema, profileRequiredSchema, type SignUpInput, type ProfileRequiredInput } from '@/validations/auth.schema'
 import { createClient } from '@/lib/supabase/client'
 import { useAuthModal } from '@/stores/auth-modal.store'
 
@@ -38,7 +38,7 @@ function GoogleIcon() {
 }
 
 export function SignUpForm() {
-  const { open, close } = useAuthModal()
+  const { open, triggerSuccess } = useAuthModal()
   const router = useRouter()
   const [step, setStep] = useState<Step>('credentials')
   const [email, setEmail] = useState('')
@@ -47,7 +47,14 @@ export function SignUpForm() {
     return <OtpStep email={email} onVerified={() => setStep('profile')} onBack={() => setStep('credentials')} />
   }
   if (step === 'profile') {
-    return <ProfileStep onDone={() => { close(); router.refresh() }} />
+    return (
+      <ProfileStep
+        onDone={async () => {
+          await triggerSuccess()
+          router.refresh()
+        }}
+      />
+    )
   }
   return (
     <CredentialsStep
@@ -260,6 +267,7 @@ function OtpStep({ email, onVerified, onBack }: { email: string; onVerified: () 
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [seconds, setSeconds] = useState(46)
+  const [resendCount, setResendCount] = useState(0)
   const refs = useRef<(HTMLInputElement | null)[]>([])
   // Browser client per mount — verifying the OTP through it (not a server
   // action) establishes the session client-side, so the navbar flips to logged
@@ -310,7 +318,14 @@ function OtpStep({ email, onVerified, onBack }: { email: string; onVerified: () 
       // server round-trip.
       const { error: verifyError } = await supabase.auth.verifyOtp({ email, token: code, type: 'signup' })
       if (verifyError) {
-        setError(verifyError.message)
+        const msg = verifyError.message?.toLowerCase() || ''
+        if (msg.includes('rate') || msg.includes('too many') || msg.includes('exceeded')) {
+          setError('Too many attempts. Please wait a few minutes before trying again.')
+        } else if (msg.includes('network') || msg.includes('fetch')) {
+          setError('Something went wrong. Please try again.')
+        } else {
+          setError('Incorrect code. Please check your email and try again.')
+        }
         setLoading(false)
         return
       }
@@ -326,22 +341,33 @@ function OtpStep({ email, onVerified, onBack }: { email: string; onVerified: () 
 
   async function handleResend() {
     if (seconds > 0) return
+    if (resendCount >= 5) {
+      setError('Maximum resend limit reached. Please try again later.')
+      return
+    }
     try {
       const { error: resendError } = await supabase.auth.resend({ type: 'signup', email })
       if (resendError) {
-        setError(resendError.message || 'Could not resend code. Please try again.')
+        const msg = resendError.message?.toLowerCase() || ''
+        if (msg.includes('rate') || msg.includes('too many') || msg.includes('exceeded')) {
+          setError('Too many attempts. Please wait a few minutes before trying again.')
+        } else {
+          setError(resendError.message || 'Could not resend code. Please try again.')
+        }
         return
       }
+      setResendCount(c => c + 1)
       setDigits(['', '', '', '', '', '', '', ''])
       setError('')
       setSeconds(46)
     } catch {
-      setError('Could not resend code. Please try again.')
+      setError('Something went wrong. Please try again.')
     }
   }
 
   const mm = String(Math.floor(seconds / 60)).padStart(2, '0')
   const ss = String(seconds % 60).padStart(2, '0')
+  const isResendCapped = resendCount >= 5
 
   return (
     <div className="flex flex-col gap-5">
@@ -391,7 +417,7 @@ function OtpStep({ email, onVerified, onBack }: { email: string; onVerified: () 
         <button
           type="button"
           onClick={handleResend}
-          disabled={seconds > 0}
+          disabled={seconds > 0 || isResendCapped}
           className="font-medium text-[#2563EB] disabled:text-[#A0A0A0] disabled:no-underline hover:underline"
         >
           Resend code
@@ -418,11 +444,15 @@ function ProfileStep({ onDone }: { onDone: () => void }) {
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting },
-  } = useForm<ProfileInput>({ resolver: zodResolver(profileSchema) })
+    formState: { errors, isSubmitting },
+  } = useForm<ProfileRequiredInput>({ resolver: zodResolver(profileRequiredSchema) })
 
-  async function onSubmit(values: ProfileInput) {
-    await updateProfile(values)
+  async function onSubmit(values: ProfileRequiredInput) {
+    try {
+      await updateProfile(values)
+    } catch {
+      // Ignore update error on onboarding
+    }
     onDone()
   }
 
@@ -438,15 +468,16 @@ function ProfileStep({ onDone }: { onDone: () => void }) {
         </button>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="profile-name" className="text-sm font-medium text-[#444444]">Full Name</label>
           <input
             id="profile-name"
             {...register('fullName')}
             placeholder="E.g. Nitish Reddy"
-            className={`${fieldBase} border-[#ECECEC] bg-white focus:border-[#2563EB]`}
+            className={`${fieldBase} ${errors.fullName ? 'border-[#DC2626] bg-[rgba(255,206,203,0.5)]' : 'border-[#ECECEC] bg-white focus:border-[#2563EB]'}`}
           />
+          {errors.fullName && <p className="text-xs font-medium text-[#DC2626]">{errors.fullName.message}</p>}
         </div>
 
         <div className="flex flex-col gap-1.5">
@@ -455,8 +486,9 @@ function ProfileStep({ onDone }: { onDone: () => void }) {
             id="profile-org"
             {...register('organization')}
             placeholder="E.g. Macgence"
-            className={`${fieldBase} border-[#ECECEC] bg-white focus:border-[#2563EB]`}
+            className={`${fieldBase} ${errors.organization ? 'border-[#DC2626] bg-[rgba(255,206,203,0.5)]' : 'border-[#ECECEC] bg-white focus:border-[#2563EB]'}`}
           />
+          {errors.organization && <p className="text-xs font-medium text-[#DC2626]">{errors.organization.message}</p>}
         </div>
 
         <div className="flex flex-col gap-1.5">
@@ -465,13 +497,14 @@ function ProfileStep({ onDone }: { onDone: () => void }) {
             id="profile-role"
             {...register('jobTitle')}
             defaultValue=""
-            className={`${fieldBase} border-[#ECECEC] bg-white focus:border-[#2563EB]`}
+            className={`${fieldBase} ${errors.jobTitle ? 'border-[#DC2626] bg-[rgba(255,206,203,0.5)]' : 'border-[#ECECEC] bg-white focus:border-[#2563EB]'}`}
           >
             <option value="" disabled>E.g. Project Manager</option>
             {ROLE_OPTIONS.map(r => (
               <option key={r} value={r}>{r}</option>
             ))}
           </select>
+          {errors.jobTitle && <p className="text-xs font-medium text-[#DC2626]">{errors.jobTitle.message}</p>}
         </div>
 
         <button

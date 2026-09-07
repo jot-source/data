@@ -1,7 +1,12 @@
-// lib/prisma.ts — Prisma 7 singleton for Supabase PostgreSQL
 import { PrismaClient } from '@prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { Pool } from 'pg'
+import dotenv from 'dotenv'
+
+if (!process.env.DATABASE_URL) {
+  dotenv.config({ path: '.env.local' })
+  dotenv.config({ path: '.env' })
+}
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
 

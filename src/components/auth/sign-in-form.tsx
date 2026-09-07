@@ -10,7 +10,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useAuthModal } from '@/stores/auth-modal.store'
 
 export function SignInForm() {
-  const { open, close } = useAuthModal()
+  const { open, triggerSuccess } = useAuthModal()
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   // One browser Supabase client per mount (not per render). Signing in through
@@ -31,21 +31,31 @@ export function SignInForm() {
   } = useForm<SignInInput>({ resolver: zodResolver(signInSchema) })
 
   async function onSubmit(values: SignInInput) {
-    const { error } = await supabase.auth.signInWithPassword({
-      email: values.email,
-      password: values.password,
-    })
-    if (error) {
-      // Supabase returns a generic "Invalid login credentials" — surface it
-      // under the password field, matching the design.
-      setError('password', { message: 'Incorrect password. Please try again.' })
-      return
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: values.email,
+        password: values.password,
+      })
+      if (error) {
+        if (
+          error.name === 'AuthRetryableFetchError' ||
+          error.message?.toLowerCase().includes('fetch') ||
+          error.message?.toLowerCase().includes('network')
+        ) {
+          setError('root', { message: 'Something went wrong. Please try again.' })
+        } else {
+          // Supabase returns generic error — surface under password
+          setError('password', { message: 'Incorrect password. Please try again.' })
+        }
+        return
+      }
+      // Session is live on the browser client already (navbar updates instantly
+      // via onAuthStateChange). Auto-resume any pending action and close modal.
+      await triggerSuccess()
+      router.refresh()
+    } catch {
+      setError('root', { message: 'Something went wrong. Please try again.' })
     }
-    // Session is live on the browser client already (navbar updates instantly
-    // via onAuthStateChange). Close the modal — the user stays on the current
-    // route — and refresh so server-rendered bits (e.g. the gated price) update.
-    close()
-    router.refresh()
   }
 
   async function handleGoogle() {

@@ -23,7 +23,7 @@ export function useDatasetActions(datasetId: string, isLoggedIn: boolean) {
 
   const requireAuth = (action: () => void) => {
     if (!isLoggedIn) {
-      open('sign-in')
+      open('sign-in', action)
       return
     }
     action()

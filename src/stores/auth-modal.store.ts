@@ -10,12 +10,26 @@ export type AuthView = 'sign-in' | 'sign-up' | 'forgot-password'
 
 type AuthModalState = {
   view: AuthView | null
-  open: (view: AuthView) => void
+  resumeAction: (() => void | Promise<void>) | null
+  open: (view: AuthView, resumeAction?: () => void | Promise<void>) => void
   close: () => void
+  triggerSuccess: () => Promise<void>
 }
 
-export const useAuthModal = create<AuthModalState>((set) => ({
+export const useAuthModal = create<AuthModalState>((set, get) => ({
   view: null,
-  open: (view) => set({ view }),
-  close: () => set({ view: null }),
+  resumeAction: null,
+  open: (view, resumeAction) => set({ view, resumeAction: resumeAction ?? null }),
+  close: () => set({ view: null, resumeAction: null }),
+  triggerSuccess: async () => {
+    const action = get().resumeAction
+    set({ view: null, resumeAction: null })
+    if (action) {
+      try {
+        await action()
+      } catch (err) {
+        console.error('Failed to auto-resume action after auth:', err)
+      }
+    }
+  },
 }))

@@ -15,20 +15,47 @@ import { ForgotPasswordForm } from './forgot-password-form'
 export function AuthModal() {
   const { view, close } = useAuthModal()
 
-  // Close on Escape and lock body scroll while open.
+  // Close on Escape, handle browser back button, and lock body scroll while open.
   useEffect(() => {
     if (!view) return
-    function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') close()
+
+    // Push a history entry so pressing the browser Back button closes the modal
+    // without navigating away from the page or resetting filters/forms.
+    window.history.pushState({ authModal: true }, '')
+
+    function onPopState() {
+      close()
     }
+
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        if (window.history.state?.authModal) {
+          window.history.back()
+        } else {
+          close()
+        }
+      }
+    }
+
+    window.addEventListener('popstate', onPopState)
     document.addEventListener('keydown', onKey)
     const prevOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
+
     return () => {
+      window.removeEventListener('popstate', onPopState)
       document.removeEventListener('keydown', onKey)
       document.body.style.overflow = prevOverflow
     }
   }, [view, close])
+
+  const handleManualClose = () => {
+    if (window.history.state?.authModal) {
+      window.history.back()
+    } else {
+      close()
+    }
+  }
 
   if (!view) return null
 
