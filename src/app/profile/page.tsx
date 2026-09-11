@@ -31,11 +31,36 @@ export default async function ProfilePage() {
   // Fetch saved datasets for the wishlist section
   const { datasets: savedDatasets } = await getSavedDatasets()
 
+  // Fetch orders for the user
+  const dbOrders = await prisma.order.findMany({
+    where: { userId: session.id },
+    include: {
+      dataset: {
+        select: {
+          title: true,
+          slug: true,
+        },
+      },
+    },
+    orderBy: { createdAt: 'desc' },
+  })
+
+  const orders = dbOrders.map((o) => ({
+    id: o.id,
+    datasetId: o.datasetId,
+    datasetTitle: o.dataset.title,
+    datasetSlug: o.dataset.slug,
+    amount: Number(o.amount),
+    currency: o.currency,
+    status: o.status,
+    createdAt: o.createdAt.toISOString(),
+  }))
+
   // Need a wrapper to have light background for this page specifically,
   // since root layout has bg-[#0a0e1a] (dark theme) and profile design is light theme.
   return (
     <div className="flex-1 bg-[#F8FAFC] text-black">
-      <ProfileClient user={dbUser} savedDatasets={savedDatasets} />
+      <ProfileClient user={dbUser} savedDatasets={savedDatasets} orders={orders} />
     </div>
   )
 }

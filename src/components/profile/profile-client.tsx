@@ -6,6 +6,7 @@ import { ProfileSidebar } from './profile-sidebar'
 import { AccountInfoForm } from './account-info-form'
 import { SecuritySettings } from './security-settings'
 import { SavedDatasets } from './saved-datasets'
+import { MyOrders, type OrderItem } from './my-orders'
 import type { DatasetCard } from '@/types/dataset'
 
 interface ProfileClientProps {
@@ -17,30 +18,11 @@ interface ProfileClientProps {
     jobTitle: string | null
   }
   savedDatasets?: (DatasetCard & { savedAt: string })[]
+  orders?: OrderItem[]
 }
 
-export function ProfileClient({ user, savedDatasets = [] }: ProfileClientProps) {
+export function ProfileClient({ user, savedDatasets = [], orders = [] }: ProfileClientProps) {
   const [activeTab, setActiveTab] = useState('Account info')
-
-  function handleTabChange(tab: string) {
-    setActiveTab(tab)
-
-    // For Security and Saved datasets, scroll to the section if we're on Account info
-    if (tab === 'Security') {
-      setActiveTab('Account info')
-      setTimeout(() => {
-        document.getElementById('security-section')?.scrollIntoView({ behavior: 'smooth' })
-      }, 50)
-      return
-    }
-    if (tab === 'Saved datasets') {
-      setActiveTab('Account info')
-      setTimeout(() => {
-        document.getElementById('wishlist-section')?.scrollIntoView({ behavior: 'smooth' })
-      }, 50)
-      return
-    }
-  }
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-8 md:px-8">
@@ -52,24 +34,24 @@ export function ProfileClient({ user, savedDatasets = [] }: ProfileClientProps) 
       <div className="flex flex-col gap-12 lg:flex-row">
         {/* Left Sidebar */}
         <aside className="w-full shrink-0 lg:w-64">
-          <ProfileSidebar activeTab={activeTab} onTabChange={handleTabChange} />
+          <ProfileSidebar activeTab={activeTab} onTabChange={setActiveTab} />
         </aside>
 
         {/* Right Content */}
         <main className="flex-1">
           {activeTab === 'Account info' && (
-            <>
+            <div className="space-y-12">
               <AccountInfoForm user={user} />
               <SecuritySettings />
-              <SavedDatasets initialDatasets={savedDatasets} />
-            </>
-          )}
-          
-          {/* Placeholder for other tabs */}
-          {['Your orders', 'Billing & Invoices', 'Custom requests', 'Quotations'].includes(activeTab) && (
-            <div className="flex h-64 items-center justify-center rounded-xl border border-dashed border-gray-300">
-              <p className="text-gray-500">This section is coming soon.</p>
             </div>
+          )}
+
+          {activeTab === 'My orders' && (
+            <MyOrders orders={orders} />
+          )}
+
+          {activeTab === 'Wishlist' && (
+            <SavedDatasets initialDatasets={savedDatasets} />
           )}
         </main>
       </div>

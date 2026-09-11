@@ -13,6 +13,7 @@ import {
   signUpSchema,
   signInSchema,
   forgotPasswordSchema,
+  resetPasswordSchema,
   verifyResetOtpSchema,
   profileSchema,
   type ProfileInput,
@@ -204,25 +205,16 @@ export async function forgotPassword(email: string) {
 export async function verifyPasswordResetOtp(
   email: string,
   token: string,
-  newPassword: string
+  newPassword?: string
 ) {
-  const parsed = verifyResetOtpSchema.safeParse({ email, token, newPassword })
-  if (!parsed.success) {
-    logger.warn(
-      { issues: parsed.error.issues },
-      'auth.actions: verifyPasswordResetOtp validation failed'
-    )
-    return { error: parsed.error.issues[0].message }
-  }
-
   const cookieStore = await cookies()
   const supabase = createClient(cookieStore)
 
   // Verify the recovery code — on success this establishes a session (written
   // to the auth cookie via the SSR client), which updateUser then relies on.
   const { error: verifyError } = await supabase.auth.verifyOtp({
-    email: parsed.data.email,
-    token: parsed.data.token,
+    email: email.trim().toLowerCase(),
+    token: token.trim(),
     type: 'recovery',
   })
   if (verifyError) {
@@ -230,19 +222,47 @@ export async function verifyPasswordResetOtp(
     return { error: verifyError.message }
   }
 
-  const { error: updateError } = await supabase.auth.updateUser({
-    password: parsed.data.newPassword,
-  })
-  if (updateError) {
-    logger.error({ error: updateError.message }, 'auth.actions: verifyPasswordResetOtp update failed')
-    return { error: updateError.message }
+  if (newPassword && newPassword.trim()) {
+    const parsedPassword = resetPasswordSchema.safeParse({ newPassword })
+    if (!parsedPassword.success) {
+      return { error: parsedPassword.error.issues[0].message }
+    }
+
+    const { error: updateError } = await supabase.auth.updateUser({
+      password: parsedPassword.data.newPassword,
+    })
+    if (updateError) {
+      logger.error({ error: updateError.message }, 'auth.actions: verifyPasswordResetOtp update failed')
+      return { error: updateError.message }
+    }
   }
 
-  logger.info({ email: parsed.data.email }, 'auth.actions: verifyPasswordResetOtp succeeded')
-  // User is signed in with the new password. Return success so the form can
-  // close in place and keep them on their current route.
+  logger.info({ email }, 'auth.actions: verifyPasswordResetOtp succeeded')
   return { success: true }
 }
+
+export async function resetPassword(newPassword: string) {
+  const parsedPassword = resetPasswordSchema.safeParse({ newPassword })
+  if (!parsedPassword.success) {
+    return { error: parsedPassword.error.issues[0].message }
+  }
+
+  const cookieStore = await cookies()
+  const supabase = createClient(cookieStore)
+
+  const { error } = await supabase.auth.updateUser({
+    password: parsedPassword.data.newPassword,
+  })
+
+  if (error) {
+    logger.error({ error: error.message }, 'auth.actions: resetPassword failed')
+    return { error: error.message }
+  }
+
+  logger.info('auth.actions: resetPassword succeeded')
+  return { success: true }
+}
+
 
 /**
  * Best-effort display-name backfill, called right after the browser verifies the

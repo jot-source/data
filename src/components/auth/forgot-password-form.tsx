@@ -9,14 +9,14 @@ import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { forgotPassword, verifyPasswordResetOtp } from '@/actions/auth.actions'
+import { forgotPassword, resetPassword, verifyPasswordResetOtp } from '@/actions/auth.actions'
 import { useAuthModal } from '@/stores/auth-modal.store'
 import { z } from 'zod'
 
 import Image from 'next/image'
 
 const fieldBase =
-  'h-12 w-full rounded-lg border px-3 text-sm text-[#111111] outline-none transition-colors placeholder:text-[#A0A0A0]'
+  'h-12 rounded-lg border px-3 text-sm text-[#111111] outline-none transition-colors placeholder:text-[#A0A0A0]'
 
 function Spinner() {
   return (
@@ -69,7 +69,7 @@ export function ForgotPasswordForm() {
   )
 }
 
-// ─── Step 1: email ──────────────────────────────────────────────────────
+// ─── Step 1: email (Figma Screenshots 1-5) ──────────────────────────────
 function EmailStep({ onSent, onSignIn }: { onSent: (email: string) => void; onSignIn: () => void }) {
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
@@ -77,6 +77,10 @@ function EmailStep({ onSent, onSignIn }: { onSent: (email: string) => void; onSi
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (!email.trim()) {
+      onSignIn()
+      return
+    }
     setError('')
     setLoading(true)
     const res = await forgotPassword(email)
@@ -88,54 +92,81 @@ function EmailStep({ onSent, onSignIn }: { onSent: (email: string) => void; onSi
     onSent(email)
   }
 
-  const emailClass = error
-    ? `${fieldBase} border-[#DC2626] bg-[#fee2e2]`
-    : `${fieldBase} border-[#ECECEC] bg-white focus:border-[#2563EB]`
+  const isEmailEntered = email.trim().length > 0
+
+  const emailInputClass = error
+    ? 'h-[44px] w-full rounded-lg border border-[#DC2626] bg-[rgba(255,206,203,0.5)] px-3 text-sm text-[#111111] outline-none font-[family-name:var(--font-public-sans)]'
+    : isEmailEntered
+      ? 'h-[44px] w-full rounded-lg border border-[#C9C9C9] bg-white px-3 text-sm text-[#111111] outline-none transition-colors focus:border-[#2563EB] font-[family-name:var(--font-public-sans)] placeholder:text-[#A0A0A0]'
+      : 'h-[44px] w-full rounded-lg border border-[#ECECEC] bg-white px-3 text-sm text-[#111111] outline-none transition-colors focus:border-[#2563EB] font-[family-name:var(--font-public-sans)] placeholder:text-[#A0A0A0]'
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className={`flex flex-col font-[family-name:var(--font-public-sans)] ${isEmailEntered ? 'gap-8 my-auto' : 'gap-5'}`}>
+      {/* Top Password Reset Illustration Banner (Figma Image 2: 407×180, 9px radius) */}
+      {!isEmailEntered && (
+        <div className="relative h-[180px] w-full overflow-hidden rounded-[9px]">
+          <Image
+            src="/password-reset/Frame 1272629799.png"
+            alt="Password Reset Illustration"
+            fill
+            priority
+            className="object-cover"
+          />
+        </div>
+      )}
+
+      {/* Copy (Figma Image 2: 407×52px, 4px gap) */}
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold leading-8 text-[#111111]">Forgot Password</h1>
-        <p className="text-xs leading-4 text-[#616161]">Enter email to verify and create new password</p>
+        <h1 className="text-[24px] font-semibold leading-[32px] tracking-normal text-[#111111]">
+          Forgot Password
+        </h1>
+        <p className="text-[12px] font-normal leading-[16px] tracking-normal text-[#616161]">
+          Enter email to verify and create new password
+        </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className={`flex flex-col ${isEmailEntered ? 'gap-8' : 'gap-4'}`}>
+        {/* Input Field (Figma Image 4: 407×44px, #C9C9C9 border when entered, 8px radius) */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="forgot-email" className="text-sm font-medium text-[#444444]">Email</label>
+          <label htmlFor="forgot-email" className="text-sm font-medium text-[#444444]">
+            Email
+          </label>
           <input
             id="forgot-email"
             type="email"
-            required
             value={email}
             onChange={e => setEmail(e.target.value)}
             placeholder="you@example.com"
             aria-invalid={!!error}
-            className={emailClass}
+            className={emailInputClass}
           />
           {error && <p className="text-xs font-medium text-[#DC2626]">{error}</p>}
         </div>
 
+        {/* Dynamic Action Button: "Back to login" when empty, "Continue" when email entered */}
         <button
           type="submit"
           disabled={loading}
-          className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#2563EB] text-base font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex h-[44px] w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] text-sm font-semibold text-white tracking-normal transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading && <Spinner />}
-          {loading ? 'Sending…' : 'Continue'}
+          {loading ? 'Sending…' : isEmailEntered ? 'Continue' : 'Back to login'}
         </button>
       </form>
 
-      <p className="text-center text-sm text-[#2B2B2B]">
-        Remember your password?{' '}
-        <button type="button" onClick={onSignIn} className="font-medium text-[#2563EB] transition-colors hover:text-[#1d4fd7]">
-          Sign in
-        </button>
-      </p>
+      {!isEmailEntered && (
+        <p className="text-center text-sm text-[#2B2B2B]">
+          Remember your password?{' '}
+          <button type="button" onClick={onSignIn} className="font-semibold text-[#2563EB] transition-colors hover:text-[#1d4fd7]">
+            Sign in
+          </button>
+        </p>
+      )}
     </div>
   )
 }
 
-// ─── Step 2: OTP verification ───────────────────────────────────────────
+// ─── Step 2: OTP verification (Figma Screenshots 1-5 — 8-digit OTP) ──────────────────────
 function OtpStep({
   email,
   onVerified,
@@ -146,10 +177,11 @@ function OtpStep({
   onBack: () => void
   onResend: () => void
 }) {
-  const [digits, setDigits] = useState<string[]>(['', '', '', '', '', ''])
+  const [digits, setDigits] = useState<string[]>(['', '', '', '', '', '', '', ''])
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [seconds, setSeconds] = useState(46)
+  const [failedAttempts, setFailedAttempts] = useState(0)
   const refs = useRef<(HTMLInputElement | null)[]>([])
 
   useEffect(() => {
@@ -166,7 +198,7 @@ function OtpStep({
       next[i] = d
       return next
     })
-    if (d && i < 5) refs.current[i + 1]?.focus()
+    if (d && i < 7) refs.current[i + 1]?.focus()
   }
 
   function onKeyDown(i: number, e: React.KeyboardEvent<HTMLInputElement>) {
@@ -174,37 +206,54 @@ function OtpStep({
   }
 
   function onPaste(e: React.ClipboardEvent) {
-    const text = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6)
+    const text = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 8)
     if (!text) return
     e.preventDefault()
-    const next = ['', '', '', '', '', '']
+    const next = ['', '', '', '', '', '', '', '']
     text.split('').forEach((c, idx) => { next[idx] = c })
     setDigits(next)
-    refs.current[Math.min(text.length, 5)]?.focus()
+    refs.current[Math.min(text.length, 7)]?.focus()
   }
 
   async function handleVerify() {
     const code = digits.join('')
-    if (code.length < 6) {
-      setError('Enter the 6-digit code from your email.')
+    if (code.length < 8) {
+      const newCount = failedAttempts + 1
+      setFailedAttempts(newCount)
+      if (newCount >= 3) {
+        setError('Too many incorrect attempts. Please request a new verification code.')
+      } else {
+        setError('The verification code is incorrect. Please try again.')
+      }
       return
     }
     setLoading(true)
-    // We just verify the OTP is correct. The actual password update happens
-    // in the next step, but we need to pass the token forward. We'll call
-    // onVerified with the token so the NewPasswordStep can use it.
+    setError('')
+    const res = await verifyPasswordResetOtp(email, code, '')
+    if (res?.error) {
+      const newCount = failedAttempts + 1
+      setFailedAttempts(newCount)
+      if (newCount >= 3 || res.error.toLowerCase().includes('attempt') || res.error.toLowerCase().includes('many')) {
+        setError('Too many incorrect attempts. Please request a new verification code.')
+      } else {
+        setError('The verification code is incorrect. Please try again.')
+      }
+      setLoading(false)
+      return
+    }
+    setLoading(false)
     onVerified(code)
   }
 
   async function handleResend() {
-    if (seconds > 0) return
     setLoading(true)
     const res = await forgotPassword(email)
     if (res?.error) {
       setError(res.error)
     } else {
-      setDigits(['', '', '', '', '', ''])
+      setDigits(['', '', '', '', '', '', '', ''])
       setError('')
+      setFailedAttempts(0)
     }
     setSeconds(46)
     setLoading(false)
@@ -212,33 +261,46 @@ function OtpStep({
 
   const mm = String(Math.floor(seconds / 60)).padStart(2, '0')
   const ss = String(seconds % 60).padStart(2, '0')
+  const isFilled = digits.every(d => d !== '')
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 font-[family-name:var(--font-public-sans)]">
+      {/* Title & Email Display Row */}
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold leading-8 text-[#111111]">Check your inbox</h1>
-        <p className="text-xs leading-4 text-[#616161]">We sent a 6-digit code to</p>
-        <button
-          type="button"
-          onClick={onBack}
-          className="flex items-center gap-1.5 text-sm font-medium text-[#111111] hover:text-[#2563EB]"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <h1 className="text-[24px] font-semibold leading-[32px] text-[#111111]">
+          Check your inbox
+        </h1>
+        <p className="text-[12px] leading-[16px] text-[#616161]">
+          We sent an 8 digit code to
+        </p>
+
+        <div className="mt-0.5 flex items-center gap-1.5 text-sm font-semibold text-[#111111]">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <rect x="2" y="4" width="20" height="16" rx="2" />
             <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
           </svg>
-          {email}
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 20h9" />
-            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
-          </svg>
-        </button>
+          <span>{email}</span>
+          <button
+            type="button"
+            onClick={onBack}
+            title="Edit email"
+            className="ml-1 flex items-center justify-center text-[#616161] transition-colors hover:text-[#2563EB]"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 20h9" />
+              <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+            </svg>
+          </button>
+        </div>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <span className="text-xs font-medium uppercase tracking-wider text-[#444444]">Enter 6-digit code</span>
-        {/* Horizontally stacked with space-between fitting 375px mobile screens */}
-        <div className="flex w-full items-center justify-between gap-1.5 sm:gap-2" onPaste={onPaste}>
+      {/* 8-Digit OTP Input Boxes (348px width, 38x44px boxes, #E0E0E0 border, 6px gap) */}
+      <div className="flex flex-col gap-2 w-full max-w-[348px]">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-[#616161]">
+          Enter 8 DIGIT CODE
+        </span>
+
+        <div className="flex items-center justify-between gap-1.5" onPaste={onPaste}>
           {digits.map((d, i) => (
             <input
               key={i}
@@ -248,33 +310,48 @@ function OtpStep({
               value={d}
               onChange={e => setDigit(i, e.target.value)}
               onKeyDown={e => onKeyDown(i, e)}
-              className={`h-12 w-11 flex-1 max-w-[48px] rounded-lg border text-center text-base font-semibold text-[#111111] outline-none transition-colors sm:h-12 sm:w-12 sm:text-lg ${
-                error ? 'border-[#DC2626] bg-[#fee2e2]' : 'border-[#ECECEC] bg-white focus:border-[#2563EB]'
+              className={`h-[44px] w-[38px] rounded-lg border text-center text-lg font-semibold outline-none transition-all ${
+                error
+                  ? 'border-[#DC2626] bg-[rgba(255,206,203,0.3)] text-[#DC2626]'
+                  : 'border-[#E0E0E0] bg-white text-[#111111] focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB]'
               }`}
             />
           ))}
         </div>
-        {error && <p className="text-xs font-medium text-[#DC2626]">{error}</p>}
       </div>
 
-      <p className="text-xs text-[#8C8C8C]">
-        Didn&apos;t receive code? Resend in{' '}
-        <span className="text-[#2563EB]">{mm}:{ss}</span>{'   '}
+      {/* Error / Timer & Resend Link Row */}
+      <div className="flex items-start justify-between text-xs w-full max-w-[348px] gap-2">
+        {error ? (
+          <p className="text-[11px] font-medium leading-4 text-[#DC2626] flex-1">
+            {error}
+          </p>
+        ) : (
+          <span className="text-[#616161]">
+            Code expires in <span className="font-semibold text-[#2563EB]">{mm}:{ss}</span>
+          </span>
+        )}
+
         <button
           type="button"
           onClick={handleResend}
-          disabled={seconds > 0}
-          className="font-medium text-[#2563EB] disabled:text-[#A0A0A0] disabled:no-underline hover:underline"
+          disabled={seconds > 0 && !error}
+          className="font-semibold text-[#2563EB] transition-colors hover:underline disabled:text-[#A0A0A0] disabled:no-underline whitespace-nowrap"
         >
           Resend code
         </button>
-      </p>
+      </div>
 
+      {/* Verify Button */}
       <button
         type="button"
         onClick={handleVerify}
-        disabled={loading}
-        className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#2563EB] text-base font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+        disabled={loading || !isFilled || error.includes('Too many')}
+        className={`flex h-[44px] w-full max-w-[348px] items-center justify-center gap-2 rounded-xl text-sm font-semibold tracking-normal transition-all font-[family-name:var(--font-public-sans)] ${
+          !isFilled || error.includes('Too many')
+            ? 'border border-[#DDDDDD] bg-[#F1F5F9] text-[#A0A0A0] cursor-not-allowed'
+            : 'border border-transparent bg-[#2563EB] text-white hover:bg-[#1d4fd7] active:scale-[0.99]'
+        } disabled:cursor-not-allowed`}
       >
         {loading && <Spinner />}
         {loading ? 'Verifying…' : 'Verify'}
@@ -283,7 +360,7 @@ function OtpStep({
   )
 }
 
-// ─── Step 3: Create new password ────────────────────────────────────────
+// ─── Step 3: Create new password (Figma Screenshots 1 & 2) ───────────────────
 const newPasswordFormSchema = z.object({
   password: z
     .string()
@@ -292,7 +369,7 @@ const newPasswordFormSchema = z.object({
     .regex(/[0-9]/, 'Use 8+ characters and one number.'),
   confirmPassword: z.string().min(1, 'Please confirm your password.'),
 }).refine(data => data.password === data.confirmPassword, {
-  message: 'Passwords do not match.',
+  message: 'Passwords do not match. Please re-enter them.',
   path: ['confirmPassword'],
 })
 
@@ -324,10 +401,11 @@ function NewPasswordStep({
   const confirmValue = watch('confirmPassword') || ''
   const passwordStrong = passwordValue.length >= 8 && /[0-9]/.test(passwordValue)
   const passwordsMatch = passwordValue && confirmValue && passwordValue === confirmValue
+  const isMismatch = confirmValue.length > 0 && passwordValue !== confirmValue
 
   async function onSubmit(values: NewPasswordFormInput) {
     setServerError('')
-    const res = await verifyPasswordResetOtp(email, token, values.password)
+    const res = await resetPassword(values.password)
     if (res?.error) {
       setServerError(res.error)
       return
@@ -335,15 +413,15 @@ function NewPasswordStep({
     onSuccess()
   }
 
-  const passwordWrap = errors.password
-    ? 'flex h-12 w-full items-center gap-2 rounded-lg border border-[#DC2626] bg-[#fee2e2] px-3'
-    : 'flex h-12 w-full items-center gap-2 rounded-lg border border-[#ECECEC] bg-white px-3 transition-colors focus-within:border-[#2563EB]'
+  const passwordWrap = (errors.password || isMismatch)
+    ? 'flex h-12 items-center gap-2 rounded-lg border border-[#DC2626] bg-[rgba(255,206,203,0.5)] px-3'
+    : 'flex h-12 items-center gap-2 rounded-lg border border-[#ECECEC] bg-white px-3 transition-colors focus-within:border-[#2563EB]'
 
-  const confirmWrap = errors.confirmPassword
-    ? 'flex h-12 w-full items-center gap-2 rounded-lg border border-[#DC2626] bg-[#fee2e2] px-3'
+  const confirmWrap = (errors.confirmPassword || isMismatch)
+    ? 'flex h-12 items-center gap-2 rounded-lg border border-[#DC2626] bg-[rgba(255,206,203,0.5)] px-3'
     : passwordsMatch
-      ? 'flex h-12 w-full items-center gap-2 rounded-lg border border-[#16A34A] bg-white px-3 transition-colors'
-      : 'flex h-12 w-full items-center gap-2 rounded-lg border border-[#ECECEC] bg-white px-3 transition-colors focus-within:border-[#2563EB]'
+      ? 'flex h-12 items-center gap-2 rounded-lg border border-[#ECECEC] bg-white px-3 transition-colors'
+      : 'flex h-12 items-center gap-2 rounded-lg border border-[#ECECEC] bg-white px-3 transition-colors focus-within:border-[#2563EB]'
 
   function EyeToggle({ show, onToggle, hasError }: { show: boolean; onToggle: () => void; hasError: boolean }) {
     return (
@@ -371,37 +449,30 @@ function NewPasswordStep({
   }
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 font-[family-name:var(--font-public-sans)]">
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold leading-8 text-[#111111]">Create new password</h1>
-        <p className="text-xs leading-4 text-[#616161]">Enter new password through set new password for your account</p>
+        <h1 className="text-2xl font-semibold leading-8 text-[#181818]">Create new password</h1>
+        <p className="text-xs leading-4 text-[#616161]">Almost there! set a new password to get back into your account</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
-        {/* New Password */}
+        {/* Enter new password */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="reset-new-password" className="text-sm font-medium text-[#444444]">New password</label>
+          <label htmlFor="reset-new-password" className="text-sm font-medium text-[#444444]">Enter new password</label>
           <div className={passwordWrap}>
             <input
               id="reset-new-password"
               type={showPassword ? 'text' : 'password'}
               {...register('password')}
-              placeholder="Create a password"
-              aria-invalid={!!errors.password}
-              className="min-w-0 flex-1 bg-transparent text-sm text-[#111111] outline-none placeholder:text-[#A0A0A0]"
+              placeholder="Enter new password"
+              aria-invalid={!!errors.password || isMismatch}
+              className="min-w-0 flex-1 bg-transparent text-sm text-[#181818] outline-none placeholder:text-[#A0A0A0]"
             />
-            <EyeToggle show={showPassword} onToggle={() => setShowPassword(v => !v)} hasError={!!errors.password} />
+            <EyeToggle show={showPassword} onToggle={() => setShowPassword(v => !v)} hasError={!!errors.password || isMismatch} />
           </div>
-          {errors.password ? (
-            <p className="text-xs font-medium text-[#DC2626]">{errors.password.message}</p>
-          ) : passwordValue && passwordStrong ? (
-            <p className="text-xs text-[#16A34A]">Your password is strong.</p>
-          ) : (
-            <p className="text-xs text-[#616161]">Use 8+ characters and one number</p>
-          )}
         </div>
 
-        {/* Re-enter Password */}
+        {/* Re-enter password */}
         <div className="flex flex-col gap-1.5">
           <label htmlFor="reset-confirm-password" className="text-sm font-medium text-[#444444]">Re-enter password</label>
           <div className={confirmWrap}>
@@ -409,26 +480,27 @@ function NewPasswordStep({
               id="reset-confirm-password"
               type={showConfirm ? 'text' : 'password'}
               {...register('confirmPassword')}
-              placeholder="Confirm your password"
-              aria-invalid={!!errors.confirmPassword}
-              className="min-w-0 flex-1 bg-transparent text-sm text-[#111111] outline-none placeholder:text-[#A0A0A0]"
+              placeholder="Re-enter password"
+              aria-invalid={!!errors.confirmPassword || isMismatch}
+              className="min-w-0 flex-1 bg-transparent text-sm text-[#181818] outline-none placeholder:text-[#A0A0A0]"
             />
-            <EyeToggle show={showConfirm} onToggle={() => setShowConfirm(v => !v)} hasError={!!errors.confirmPassword} />
+            <EyeToggle show={showConfirm} onToggle={() => setShowConfirm(v => !v)} hasError={!!errors.confirmPassword || isMismatch} />
           </div>
-          {errors.confirmPassword ? (
-            <p className="text-xs font-medium text-[#DC2626]">{errors.confirmPassword.message}</p>
+
+          {/* Feedback messages (Figma SS 1 & 2) */}
+          {isMismatch ? (
+            <p className="text-xs font-medium text-[#DC2626]">Passwords do not match. Please re-enter them.</p>
           ) : passwordsMatch ? (
-            <p className="flex items-center gap-1 text-xs text-[#16A34A]">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1.2 14.3-3.5-3.5 1.4-1.4 2.1 2.1 4.3-4.3 1.4 1.4-5.7 5.7Z" />
-              </svg>
-              Passwords matched and matched
-            </p>
-          ) : null}
+            <p className="text-xs font-medium text-[#16A34A]">Passwords match</p>
+          ) : errors.password ? (
+            <p className="text-xs font-medium text-[#DC2626]">{errors.password.message}</p>
+          ) : (
+            <p className="text-xs text-[#616161]">Use 8+ characters and one number</p>
+          )}
         </div>
 
         {serverError && (
-          <div className="rounded-lg border border-[#DC2626]/30 bg-[#fee2e2] px-4 py-2.5 text-sm text-[#DC2626]">
+          <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-600">
             {serverError}
           </div>
         )}
@@ -436,7 +508,7 @@ function NewPasswordStep({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#2563EB] text-base font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex h-[44px] items-center justify-center gap-2 rounded-xl bg-[#2563EB] text-sm font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting && <Spinner />}
           {isSubmitting ? 'Saving…' : 'Save password'}
@@ -446,35 +518,34 @@ function NewPasswordStep({
   )
 }
 
-// ─── Step 4: Password updated success ───────────────────────────────────
+// ─── Step 4: Password updated success (Figma Screenshot 3) ───────────────
 function SuccessStep({ onBackToLogin }: { onBackToLogin: () => void }) {
   return (
-    <div className="flex flex-col items-start gap-8">
-      {/* Reset illustration */}
-      <div className="flex w-full items-center justify-center overflow-hidden rounded-[9px]">
+    <div className="flex flex-col items-center gap-6 font-[family-name:var(--font-public-sans)]">
+      {/* Top Reset illustration banner (Figma SS 3) */}
+      <div className="relative h-[180px] w-full overflow-hidden rounded-[9px]">
         <Image
           src="/password-reset/reset.png"
-          alt="Password updated"
-          width={407}
-          height={180}
-          className="h-[180px] w-full object-cover"
+          alt="Password updated illustration"
+          fill
           priority
+          className="object-cover"
         />
       </div>
 
       {/* Copy */}
-      <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold leading-8 text-[#111111]">Password Updated</h1>
+      <div className="flex flex-col gap-1 w-full text-left">
+        <h1 className="text-2xl font-semibold leading-8 text-[#181818]">Password Updated</h1>
         <p className="text-xs leading-4 text-[#616161]">
           Your new password is set. Sign in to get back into your account.
         </p>
       </div>
 
-      {/* Back to login */}
+      {/* Back to login button */}
       <button
         type="button"
         onClick={onBackToLogin}
-        className="flex h-12 w-full items-center justify-center rounded-lg bg-[#2563EB] text-base font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99]"
+        className="flex h-[44px] w-full items-center justify-center rounded-xl bg-[#2563EB] text-sm font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99]"
       >
         Back to login
       </button>

@@ -1,10 +1,11 @@
+import { Metadata } from 'next'
+import { ScheduleMeeting } from '@/components/meet/schedule-meeting'
+
+export const metadata: Metadata = {
+  title: 'Book a Discovery Call — Macgence',
+  description: 'Schedule a 30-minute consultation with Macgence AI training data experts to discuss custom datasets, annotation, and enterprise pricing.',
+}
+
 export default function MeetPage() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold">Schedule a Meeting</h1>
-        <p className="mt-4 text-gray-600">Meeting scheduling UI will go here.</p>
-      </div>
-    </div>
-  )
+  return <ScheduleMeeting />
 }
