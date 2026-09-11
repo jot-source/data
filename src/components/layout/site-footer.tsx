@@ -32,7 +32,7 @@ export function SiteFooter() {
 
   return (
     <footer
-      className="relative overflow-hidden px-6 sm:px-12 md:px-16 lg:px-[120px] pb-10 pt-16 text-white"
+      className="w-full max-w-[100vw] relative overflow-x-hidden px-5 sm:px-12 md:px-16 lg:px-[120px] pb-10 pt-14 sm:pt-16 text-white"
       style={{
         background:
           'radial-gradient(ellipse 60% 80% at 8% 50%, rgba(37, 99, 235, 0.2) 0%, transparent 65%), radial-gradient(ellipse 60% 80% at 92% 50%, rgba(59, 130, 246, 0.16) 0%, transparent 65%), #0B1220',

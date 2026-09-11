@@ -61,9 +61,9 @@ export function Specifications({ dataset }: { dataset: DatasetDetail }) {
       {/* Spec Table */}
       <div className="rounded-2xl border border-[#CBD5E1] bg-[#EFF6FF] p-5">
         <h2 className="mb-5 text-xl font-medium text-[#181818]">Dataset specifications</h2>
-        <div className="flex gap-4">
+        <div className="flex flex-col md:flex-row gap-4">
           {/* Left column */}
-          <div className="flex-1 rounded-lg px-3 py-3">
+          <div className="flex-1 rounded-lg px-2 sm:px-3 py-2 sm:py-3">
             {leftSpecs.map((spec, i) => (
               <React.Fragment key={i}>
                 <div className="flex items-center justify-between py-2.5">
@@ -75,7 +75,7 @@ export function Specifications({ dataset }: { dataset: DatasetDetail }) {
             ))}
           </div>
           {/* Right column */}
-          <div className="flex-1 rounded-lg px-3 py-3">
+          <div className="flex-1 rounded-lg px-2 sm:px-3 py-2 sm:py-3">
             {rightSpecs.map((spec, i) => (
               <React.Fragment key={i}>
                 <div className="flex items-center justify-between py-2.5">
@@ -90,7 +90,7 @@ export function Specifications({ dataset }: { dataset: DatasetDetail }) {
       </div>
 
       {/* Info Cards Row */}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
         {infoCards.map((card, i) => (
           <div key={i} className="flex flex-col items-start gap-6 rounded-xl border border-[#CBD5E1] bg-white p-6">
             <div className="text-[#2563EB]">{card.icon}</div>

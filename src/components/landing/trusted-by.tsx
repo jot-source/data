@@ -27,16 +27,16 @@ const BRANDS: Brand[] = [
 
 export function TrustedBy() {
   return (
-    <section className="border-y-[0.5px] border-[#DDDDDD] bg-white px-[120px] pb-12 pt-8">
-      <div className="mx-auto flex max-w-[1200px] flex-col items-center gap-12">
-        <h2 className="font-public-sans text-2xl font-semibold text-[#8C8C8C]">
+    <section className="w-full max-w-[100vw] border-y-[0.5px] border-[#DDDDDD] bg-white px-4 py-8 sm:px-8 lg:px-[120px] lg:pb-12">
+      <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-8 md:gap-12">
+        <h2 className="text-center font-public-sans text-xl sm:text-2xl font-semibold text-[#8C8C8C]">
           Trusted by leading AI companies
         </h2>
 
-        <div className="flex w-full items-center justify-between">
+        <div className="flex w-full flex-wrap items-center justify-center gap-6 sm:gap-8 md:justify-between">
           {BRANDS.map((brand) => (
-            <div key={brand.id} className="flex w-[106px] flex-col items-center gap-2">
-              <div className="flex h-[53px] items-center justify-center">
+            <div key={brand.id} className="flex w-[90px] sm:w-[106px] flex-col items-center gap-2">
+              <div className="flex h-[44px] sm:h-[53px] items-center justify-center">
                 {brand.mark}
               </div>
               <span className="font-public-sans text-[10px] leading-4 text-[#616161]">

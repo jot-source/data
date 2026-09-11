@@ -80,34 +80,22 @@ export function EnterpriseConsultation() {
         }}
       />
 
-      <div className="relative z-10 flex flex-col gap-10 p-8 lg:min-h-[485px] lg:flex-row lg:items-center lg:justify-between lg:gap-8 lg:py-[63px] lg:pl-[56px] lg:pr-[65px]">
+      <div className="relative z-10 flex flex-col gap-8 sm:gap-10 p-5 sm:p-8 lg:min-h-[485px] lg:flex-row lg:items-center lg:justify-between lg:gap-8 lg:py-[63px] lg:pl-[56px] lg:pr-[65px]">
 
         {/* Left: heading + checklist */}
-        <div className="flex max-w-[672px] flex-col" style={{ gap: 32 }}>
+        <div className="flex max-w-[672px] flex-col gap-6 sm:gap-8">
           <h2
-            style={{
-              fontFamily: "'Public Sans', sans-serif",
-              fontWeight: 700,
-              fontSize: 32,
-              lineHeight: '48px',
-              color: '#FFFFFF',
-            }}
+            className="font-public-sans text-2xl sm:text-3xl lg:text-[32px] font-bold leading-tight lg:leading-[48px] text-white"
           >
             Need enterprise pricing? Schedule a consultation.
           </h2>
 
-          <ul className="flex flex-col" style={{ gap: 12 }}>
+          <ul className="flex flex-col gap-3">
             {['Volume discounts', 'Multi-year terms', 'Dedicated manager'].map((item) => (
-              <li key={item} className="flex items-center" style={{ gap: 10 }}>
+              <li key={item} className="flex items-center gap-2.5">
                 <CheckIcon />
                 <span
-                  style={{
-                    fontFamily: "'Public Sans', sans-serif",
-                    fontWeight: 600,
-                    fontSize: 20,
-                    lineHeight: '28px',
-                    color: '#FFFFFF',
-                  }}
+                  className="font-public-sans text-base sm:text-lg lg:text-[20px] font-semibold text-white"
                 >
                   {item}
                 </span>
@@ -116,17 +104,11 @@ export function EnterpriseConsultation() {
           </ul>
         </div>
 
-        {/* Right: glass form card — 383x361, padding 32 */}
+        {/* Right: glass form card */}
         <div
-          className="w-full shrink-0 lg:w-[383px]"
+          className="w-full shrink-0 lg:w-[383px] rounded-2xl border border-white/10 bg-white/15 p-5 sm:p-8 backdrop-blur-[5.4px]"
           style={{
             minHeight: 361,
-            padding: 32,
-            background: 'rgba(255, 255, 255, 0.16)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            backdropFilter: 'blur(5.4px)',
-            WebkitBackdropFilter: 'blur(5.4px)',
-            borderRadius: 16,
           }}
         >
           <form onSubmit={handleSubmit} className="flex flex-col" style={{ gap: 33 }}>

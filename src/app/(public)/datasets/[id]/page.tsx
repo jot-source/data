@@ -65,26 +65,26 @@ export default async function DatasetDetailPage({
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F7FB] text-[#181818] w-full">
-      <div className="mx-auto w-full max-w-[1200px] px-5 py-6">
+    <div className="min-h-screen bg-[#F4F7FB] text-[#181818] w-full max-w-[100vw] overflow-x-hidden">
+      <div className="mx-auto w-full max-w-[1200px] px-4 sm:px-5 py-6">
 
         {/* Breadcrumb */}
-        <div className="mb-6 flex items-center gap-2 text-sm text-[#616161]">
+        <div className="mb-6 flex flex-wrap items-center gap-2 text-sm text-[#616161]">
           <span className="hover:text-[#181818] cursor-pointer">Home</span>
           <span className="text-[#CBD5E1]">&gt;</span>
           <span className="hover:text-[#181818] cursor-pointer">Marketplace</span>
           <span className="text-[#CBD5E1]">&gt;</span>
-          <span className="font-medium text-[#181818]">{safeDataset.title}</span>
+          <span className="font-medium text-[#181818] line-clamp-1">{safeDataset.title}</span>
         </div>
 
         {/* ──── Two-column layout ──── */}
         {/* items-stretch (default) so the right column matches the tall left
             column's height — that gives the sticky pricing sidebar room to
             stay pinned all the way down instead of scrolling out of view. */}
-        <div className="flex gap-6 items-stretch">
+        <div className="flex flex-col lg:flex-row gap-6 items-stretch w-full max-w-full">
 
-          {/* LEFT: Main content — 748px fixed */}
-          <div className="w-[748px] shrink-0 flex flex-col gap-8 rounded-3xl border border-[#CBD5E1] bg-white p-6">
+          {/* LEFT: Main content — full-width on mobile/tablet, 748px on lg screens */}
+          <div className="w-full lg:w-[748px] min-w-0 shrink-0 flex flex-col gap-6 sm:gap-8 rounded-3xl border border-[#CBD5E1] bg-white p-4 sm:p-6 box-border">
             {/* Hero heading */}
             <DatasetHeading dataset={safeDataset} isLoggedIn={isLoggedIn} isSaved={isSaved} />
 
@@ -92,7 +92,7 @@ export default async function DatasetDetailPage({
             <StickyNav />
 
             {/* Content sections — gap 64px between major groups per Figma */}
-            <div className="flex flex-col gap-16">
+            <div className="flex flex-col gap-12 sm:gap-16">
               <Specifications dataset={safeDataset} />
               <DataQuality />
               <PricingOptions dataset={safeDataset} isLoggedIn={isLoggedIn} owned={owned} />
@@ -100,13 +100,12 @@ export default async function DatasetDetailPage({
             </div>
           </div>
 
-          {/* RIGHT: Pricing sidebar — 420px fixed */}
-          <div className="w-[420px] shrink-0">
+          {/* RIGHT: Pricing sidebar — full-width on mobile/tablet, 420px on lg screens */}
+          <div className="w-full lg:w-[420px] min-w-0 shrink-0">
             <PricingSidebar dataset={safeDataset} isLoggedIn={isLoggedIn} owned={owned} />
           </div>
         </div>
 
-        {/* ──── Enterprise Consultation Block ──── */}
         {/* ──── Enterprise Consultation Block ──── */}
         <EnterpriseConsultation />
 

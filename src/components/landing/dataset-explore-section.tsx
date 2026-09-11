@@ -2,7 +2,6 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { useDatasets } from '@/hooks/use-datasets'
 import { useDatasetFacets } from '@/hooks/use-dataset-facets'
 import { useDatasetFilters, type FacetKey } from '@/stores/dataset-filters.store'
@@ -10,8 +9,6 @@ import { DatasetCard } from '@/components/search-datasets/dataset-card'
 import type { DatasetSort } from '@/validations/dataset.schema'
 
 export function DatasetExploreSection() {
-  const router = useRouter()
-  
   // Data
   const { data, isPending } = useDatasets()
   const { data: facetsData } = useDatasetFacets()
@@ -19,11 +16,12 @@ export function DatasetExploreSection() {
   // State
   const { q, setSearch, facets, toggleFacet, clearAll, sort, setSort, minQuality, setMinQuality } = useDatasetFilters()
   const [draftSearch, setDraftSearch] = useState(q)
+  const [prevQ, setPrevQ] = useState(q)
 
-  // Update local search if global changes
-  useEffect(() => {
+  if (q !== prevQ) {
+    setPrevQ(q)
     setDraftSearch(q)
-  }, [q])
+  }
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault()
@@ -50,25 +48,25 @@ export function DatasetExploreSection() {
   }
 
   return (
-    <section className="w-full bg-[#EFF6FF] py-16">
-      <div className="mx-auto max-w-[1200px] px-5">
-        <h2 className="mb-10 text-center text-2xl font-bold text-[#181818] md:text-3xl">
+    <section className="w-full max-w-[100vw] overflow-x-hidden bg-[#EFF6FF] py-12 sm:py-16">
+      <div className="mx-auto max-w-[1200px] px-4 sm:px-5">
+        <h2 className="mb-8 sm:mb-10 text-center text-2xl font-bold text-[#181818] md:text-3xl">
           We got every dataset you need. Search and explore now.
         </h2>
 
         <div className="rounded-3xl bg-[#283350] p-4 md:p-8">
           {/* Search bar — search button nested on right corner */}
-          <form onSubmit={handleSearch} className="mb-6 relative flex items-center rounded-xl bg-white p-1.5 pl-4 shadow-sm border border-transparent focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-[#2563EB]/20 transition-all">
+          <form onSubmit={handleSearch} className="mb-6 relative flex items-center rounded-xl bg-white p-1.5 pl-3 sm:pl-4 shadow-sm border border-transparent focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-[#2563EB]/20 transition-all">
             <input
               type="text"
               value={draftSearch}
               onChange={(e) => setDraftSearch(e.target.value)}
               placeholder="Eg: search health care datasets"
-              className="flex-1 bg-transparent pr-3 py-2 text-sm text-[#181818] outline-none placeholder:text-[#8C8C8C]"
+              className="flex-1 min-w-0 bg-transparent pr-2 sm:pr-3 py-2 text-sm text-[#181818] outline-none placeholder:text-[#8C8C8C]"
             />
             <button
               type="submit"
-              className="shrink-0 rounded-lg bg-[#2563EB] px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#1D4ED8] active:scale-95"
+              className="shrink-0 rounded-lg bg-[#2563EB] px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-[#1D4ED8] active:scale-95"
             >
               Search
             </button>

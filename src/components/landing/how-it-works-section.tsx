@@ -71,19 +71,19 @@ export function HowItWorksSection() {
   }, [isInView, isHovered])
 
   return (
-    <section id="how-it-works" ref={sectionRef} className="w-full scroll-mt-4 bg-[#F5F8FF] py-24 border-t border-[#CBD5E1]">
-      <div className="mx-auto max-w-[1200px] px-5 flex flex-col items-center">
+    <section id="how-it-works" ref={sectionRef} className="w-full max-w-[100vw] overflow-x-hidden scroll-mt-4 bg-[#F5F8FF] py-14 sm:py-24 border-t border-[#CBD5E1]">
+      <div className="mx-auto max-w-[1200px] px-4 sm:px-5 flex flex-col items-center">
 
-        <h2 className="mb-4 text-center text-3xl font-bold tracking-tight text-[#181818] md:text-4xl">
+        <h2 className="mb-4 text-center text-2xl sm:text-3xl font-bold tracking-tight text-[#181818] md:text-4xl">
           From discovery to delivery in four steps
         </h2>
-        <p className="mb-20 text-center text-base text-[#616161] max-w-2xl">
+        <p className="mb-14 sm:mb-20 text-center text-sm sm:text-base text-[#616161] max-w-2xl">
           A simple, transparent path from finding the right data to getting it in your hands.
         </p>
 
         {/* Timeline visualization */}
         <div
-          className="relative w-full max-w-3xl mb-16"
+          className="relative w-full max-w-3xl mb-14 sm:mb-16"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
@@ -107,20 +107,20 @@ export function HowItWorksSection() {
                   <button
                     onClick={() => setActiveStep(step.id)}
                     className={cn(
-                      "flex h-16 w-16 items-center justify-center rounded-full transition-all duration-500",
+                      "flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-full transition-all duration-500",
                       isActive
-                        ? "bg-[#2563EB] text-white shadow-[0_0_40px_rgba(37,99,235,0.4)] scale-110 border-none"
+                        ? "bg-[#2563EB] text-white shadow-[0_0_30px_rgba(37,99,235,0.4)] scale-110 border-none"
                         : isPast
                           ? "bg-white border border-[#2563EB] text-[#2563EB]"
                           : "bg-white border border-[#CBD5E1] text-[#8C8C8C]"
                     )}
                   >
-                    {step.icon}
+                    <span className="scale-90 sm:scale-100">{step.icon}</span>
                   </button>
 
                   {/* Step label (only shows for active) */}
                   <div className={cn(
-                    "absolute -bottom-8 font-semibold text-xs transition-opacity duration-300",
+                    "absolute -bottom-7 sm:-bottom-8 font-semibold text-[11px] sm:text-xs transition-opacity duration-300 whitespace-nowrap",
                     isActive ? "opacity-100 text-[#181818]" : "opacity-0"
                   )}>
                     STEP {step.id}
@@ -133,14 +133,14 @@ export function HowItWorksSection() {
 
         {/* Active Step Details Card */}
         <div
-          className="w-full max-w-3xl rounded-3xl border border-[#CBD5E1] bg-white p-8 md:p-10 transition-all duration-300"
+          className="w-full max-w-3xl rounded-3xl border border-[#CBD5E1] bg-white p-5 sm:p-8 md:p-10 transition-all duration-300"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-10">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-4 sm:gap-6 md:gap-10">
             {/* Big Blue Icon Square */}
-            <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl bg-[#2563EB] text-white transition-all duration-500">
-              {STEPS[activeStep - 1].icon}
+            <div className="flex h-16 w-16 sm:h-24 sm:w-24 shrink-0 items-center justify-center rounded-2xl bg-[#2563EB] text-white transition-all duration-500">
+              <span className="scale-90 sm:scale-125">{STEPS[activeStep - 1].icon}</span>
             </div>
 
             {/* Text Content */}

@@ -43,14 +43,14 @@ export function StickyNav() {
   }, [activeId])
 
   return (
-    <div className="sticky top-4 z-40 rounded-xl border border-[#CBD5E1] bg-white p-2.5">
-      <div className="flex w-full items-center justify-between">
+    <div className="sticky top-4 z-40 w-full max-w-full rounded-xl border border-[#CBD5E1] bg-white p-1.5 sm:p-2.5 overflow-x-auto">
+      <div className="flex w-full min-w-max sm:min-w-0 items-center justify-between gap-1 sm:gap-2">
         {NAV_ITEMS.map((item) => (
           <button
             key={item.id}
             onClick={() => scrollTo(item.id)}
             className={cn(
-              'flex flex-1 items-center justify-center gap-2 rounded-lg py-3 text-sm font-medium transition-colors',
+              'flex shrink-0 sm:flex-1 items-center justify-center gap-1.5 sm:gap-2 rounded-lg px-2.5 sm:px-3 py-2 sm:py-3 text-xs sm:text-sm font-medium transition-colors whitespace-nowrap',
               activeId === item.id ? 'bg-[#2563EB] text-white' : 'text-[#616161] hover:bg-[#F9FAFB] hover:text-[#181818]'
             )}
           >

@@ -8,7 +8,7 @@ export function RelatedDatasets({ datasets }: { datasets: DatasetCardType[] }) {
   return (
     <div className="mt-4">
       <h2 className="mb-6 text-lg font-semibold text-[#181818]">Related datasets</h2>
-      <div className="grid gap-6 grid-cols-2">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2">
         {datasets.slice(0, 4).map((dataset) => (
           <DatasetCard key={dataset.id} dataset={dataset} />
         ))}

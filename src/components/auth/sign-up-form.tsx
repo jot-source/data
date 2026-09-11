@@ -11,11 +11,12 @@ import { signUp, syncSignupName, updateProfile, checkEmailExists } from '@/actio
 import { signUpSchema, profileRequiredSchema, type SignUpInput, type ProfileRequiredInput } from '@/validations/auth.schema'
 import { createClient } from '@/lib/supabase/client'
 import { useAuthModal } from '@/stores/auth-modal.store'
+import { AuthTabSwitcher } from './auth-tab-switcher'
 
 type Step = 'credentials' | 'otp' | 'profile'
 
 const fieldBase =
-  'h-12 rounded-lg border px-3 text-sm text-[#111111] outline-none transition-colors placeholder:text-[#A0A0A0]'
+  'h-12 w-full rounded-lg border px-3 text-sm text-[#111111] outline-none transition-colors placeholder:text-[#A0A0A0]'
 
 function Spinner() {
   return (
@@ -133,23 +134,28 @@ function CredentialsStep({ onSignUp, onLogin }: { onSignUp: (email: string) => v
   }
 
   const emailClass = (errors.email || emailTaken)
-    ? `${fieldBase} border-[#DC2626] bg-[rgba(255,206,203,0.5)]`
+    ? `${fieldBase} border-[#DC2626] bg-[#fee2e2]`
     : `${fieldBase} border-[#ECECEC] bg-white focus:border-[#2563EB]`
   const passwordWrap = errors.password
-    ? 'flex h-12 items-center gap-2 rounded-lg border border-[#DC2626] bg-[rgba(255,206,203,0.5)] px-3'
-    : 'flex h-12 items-center gap-2 rounded-lg border border-[#ECECEC] bg-white px-3 transition-colors focus-within:border-[#2563EB]'
+    ? 'flex h-12 w-full items-center gap-2 rounded-lg border border-[#DC2626] bg-[#fee2e2] px-3'
+    : 'flex h-12 w-full items-center gap-2 rounded-lg border border-[#ECECEC] bg-white px-3 transition-colors focus-within:border-[#2563EB]'
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex flex-col gap-1">
+      {/* Mobile Tab Switcher */}
+      <AuthTabSwitcher activeTab="sign-up" />
+
+      {/* Desktop Header */}
+      <div className="hidden flex-col gap-1 md:flex">
         <h1 className="text-2xl font-semibold leading-8 text-[#111111]">Create account</h1>
         <p className="text-xs leading-4 text-[#616161]">Access datasets, samples, and downloads.</p>
       </div>
 
+      {/* Signup with Google (full width touch target 48px height) */}
       <button
         type="button"
         onClick={handleGoogle}
-        className="flex h-12 items-center justify-center gap-2 rounded-lg border border-[#DDDDDD] bg-white px-8 text-sm font-medium text-[#181818] transition-colors hover:bg-[#fafafa]"
+        className="flex h-12 w-full items-center justify-center gap-2 rounded-lg border border-[#DDDDDD] bg-white px-8 text-sm font-medium text-[#181818] transition-colors hover:bg-[#fafafa]"
       >
         <GoogleIcon />
         Signup with Google
@@ -230,7 +236,7 @@ function CredentialsStep({ onSignUp, onLogin }: { onSignUp: (email: string) => v
         </div>
 
         {errors.root && (
-          <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-600">
+          <div className="rounded-lg border border-[#DC2626]/30 bg-[#fee2e2] px-4 py-2.5 text-sm text-[#DC2626]">
             {errors.root.message}
           </div>
         )}
@@ -238,7 +244,7 @@ function CredentialsStep({ onSignUp, onLogin }: { onSignUp: (email: string) => v
         <button
           type="submit"
           disabled={isSubmitting || emailTaken}
-          className="flex h-12 items-center justify-center gap-2 rounded-lg bg-[#2563EB] text-base font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#2563EB] text-base font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting && <Spinner />}
           {isSubmitting ? 'Creating account…' : 'Create account'}
@@ -263,7 +269,7 @@ function CredentialsStep({ onSignUp, onLogin }: { onSignUp: (email: string) => v
 
 // ─── Step 2: email OTP ────────────────────────────────────────────────
 function OtpStep({ email, onVerified, onBack }: { email: string; onVerified: () => void; onBack: () => void }) {
-  const [digits, setDigits] = useState<string[]>(['', '', '', '', '', '', '', ''])
+  const [digits, setDigits] = useState<string[]>(['', '', '', '', '', ''])
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [seconds, setSeconds] = useState(46)
@@ -288,7 +294,7 @@ function OtpStep({ email, onVerified, onBack }: { email: string; onVerified: () 
       next[i] = d
       return next
     })
-    if (d && i < 7) refs.current[i + 1]?.focus()
+    if (d && i < 5) refs.current[i + 1]?.focus()
   }
 
   function onKeyDown(i: number, e: React.KeyboardEvent<HTMLInputElement>) {
@@ -296,19 +302,19 @@ function OtpStep({ email, onVerified, onBack }: { email: string; onVerified: () 
   }
 
   function onPaste(e: React.ClipboardEvent) {
-    const text = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 8)
+    const text = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6)
     if (!text) return
     e.preventDefault()
-    const next = ['', '', '', '', '', '', '', '']
+    const next = ['', '', '', '', '', '']
     text.split('').forEach((c, idx) => { next[idx] = c })
     setDigits(next)
-    refs.current[Math.min(text.length, 7)]?.focus()
+    refs.current[Math.min(text.length, 5)]?.focus()
   }
 
   async function handleConfirm() {
     const code = digits.join('')
-    if (code.length < 8) {
-      setError('Enter the 8-digit code from your email.')
+    if (code.length < 6) {
+      setError('Enter the 6-digit code from your email.')
       return
     }
     setLoading(true)
@@ -357,7 +363,7 @@ function OtpStep({ email, onVerified, onBack }: { email: string; onVerified: () 
         return
       }
       setResendCount(c => c + 1)
-      setDigits(['', '', '', '', '', '', '', ''])
+      setDigits(['', '', '', '', '', ''])
       setError('')
       setSeconds(46)
     } catch {
@@ -373,7 +379,7 @@ function OtpStep({ email, onVerified, onBack }: { email: string; onVerified: () 
     <div className="flex flex-col gap-5">
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-semibold leading-8 text-[#111111]">Check your inbox</h1>
-        <p className="text-xs leading-4 text-[#616161]">We sent an 8 digit code to</p>
+        <p className="text-xs leading-4 text-[#616161]">We sent a 6-digit code to</p>
         <button
           type="button"
           onClick={onBack}
@@ -392,8 +398,9 @@ function OtpStep({ email, onVerified, onBack }: { email: string; onVerified: () 
       </div>
 
       <div className="flex flex-col gap-2">
-        <span className="text-xs font-medium uppercase tracking-wider text-[#444444]">Enter 8 digit code</span>
-        <div className="flex gap-2" onPaste={onPaste}>
+        <span className="text-xs font-medium uppercase tracking-wider text-[#444444]">Enter 6-digit code</span>
+        {/* Horizontally stacked with space-between fitting 375px mobile screens */}
+        <div className="flex w-full items-center justify-between gap-1.5 sm:gap-2" onPaste={onPaste}>
           {digits.map((d, i) => (
             <input
               key={i}
@@ -403,8 +410,9 @@ function OtpStep({ email, onVerified, onBack }: { email: string; onVerified: () 
               value={d}
               onChange={e => setDigit(i, e.target.value)}
               onKeyDown={e => onKeyDown(i, e)}
-              className={`h-10 w-10 rounded-lg border text-center text-base font-semibold text-[#111111] outline-none transition-colors ${error ? 'border-[#DC2626] bg-[rgba(255,206,203,0.5)]' : 'border-[#ECECEC] bg-white focus:border-[#2563EB]'
-                }`}
+              className={`h-12 w-11 flex-1 max-w-[48px] rounded-lg border text-center text-base font-semibold text-[#111111] outline-none transition-colors sm:h-12 sm:w-12 sm:text-lg ${
+                error ? 'border-[#DC2626] bg-[#fee2e2]' : 'border-[#ECECEC] bg-white focus:border-[#2563EB]'
+              }`}
             />
           ))}
         </div>
@@ -428,7 +436,7 @@ function OtpStep({ email, onVerified, onBack }: { email: string; onVerified: () 
         type="button"
         onClick={handleConfirm}
         disabled={loading}
-        className="flex h-12 items-center justify-center gap-2 rounded-lg bg-[#2563EB] text-base font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+        className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#2563EB] text-base font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
       >
         {loading && <Spinner />}
         {loading ? 'Confirming…' : 'Confirm'}
@@ -457,16 +465,22 @@ function ProfileStep({ onDone }: { onDone: () => void }) {
   }
 
   return (
-    <div className="flex flex-col gap-5">
-      <div className="flex items-start justify-between">
+    <div className="relative flex flex-col gap-5">
+      <div className="flex items-start justify-between pr-14 md:pr-0">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-semibold leading-8 text-[#111111]">Profile setup</h1>
           <p className="text-xs leading-4 text-[#616161]">Access datasets, samples, and downloads.</p>
         </div>
-        <button type="button" onClick={onDone} className="text-sm font-medium text-[#2563EB] hover:underline">
-          Skip
-        </button>
       </div>
+
+      {/* Skip action pinned to top right corner of the card */}
+      <button
+        type="button"
+        onClick={onDone}
+        className="absolute -top-1 right-0 text-sm font-medium text-[#2563EB] transition-colors hover:text-[#1d4fd7] hover:underline"
+      >
+        Skip
+      </button>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">
@@ -475,7 +489,7 @@ function ProfileStep({ onDone }: { onDone: () => void }) {
             id="profile-name"
             {...register('fullName')}
             placeholder="E.g. Nitish Reddy"
-            className={`${fieldBase} ${errors.fullName ? 'border-[#DC2626] bg-[rgba(255,206,203,0.5)]' : 'border-[#ECECEC] bg-white focus:border-[#2563EB]'}`}
+            className={`${fieldBase} ${errors.fullName ? 'border-[#DC2626] bg-[#fee2e2]' : 'border-[#ECECEC] bg-white focus:border-[#2563EB]'}`}
           />
           {errors.fullName && <p className="text-xs font-medium text-[#DC2626]">{errors.fullName.message}</p>}
         </div>
@@ -486,7 +500,7 @@ function ProfileStep({ onDone }: { onDone: () => void }) {
             id="profile-org"
             {...register('organization')}
             placeholder="E.g. Macgence"
-            className={`${fieldBase} ${errors.organization ? 'border-[#DC2626] bg-[rgba(255,206,203,0.5)]' : 'border-[#ECECEC] bg-white focus:border-[#2563EB]'}`}
+            className={`${fieldBase} ${errors.organization ? 'border-[#DC2626] bg-[#fee2e2]' : 'border-[#ECECEC] bg-white focus:border-[#2563EB]'}`}
           />
           {errors.organization && <p className="text-xs font-medium text-[#DC2626]">{errors.organization.message}</p>}
         </div>
@@ -497,7 +511,7 @@ function ProfileStep({ onDone }: { onDone: () => void }) {
             id="profile-role"
             {...register('jobTitle')}
             defaultValue=""
-            className={`${fieldBase} ${errors.jobTitle ? 'border-[#DC2626] bg-[rgba(255,206,203,0.5)]' : 'border-[#ECECEC] bg-white focus:border-[#2563EB]'}`}
+            className={`${fieldBase} ${errors.jobTitle ? 'border-[#DC2626] bg-[#fee2e2]' : 'border-[#ECECEC] bg-white focus:border-[#2563EB]'}`}
           >
             <option value="" disabled>E.g. Project Manager</option>
             {ROLE_OPTIONS.map(r => (
@@ -510,7 +524,7 @@ function ProfileStep({ onDone }: { onDone: () => void }) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="mt-1 flex h-12 items-center justify-center gap-2 rounded-lg bg-[#2563EB] text-base font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+          className="mt-1 flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#2563EB] text-base font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting && <Spinner />}
           {isSubmitting ? 'Saving…' : 'Save & Continue'}

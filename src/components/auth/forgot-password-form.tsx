@@ -16,7 +16,7 @@ import { z } from 'zod'
 import Image from 'next/image'
 
 const fieldBase =
-  'h-12 rounded-lg border px-3 text-sm text-[#111111] outline-none transition-colors placeholder:text-[#A0A0A0]'
+  'h-12 w-full rounded-lg border px-3 text-sm text-[#111111] outline-none transition-colors placeholder:text-[#A0A0A0]'
 
 function Spinner() {
   return (
@@ -89,7 +89,7 @@ function EmailStep({ onSent, onSignIn }: { onSent: (email: string) => void; onSi
   }
 
   const emailClass = error
-    ? `${fieldBase} border-[#DC2626] bg-[rgba(255,206,203,0.5)]`
+    ? `${fieldBase} border-[#DC2626] bg-[#fee2e2]`
     : `${fieldBase} border-[#ECECEC] bg-white focus:border-[#2563EB]`
 
   return (
@@ -118,7 +118,7 @@ function EmailStep({ onSent, onSignIn }: { onSent: (email: string) => void; onSi
         <button
           type="submit"
           disabled={loading}
-          className="flex h-12 items-center justify-center gap-2 rounded-lg bg-[#2563EB] text-base font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#2563EB] text-base font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading && <Spinner />}
           {loading ? 'Sending…' : 'Continue'}
@@ -146,7 +146,7 @@ function OtpStep({
   onBack: () => void
   onResend: () => void
 }) {
-  const [digits, setDigits] = useState<string[]>(['', '', '', '', '', '', '', ''])
+  const [digits, setDigits] = useState<string[]>(['', '', '', '', '', ''])
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [seconds, setSeconds] = useState(46)
@@ -166,7 +166,7 @@ function OtpStep({
       next[i] = d
       return next
     })
-    if (d && i < 7) refs.current[i + 1]?.focus()
+    if (d && i < 5) refs.current[i + 1]?.focus()
   }
 
   function onKeyDown(i: number, e: React.KeyboardEvent<HTMLInputElement>) {
@@ -174,19 +174,19 @@ function OtpStep({
   }
 
   function onPaste(e: React.ClipboardEvent) {
-    const text = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 8)
+    const text = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6)
     if (!text) return
     e.preventDefault()
-    const next = ['', '', '', '', '', '', '', '']
+    const next = ['', '', '', '', '', '']
     text.split('').forEach((c, idx) => { next[idx] = c })
     setDigits(next)
-    refs.current[Math.min(text.length, 7)]?.focus()
+    refs.current[Math.min(text.length, 5)]?.focus()
   }
 
   async function handleVerify() {
     const code = digits.join('')
-    if (code.length < 8) {
-      setError('Enter the 8-digit code from your email.')
+    if (code.length < 6) {
+      setError('Enter the 6-digit code from your email.')
       return
     }
     setLoading(true)
@@ -203,7 +203,7 @@ function OtpStep({
     if (res?.error) {
       setError(res.error)
     } else {
-      setDigits(['', '', '', '', '', '', '', ''])
+      setDigits(['', '', '', '', '', ''])
       setError('')
     }
     setSeconds(46)
@@ -217,7 +217,7 @@ function OtpStep({
     <div className="flex flex-col gap-5">
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-semibold leading-8 text-[#111111]">Check your inbox</h1>
-        <p className="text-xs leading-4 text-[#616161]">We sent an 8 digit code to</p>
+        <p className="text-xs leading-4 text-[#616161]">We sent a 6-digit code to</p>
         <button
           type="button"
           onClick={onBack}
@@ -236,8 +236,9 @@ function OtpStep({
       </div>
 
       <div className="flex flex-col gap-2">
-        <span className="text-xs font-medium uppercase tracking-wider text-[#444444]">Enter 8 digit code</span>
-        <div className="flex gap-2" onPaste={onPaste}>
+        <span className="text-xs font-medium uppercase tracking-wider text-[#444444]">Enter 6-digit code</span>
+        {/* Horizontally stacked with space-between fitting 375px mobile screens */}
+        <div className="flex w-full items-center justify-between gap-1.5 sm:gap-2" onPaste={onPaste}>
           {digits.map((d, i) => (
             <input
               key={i}
@@ -247,8 +248,8 @@ function OtpStep({
               value={d}
               onChange={e => setDigit(i, e.target.value)}
               onKeyDown={e => onKeyDown(i, e)}
-              className={`h-10 w-10 rounded-lg border text-center text-base font-semibold text-[#111111] outline-none transition-colors ${
-                error ? 'border-[#DC2626] bg-[rgba(255,206,203,0.5)]' : 'border-[#ECECEC] bg-white focus:border-[#2563EB]'
+              className={`h-12 w-11 flex-1 max-w-[48px] rounded-lg border text-center text-base font-semibold text-[#111111] outline-none transition-colors sm:h-12 sm:w-12 sm:text-lg ${
+                error ? 'border-[#DC2626] bg-[#fee2e2]' : 'border-[#ECECEC] bg-white focus:border-[#2563EB]'
               }`}
             />
           ))}
@@ -273,7 +274,7 @@ function OtpStep({
         type="button"
         onClick={handleVerify}
         disabled={loading}
-        className="flex h-12 items-center justify-center gap-2 rounded-lg bg-[#2563EB] text-base font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+        className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#2563EB] text-base font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
       >
         {loading && <Spinner />}
         {loading ? 'Verifying…' : 'Verify'}
@@ -335,14 +336,14 @@ function NewPasswordStep({
   }
 
   const passwordWrap = errors.password
-    ? 'flex h-12 items-center gap-2 rounded-lg border border-[#DC2626] bg-[rgba(255,206,203,0.5)] px-3'
-    : 'flex h-12 items-center gap-2 rounded-lg border border-[#ECECEC] bg-white px-3 transition-colors focus-within:border-[#2563EB]'
+    ? 'flex h-12 w-full items-center gap-2 rounded-lg border border-[#DC2626] bg-[#fee2e2] px-3'
+    : 'flex h-12 w-full items-center gap-2 rounded-lg border border-[#ECECEC] bg-white px-3 transition-colors focus-within:border-[#2563EB]'
 
   const confirmWrap = errors.confirmPassword
-    ? 'flex h-12 items-center gap-2 rounded-lg border border-[#DC2626] bg-[rgba(255,206,203,0.5)] px-3'
+    ? 'flex h-12 w-full items-center gap-2 rounded-lg border border-[#DC2626] bg-[#fee2e2] px-3'
     : passwordsMatch
-      ? 'flex h-12 items-center gap-2 rounded-lg border border-[#16A34A] bg-white px-3 transition-colors'
-      : 'flex h-12 items-center gap-2 rounded-lg border border-[#ECECEC] bg-white px-3 transition-colors focus-within:border-[#2563EB]'
+      ? 'flex h-12 w-full items-center gap-2 rounded-lg border border-[#16A34A] bg-white px-3 transition-colors'
+      : 'flex h-12 w-full items-center gap-2 rounded-lg border border-[#ECECEC] bg-white px-3 transition-colors focus-within:border-[#2563EB]'
 
   function EyeToggle({ show, onToggle, hasError }: { show: boolean; onToggle: () => void; hasError: boolean }) {
     return (
@@ -427,7 +428,7 @@ function NewPasswordStep({
         </div>
 
         {serverError && (
-          <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-600">
+          <div className="rounded-lg border border-[#DC2626]/30 bg-[#fee2e2] px-4 py-2.5 text-sm text-[#DC2626]">
             {serverError}
           </div>
         )}
@@ -435,7 +436,7 @@ function NewPasswordStep({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex h-12 items-center justify-center gap-2 rounded-lg bg-[#2563EB] text-base font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#2563EB] text-base font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting && <Spinner />}
           {isSubmitting ? 'Saving…' : 'Save password'}

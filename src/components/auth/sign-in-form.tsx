@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { signInSchema, type SignInInput } from '@/validations/auth.schema'
 import { createClient } from '@/lib/supabase/client'
 import { useAuthModal } from '@/stores/auth-modal.store'
+import { AuthTabSwitcher } from './auth-tab-switcher'
 
 export function SignInForm() {
   const { open, triggerSuccess } = useAuthModal()
@@ -66,29 +67,32 @@ export function SignInForm() {
     if (oauthError) setError('root', { message: oauthError.message })
   }
 
-  // Shared input styling — switches to the error look (rgba(255,206,203,.5)
-  // fill + #DC2626 border) from the Figma spec.
+  // Shared input styling — switches to the error look (#fee2e2 fill + #DC2626 border)
   const fieldBase =
-    'h-12 rounded-lg border px-3 text-sm text-[#111111] outline-none transition-colors placeholder:text-[#A0A0A0]'
+    'h-12 w-full rounded-lg border px-3 text-sm text-[#111111] outline-none transition-colors placeholder:text-[#A0A0A0]'
   const emailFieldClass = errors.email
-    ? `${fieldBase} border-[#DC2626] bg-[rgba(255,206,203,0.5)]`
+    ? `${fieldBase} border-[#DC2626] bg-[#fee2e2]`
     : `${fieldBase} border-[#ECECEC] bg-white focus:border-[#2563EB]`
   const passwordWrapClass = errors.password
-    ? 'flex h-12 items-center gap-2 rounded-lg border border-[#DC2626] bg-[rgba(255,206,203,0.5)] px-3'
-    : 'flex h-12 items-center gap-2 rounded-lg border border-[#ECECEC] bg-white px-3 transition-colors focus-within:border-[#2563EB]'
+    ? 'flex h-12 w-full items-center gap-2 rounded-lg border border-[#DC2626] bg-[#fee2e2] px-3'
+    : 'flex h-12 w-full items-center gap-2 rounded-lg border border-[#ECECEC] bg-white px-3 transition-colors focus-within:border-[#2563EB]'
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex flex-col gap-1">
+      {/* Mobile Tab Switcher */}
+      <AuthTabSwitcher activeTab="sign-in" />
+
+      {/* Desktop Header */}
+      <div className="hidden flex-col gap-1 md:flex">
         <h1 className="text-2xl font-semibold leading-8 text-[#111111]">Welcome back!</h1>
         <p className="text-xs leading-4 text-[#616161]">Access datasets, samples, and downloads.</p>
       </div>
 
-      {/* Continue with Google */}
+      {/* Continue with Google (full width touch target 48px height) */}
       <button
         type="button"
         onClick={handleGoogle}
-        className="flex h-12 items-center justify-center gap-2 rounded-lg border border-[#DDDDDD] bg-white px-8 text-sm font-medium text-[#181818] transition-colors hover:bg-[#fafafa]"
+        className="flex h-12 w-full items-center justify-center gap-2 rounded-lg border border-[#DDDDDD] bg-white px-8 text-sm font-medium text-[#181818] transition-colors hover:bg-[#fafafa]"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z" />
@@ -171,7 +175,7 @@ export function SignInForm() {
         </button>
 
         {errors.root && (
-          <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-600">
+          <div className="rounded-lg border border-[#DC2626]/30 bg-[#fee2e2] px-4 py-2.5 text-sm text-[#DC2626]">
             {errors.root.message}
           </div>
         )}
@@ -180,7 +184,7 @@ export function SignInForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex h-12 items-center justify-center gap-2 rounded-lg bg-[#2563EB] text-base font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#2563EB] text-base font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting && (
             <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">

@@ -34,7 +34,7 @@ export function SubmitRequirementsSection() {
       } else {
         alert('Failed to send request. Please try again later.')
       }
-    } catch (err) {
+    } catch {
       alert('An error occurred while sending your request.')
     } finally {
       setLoading(false)
@@ -44,10 +44,9 @@ export function SubmitRequirementsSection() {
   return (
     <section
       id="customize"
-      className="w-full scroll-mt-4 text-white"
+      className="w-full max-w-[100vw] overflow-x-hidden scroll-mt-4 text-white px-4 py-16 sm:px-6 sm:py-24"
       style={{
         background: 'radial-gradient(69.37% 177.6% at 50% 50%, #0F1427 57.35%, #36488D 100%)',
-        padding: '96px 24px',
       }}
     >
       <div className="mx-auto flex max-w-[1200px] flex-col items-center gap-12 lg:flex-row lg:items-start lg:justify-between lg:gap-16">
@@ -55,22 +54,22 @@ export function SubmitRequirementsSection() {
         {/* Left Side: Copy & Checks */}
         <div className="flex flex-1 flex-col pt-4 max-w-[520px]">
           <h2 
-            className="mb-8 font-public-sans text-4xl sm:text-5xl font-bold tracking-tight text-white leading-[1.15]"
+            className="mb-6 sm:mb-8 font-public-sans text-3xl sm:text-5xl font-bold tracking-tight text-white leading-[1.15]"
           >
-            Need data that<br />doesn't exist yet?
+            Need data that<br />doesn&apos;t exist yet?
           </h2>
 
-          <p className="mb-10 font-public-sans text-lg text-[#CBD5E1] leading-relaxed">
+          <p className="mb-8 sm:mb-10 font-public-sans text-base sm:text-lg text-[#CBD5E1] leading-relaxed">
             From niche dialects to complex multi-modal annotations, we build custom datasets to power your proprietary models.
           </p>
 
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-4 sm:gap-5">
             {FEATURES.map((feature, i) => (
               <div key={i} className="flex items-center gap-3.5">
                 <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-[#0F1427] shadow-sm">
                   <CheckIcon />
                 </div>
-                <span className="font-public-sans text-base sm:text-lg font-medium text-white/95">
+                <span className="font-public-sans text-sm sm:text-lg font-medium text-white/95">
                   {feature}
                 </span>
               </div>
@@ -79,8 +78,8 @@ export function SubmitRequirementsSection() {
         </div>
 
         {/* Right Side: Form Card */}
-        <div className="w-full max-w-[540px] rounded-3xl bg-white p-7 sm:p-9 shadow-2xl border border-slate-100">
-          <h3 className="mb-6 font-public-sans text-2xl font-bold tracking-tight text-[#181818]">
+        <div className="w-full max-w-[540px] rounded-3xl bg-white p-5 sm:p-9 shadow-2xl border border-slate-100">
+          <h3 className="mb-6 font-public-sans text-xl sm:text-2xl font-bold tracking-tight text-[#181818]">
             Submit your requirements
           </h3>
 

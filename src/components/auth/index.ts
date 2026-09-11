@@ -3,3 +3,4 @@
 export { AuthModal } from './auth-modal'
 export { AuthNavButtons } from './auth-nav-buttons'
 export { SignOutButton } from './sign-out-button'
+export { AuthTabSwitcher } from './auth-tab-switcher'

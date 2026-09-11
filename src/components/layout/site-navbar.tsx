@@ -383,15 +383,18 @@ export function SiteHeader({ initialUser }: { initialUser: SessionUser | null })
   const [supabase] = useState(() => createClient())
 
   const [activeMenu, setActiveMenu] = useState<string | null>(null)
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   // Sign-in/up happen through a *server-side* Supabase client (the Server
   // Action), so this browser client never observes them directly — the
   // server-rendered `initialUser` is what actually carries the update,
   // arriving for free whenever router.refresh() re-renders the layout.
-  useEffect(() => {
+  const [prevInitialUser, setPrevInitialUser] = useState(initialUser)
+  if (initialUser !== prevInitialUser) {
+    setPrevInitialUser(initialUser)
     setUser(initialUser)
-  }, [initialUser])
+  }
 
   // Fallback + live sync for auth changes this browser client DOES see
   // directly (OAuth redirect completion, another tab signing out, token
@@ -421,12 +424,13 @@ export function SiteHeader({ initialUser }: { initialUser: SessionUser | null })
   }
 
   return (
-    <header className="relative z-[90] flex h-16 items-center justify-between bg-white px-6 sm:px-10 lg:px-[120px] py-3 border-b border-[#F1F5F9]">
-      <Link href={'/'}>
+    <header className="relative z-[90] flex h-16 w-full max-w-[100vw] items-center justify-between bg-white px-4 sm:px-10 lg:px-[120px] py-3 border-b border-[#F1F5F9]">
+      <Link href={'/'} className="shrink-0 flex items-center">
         <BrandLogo />
       </Link>
 
-      <nav className="flex items-center gap-6">
+      {/* Desktop Navigation Links (< 768px hidden) */}
+      <nav className="hidden md:flex items-center gap-6">
         {NAV_LINKS.map((link) => (
           <div
             key={link.id}
@@ -460,7 +464,7 @@ export function SiteHeader({ initialUser }: { initialUser: SessionUser | null })
       {/* Mega menus — aligned with 120px padding left on wide screens */}
       {(activeMenu === 'browse' || activeMenu === 'resources') && (
         <div
-          className="fixed top-16 left-0 right-0 z-50 pointer-events-none"
+          className="fixed top-16 left-0 right-0 z-50 pointer-events-none hidden md:block"
           onMouseEnter={() => handleMouseEnter(activeMenu)}
           onMouseLeave={handleMouseLeave}
         >
@@ -474,61 +478,153 @@ export function SiteHeader({ initialUser }: { initialUser: SessionUser | null })
         </div>
       )}
 
-      {user ? (
-        <div 
-          className="relative"
-          onMouseEnter={() => handleMouseEnter('profile-menu')}
-          onMouseLeave={handleMouseLeave}
-        >
+      {/* Desktop Profile / CTA Button */}
+      <div className="hidden md:flex items-center">
+        {user ? (
+          <div 
+            className="relative"
+            onMouseEnter={() => handleMouseEnter('profile-menu')}
+            onMouseLeave={handleMouseLeave}
+          >
+            <button
+              type="button"
+              className="flex items-center gap-2 rounded-full bg-[#EBF1FF] py-1.5 pl-1.5 pr-4 transition-colors hover:bg-blue-100"
+            >
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0F1B3D] text-white font-semibold text-sm">
+                {user.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
+              </div>
+              <span className="font-public-sans text-sm font-semibold text-[#2563EB]">
+                My profile
+              </span>
+              <Chevron open={activeMenu === 'profile-menu'} />
+            </button>
+            
+            {activeMenu === 'profile-menu' && (
+              <div className="absolute right-0 mt-2 w-48 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <div className="py-1">
+                  <Link
+                    href="/profile"
+                    onClick={() => setActiveMenu(null)}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    My Profile
+                  </Link>
+                  <button
+                    onClick={async () => {
+                      await supabase.auth.signOut()
+                      setActiveMenu(null)
+                      router.refresh()
+                    }}
+                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
           <button
             type="button"
-            className="flex items-center gap-2 rounded-full bg-[#EBF1FF] py-1.5 pl-1.5 pr-4 transition-colors hover:bg-blue-100"
+            onClick={() => open('sign-up')}
+            className="rounded-lg bg-[#2563EB] px-7 py-2 font-public-sans text-base font-semibold text-white transition-colors hover:bg-[#1d4ed8]"
           >
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0F1B3D] text-white font-semibold text-sm">
-              {user.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
-            </div>
-            <span className="font-public-sans text-sm font-semibold text-[#2563EB]">
-              My profile
-            </span>
-            <Chevron open={activeMenu === 'profile-menu'} />
+            Get started
           </button>
-          
-          {activeMenu === 'profile-menu' && (
-            <div className="absolute right-0 mt-2 w-48 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-              <div className="py-1">
+        )}
+      </div>
+
+      {/* Mobile Top Header Right (< 768px): Hamburger Menu icon (☰) + compact Get Started button */}
+      <div className="flex items-center gap-2 md:hidden">
+        {user ? (
+          <Link
+            href="/profile"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0F1B3D] text-white font-semibold text-xs"
+            aria-label="My profile"
+          >
+            {user.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
+          </Link>
+        ) : (
+          <button
+            type="button"
+            onClick={() => open('sign-up')}
+            className="rounded-lg bg-[#2563EB] px-3.5 py-1.5 font-public-sans text-xs font-semibold text-white transition-colors hover:bg-[#1d4ed8] whitespace-nowrap"
+          >
+            Get Started
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={() => setMobileNavOpen((prev) => !prev)}
+          className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#CBD5E1] bg-white text-[#181818] transition-colors hover:bg-[#F8FAFC] text-xl leading-none select-none shrink-0"
+          aria-label="Toggle Navigation Menu"
+          aria-expanded={mobileNavOpen}
+        >
+          {mobileNavOpen ? '✕' : '☰'}
+        </button>
+      </div>
+
+      {/* Mobile Navigation Dropdown Drawer (< 768px) */}
+      {mobileNavOpen && (
+        <div className="absolute top-16 left-0 right-0 z-50 flex flex-col border-b border-[#E2E8F0] bg-white px-5 py-4 shadow-lg md:hidden">
+          <div className="flex flex-col gap-1">
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.id}
+                href={link.href}
+                onClick={() => setMobileNavOpen(false)}
+                className="flex items-center justify-between py-2.5 font-public-sans text-base font-medium text-[#181818] transition-colors hover:text-[#2563EB] border-b border-[#F8FAFC]"
+              >
+                {link.label}
+              </Link>
+            ))}
+            {user ? (
+              <div className="flex flex-col gap-2 pt-3">
                 <Link
                   href="/profile"
-                  onClick={() => setActiveMenu(null)}
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  onClick={() => setMobileNavOpen(false)}
+                  className="py-2 font-public-sans text-sm font-semibold text-[#2563EB]"
                 >
-                  My Profile
+                  My Profile ({user.email})
                 </Link>
                 <button
+                  type="button"
                   onClick={async () => {
-                    // Sign out on the browser client → onAuthStateChange fires
-                    // and drops the header to "Get started" instantly. Stay on
-                    // the current route (no redirect) and just refresh so
-                    // server-rendered bits (e.g. the gated price) re-hide.
                     await supabase.auth.signOut()
-                    setActiveMenu(null)
+                    setMobileNavOpen(false)
                     router.refresh()
                   }}
-                  className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                  className="text-left py-2 font-public-sans text-sm font-medium text-red-600"
                 >
                   Logout
                 </button>
               </div>
-            </div>
-          )}
+            ) : (
+              <div className="flex flex-col gap-2 pt-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileNavOpen(false)
+                    open('sign-in')
+                  }}
+                  className="flex h-11 w-full items-center justify-center rounded-lg border border-[#CBD5E1] bg-white text-sm font-semibold text-[#181818]"
+                >
+                  Log in
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileNavOpen(false)
+                    open('sign-up')
+                  }}
+                  className="flex h-11 w-full items-center justify-center rounded-lg bg-[#2563EB] text-sm font-semibold text-white hover:bg-[#1d4ed8]"
+                >
+                  Get started
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-      ) : (
-        <button
-          type="button"
-          onClick={() => open('sign-up')}
-          className="rounded-lg bg-[#2563EB] px-7 py-2 font-public-sans text-base font-semibold text-white transition-colors hover:bg-[#1d4ed8]"
-        >
-          Get started
-        </button>
       )}
     </header>
   )

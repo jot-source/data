@@ -65,34 +65,20 @@ export function FaqSection() {
 
   return (
     <section
-      className="w-full"
-      style={{ background: '#FFFFFF', paddingTop: 80, paddingBottom: 80 }}
+      className="w-full max-w-[100vw] overflow-x-hidden bg-white py-14 sm:py-20"
     >
-      <div className="mx-auto flex max-w-[1200px] flex-col justify-between gap-16 px-5 lg:flex-row lg:items-start lg:gap-[130px]">
+      <div className="mx-auto flex max-w-[1200px] flex-col justify-between gap-12 sm:gap-16 px-4 sm:px-5 lg:flex-row lg:items-start lg:gap-[130px]">
 
         {/* Left: heading, subtitle, CTA */}
-        <div className="flex w-full max-w-[472px] flex-col" style={{ gap: 32 }}>
-          <div className="flex flex-col" style={{ gap: 24 }}>
+        <div className="flex w-full max-w-[472px] flex-col gap-6 sm:gap-8">
+          <div className="flex flex-col gap-4 sm:gap-6">
             <h2
-              style={{
-                fontFamily: "'Public Sans', sans-serif",
-                fontWeight: 600,
-                fontSize: 48,
-                lineHeight: '64px',
-                color: '#181818',
-                maxWidth: 417,
-              }}
+              className="font-public-sans font-semibold text-3xl sm:text-4xl lg:text-[48px] lg:leading-[64px] text-[#181818] max-w-[417px]"
             >
               Questions before you buy
             </h2>
             <p
-              style={{
-                fontFamily: "'Public Sans', sans-serif",
-                fontWeight: 400,
-                fontSize: 20,
-                lineHeight: '28px',
-                color: '#616161',
-              }}
+              className="font-public-sans font-normal text-base sm:text-lg lg:text-[20px] lg:leading-[28px] text-[#616161]"
             >
               Licensing, quality, delivery the answers teams ask before signing.
             </p>

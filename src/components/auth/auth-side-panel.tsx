@@ -11,10 +11,10 @@ const BULLETS = [
 
 export function AuthSidePanel() {
   return (
-    <div className="relative hidden w-[333px] shrink-0 flex-col overflow-hidden bg-[#1A2552] px-[27px] pb-[62px] pt-[29px] md:flex">
-      {/* Decorative ellipses (#212C57) — exact Figma positions, clipped */}
-      <span className="pointer-events-none absolute left-[-21px] top-[461px] h-[201px] w-[201px] rounded-full bg-[#212C57]" />
-      <span className="pointer-events-none absolute left-[266px] top-[-8px] h-[101px] w-[101px] rounded-full bg-[#212C57]" />
+    <div className="relative flex w-full shrink-0 flex-col overflow-hidden bg-[#1A2552] px-6 pt-6 pb-11 md:w-[333px] md:px-[27px] md:pb-[62px] md:pt-[29px]">
+      {/* Decorative ellipses (#212C57) — mobile & desktop positions, clipped */}
+      <span className="pointer-events-none absolute -left-8 -bottom-8 h-28 w-28 rounded-full bg-[#212C57] md:left-[-21px] md:top-[461px] md:h-[201px] md:w-[201px]" />
+      <span className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-[#212C57] md:left-[266px] md:top-[-8px] md:h-[101px] md:w-[101px]" />
 
       {/* Logo (top) — 113×27 */}
       <div className="relative z-10">
@@ -28,13 +28,13 @@ export function AuthSidePanel() {
         />
       </div>
 
-      {/* Marketing copy (bottom) — Frame 1272629757, 19px gap */}
-      <div className="relative z-10 mt-auto flex w-[278px] flex-col gap-[19px]">
-        <h2 className="text-xl font-medium leading-7 text-white">
+      {/* Marketing copy / hero section */}
+      <div className="relative z-10 mt-5 flex w-full flex-col gap-2 md:mt-auto md:w-[278px] md:gap-[19px]">
+        <h2 className="text-lg font-medium leading-6 text-white md:text-xl md:leading-7">
           Find, evaluate, and manage{' '}
           <span className="text-[#92B2F5]">datasets</span> in one place.
         </h2>
-        <ul className="flex flex-col text-xs font-normal text-white">
+        <ul className="hidden flex-col text-xs font-normal text-white md:flex">
           {BULLETS.map(item => (
             <li key={item} className="flex items-center gap-1.5 py-0.5">
               <svg className="shrink-0 text-[#92B2F5]" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">

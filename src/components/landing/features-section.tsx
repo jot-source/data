@@ -22,19 +22,18 @@ const STATS = [
 export function FeaturesSection() {
   return (
     <section
-      className="w-full text-white"
+      className="w-full max-w-[100vw] overflow-x-hidden text-white"
       style={{
         background: '#09090A',
         borderTop: '1px solid #CBD5E1',
-        minHeight: 736,
-        paddingTop: 80,
-        paddingBottom: 80,
+        paddingTop: 60,
+        paddingBottom: 60,
       }}
     >
-      <div className="mx-auto flex max-w-[1200px] flex-col items-center px-5">
+      <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center px-4">
 
-        {/* Shield graphic — 366x200 cluster */}
-        <div className="relative mb-16 h-[200px] w-[367px] select-none">
+        {/* Shield graphic — responsive cluster on mobile */}
+        <div className="relative mb-12 sm:mb-16 h-[180px] sm:h-[200px] w-[367px] max-w-full select-none scale-[0.82] sm:scale-100 origin-center">
           {/* Left gold shield (key / access) — rotate -15deg */}
           <div
             className="absolute z-10 filter drop-shadow-[0_12px_24px_rgba(246,196,83,0.3)] transition-transform duration-300 hover:scale-105"

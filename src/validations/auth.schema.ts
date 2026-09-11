@@ -44,23 +44,23 @@ export const resetPasswordSchema = z.object({
   newPassword,
 })
 
-// Sign-up email verification: the 8-digit code Supabase emails after signUp.
+// Sign-up email verification: OTP code (6-digit verification on mobile)
 export const signupOtpSchema = z.object({
   email,
   token: z
     .string()
     .trim()
-    .regex(/^\d{8}$/, 'Enter the 8-digit code from your email'),
+    .regex(/^\d{6,8}$/, 'Enter the verification code from your email'),
 })
 
-// OTP-based password reset: the user supplies the email, the 8-digit recovery
+// OTP-based password reset: the user supplies the email, the recovery
 // code from the email, and their new password in a single step.
 export const verifyResetOtpSchema = z.object({
   email,
   token: z
     .string()
     .trim()
-    .regex(/^\d{8}$/, 'Enter the 8-digit code from your email'),
+    .regex(/^\d{6,8}$/, 'Enter the verification code from your email'),
   newPassword,
 })
 

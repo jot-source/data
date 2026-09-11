@@ -61,24 +61,25 @@ export function AuthModal() {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto px-4 py-8"
+      className="fixed inset-0 z-[100] flex min-h-full items-start justify-center overflow-y-auto overflow-x-hidden p-0 md:items-center md:px-4 md:py-8"
       role="dialog"
       aria-modal="true"
     >
-      {/* Backdrop — solid black at 65% opacity (per design) */}
+      {/* Backdrop — solid black at 65% opacity */}
       <button
         type="button"
         aria-label="Close"
-        onClick={close}
-        className="absolute inset-0 bg-black/65"
+        onClick={handleManualClose}
+        className="fixed inset-0 bg-black/65 transition-opacity"
       />
 
-      <div className="relative z-10 w-full max-w-[860px]">
+      <div className="relative z-10 flex min-h-screen w-full flex-col md:min-h-0 md:max-w-[860px]">
+        {/* Close Button — top right inside banner on mobile, floating outside card on desktop */}
         <button
           type="button"
           aria-label="Close"
-          onClick={close}
-          className="absolute -top-11 right-0 flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur transition-colors hover:bg-white/20"
+          onClick={handleManualClose}
+          className="absolute top-4 right-4 z-30 flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur transition-colors hover:bg-white/25 md:-top-11 md:right-0 md:h-9 md:w-9 md:bg-white/10 md:hover:bg-white/20"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="18" y1="6" x2="6" y2="18" />
@@ -86,15 +87,15 @@ export function AuthModal() {
           </svg>
         </button>
 
-        {/* Card — 860×600, 12px radius, square inner panels clipped by overflow */}
-        <div className="overflow-hidden rounded-xl bg-[#F8F8F8] shadow-2xl shadow-black/50">
-          <div className="flex min-h-[600px]">
-            <AuthSidePanel />
-            <div className="flex flex-1 flex-col justify-center bg-[#F8F8F8] px-[60px] py-10 text-[#111111]">
-              {view === 'sign-in' && <SignInForm />}
-              {view === 'sign-up' && <SignUpForm />}
-              {view === 'forgot-password' && <ForgotPasswordForm />}
-            </div>
+        {/* Card: Mobile vertical stacked layout with navy hero at top, Desktop 860x600 rounded-xl side-by-side */}
+        <div className="flex flex-1 flex-col overflow-hidden bg-[#1A2552] shadow-2xl shadow-black/50 md:min-h-[600px] md:flex-row md:rounded-xl md:bg-[#F8F8F8]">
+          <AuthSidePanel />
+          
+          {/* White form card section: rounded-t-[20px] and margin-top: -20px overlapping navy banner on mobile */}
+          <div className="auth-mobile-card relative z-10 -mt-[20px] flex flex-1 flex-col justify-center rounded-t-[20px] bg-white px-5 py-7 shadow-[0_-4px_24px_rgba(0,0,0,0.08)] sm:px-8 md:mt-0 md:rounded-none md:bg-[#F8F8F8] md:px-[60px] md:py-10 md:shadow-none text-[#111111]">
+            {view === 'sign-in' && <SignInForm />}
+            {view === 'sign-up' && <SignUpForm />}
+            {view === 'forgot-password' && <ForgotPasswordForm />}
           </div>
         </div>
       </div>
