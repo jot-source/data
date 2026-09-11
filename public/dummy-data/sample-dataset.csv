@@ -1,0 +1,11 @@
+id,text,intent,sentiment,language,confidence_score
+1,"How do I reset my account password?","account_reset","neutral","en-US",0.98
+2,"Hola, quiero cancelar mi suscripción.","cancel_subscription","negative","es-ES",0.95
+3,"What are your business operating hours?","inquire_hours","neutral","en-US",0.99
+4,"Je voudrais modifier mon adresse de livraison.","update_address","neutral","fr-FR",0.94
+5,"I received a damaged item in my shipment.","damaged_item","negative","en-US",0.97
+6,"Kann ich meine Bestellung stornieren?","cancel_order","neutral","de-DE",0.96
+7,"Great service! Highly recommended.","feedback_positive","positive","en-US",0.99
+8,"Where is my order tracking number?","order_tracking","neutral","en-US",0.93
+9,"Need help setting up 2FA security.","security_setup","neutral","en-US",0.98
+10,"The app keeps crashing on login page.","bug_report","negative","en-US",0.96

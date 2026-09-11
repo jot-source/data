@@ -3,12 +3,8 @@ import clsx from 'clsx'
 
 const TABS = [
   'Account info',
-  'Your orders',
-  'Billing & Invoices',
-  'Custom requests',
-  'Quotations',
-  'Saved datasets',
-  'Security'
+  'My orders',
+  'Wishlist',
 ]
 
 interface ProfileSidebarProps {

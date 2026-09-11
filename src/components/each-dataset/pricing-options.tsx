@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { useDatasetActions } from '@/hooks/use-dataset-actions'
 import type { DatasetDetail } from '@/types/dataset'
 
@@ -13,10 +14,99 @@ export function PricingOptions({
   owned?: boolean
 }) {
   const price = dataset.price ? Number(dataset.price) : 0
-  const hasSample = Boolean(dataset.sampleUrl)
+  const sampleDownloadUrl = dataset.sampleUrl || '/dummy-data/sample-dataset.csv'
+  const hasSample = Boolean(sampleDownloadUrl)
 
-  const { promptSignIn, downloadSample, downloadDataset, buy, buying, buyError } =
+  const [sampleStatus, setSampleStatus] = useState<'idle' | 'preparing' | 'failed'>('idle')
+  const [isSlow, setIsSlow] = useState(false)
+  const [showErrorModal, setShowErrorModal] = useState(false)
+  const [clickHistory, setClickHistory] = useState<number[]>([])
+  const [cooldownSeconds, setCooldownSeconds] = useState(0)
+
+  const { promptSignIn, downloadDataset, buy, buying, buyError } =
     useDatasetActions(dataset.id, isLoggedIn)
+
+  // Countdown timer for rate-limit cooldown
+  useEffect(() => {
+    if (cooldownSeconds <= 0) return
+    const timer = setInterval(() => {
+      setCooldownSeconds((prev) => (prev > 1 ? prev - 1 : 0))
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [cooldownSeconds])
+
+  const handleDownloadSample = async () => {
+    if (!isLoggedIn) {
+      promptSignIn()
+      return
+    }
+    if (!hasSample) return
+    if (cooldownSeconds > 0) return
+
+    const now = Date.now()
+    // Filter clicks within the last 60 seconds
+    const recentClicks = clickHistory.filter((timestamp) => now - timestamp < 60000)
+
+    if (recentClicks.length >= 5) {
+      setCooldownSeconds(60)
+      return
+    }
+
+    const updatedClicks = [...recentClicks, now]
+    setClickHistory(updatedClicks)
+
+    if (updatedClicks.length >= 5) {
+      setCooldownSeconds(60)
+    }
+
+    setSampleStatus('preparing')
+    setIsSlow(false)
+
+    const slowTimer = setTimeout(() => {
+      setIsSlow(true)
+    }, 3000)
+
+    try {
+      let response = await fetch(`/api/v1/datasets/${dataset.id}/sample`)
+
+      if (response.status === 401) {
+        promptSignIn()
+        setSampleStatus('idle')
+        return
+      }
+
+      if (response.status === 429) {
+        setCooldownSeconds(60)
+        setSampleStatus('idle')
+        return
+      }
+
+      // Fallback to local dummy sample data if dataset has no backend sample URL yet
+      if (!response.ok) {
+        response = await fetch('/dummy-data/sample-dataset.csv')
+      }
+
+      if (!response.ok) {
+        throw new Error(`SRV-${response.status}`)
+      }
+
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `${dataset.title || dataset.slug || 'dataset'}-sample`
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      window.URL.revokeObjectURL(url)
+      setSampleStatus('idle')
+    } catch (error) {
+      setSampleStatus('failed')
+      setShowErrorModal(true)
+    } finally {
+      clearTimeout(slowTimer)
+    }
+  }
 
   return (
     <div id="samples" className="scroll-mt-32 flex flex-col gap-6">
@@ -47,19 +137,117 @@ export function PricingOptions({
             </ul>
           </div>
           {/* Right: Price + CTA */}
-          <div className="flex flex-col items-start gap-4">
+          <div className="flex flex-col items-start gap-4 min-w-[240px]">
             <span className="text-3xl font-bold text-[#181818]">Free</span>
             <p className="text-sm text-[#616161]">Ideal for previewing the dataset and testing basic pipeline compatibility.</p>
-            <button
-              onClick={downloadSample}
-              disabled={!hasSample}
-              className="rounded-lg bg-[#22C55E] px-8 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#16A34A] disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {hasSample ? 'Download sample' : 'No sample available'}
-            </button>
+            
+            <div className="flex flex-col items-start gap-2 w-full">
+              <button
+                onClick={handleDownloadSample}
+                disabled={!hasSample || sampleStatus === 'preparing' || cooldownSeconds > 0}
+                className={`w-full md:w-auto flex items-center justify-center gap-2 rounded-lg px-8 py-2.5 text-sm font-semibold text-white transition-all active:scale-[0.99] disabled:cursor-not-allowed ${
+                  cooldownSeconds > 0
+                    ? 'bg-[#94A3B8] opacity-90'
+                    : 'bg-[#2563EB] hover:bg-[#1D4FD7] disabled:opacity-75'
+                }`}
+              >
+                {cooldownSeconds > 0 ? (
+                  <>
+                    <ClockIcon />
+                    <span>Please wait ({cooldownSeconds}s)</span>
+                  </>
+                ) : sampleStatus === 'preparing' ? (
+                  <>
+                    <SpinnerIcon />
+                    <span>Preparing...</span>
+                  </>
+                ) : (
+                  <>
+                    <DownloadIconWhite />
+                    <span>{hasSample ? 'Download sample' : 'No sample available'}</span>
+                  </>
+                )}
+              </button>
+
+              {/* Cooldown limit notice */}
+              {cooldownSeconds > 0 && (
+                <p className="text-xs text-[#DC2626] flex items-center gap-1.5 font-medium animate-in fade-in duration-150">
+                  <WarningIcon />
+                  <span>Download limit reached. Try again in {cooldownSeconds}s.</span>
+                </p>
+              )}
+
+              {/* Help text when downloading takes time */}
+              {sampleStatus === 'preparing' && isSlow && cooldownSeconds === 0 && (
+                <p className="text-xs text-[#616161] flex items-center gap-1.5 animate-in fade-in duration-150">
+                  <ClockIcon />
+                  <span>This may take a moment</span>
+                </p>
+              )}
+
+              {/* Error text if download failed */}
+              {sampleStatus === 'failed' && cooldownSeconds === 0 && (
+                <p className="text-xs text-[#DC2626] flex items-center gap-1.5 font-medium animate-in fade-in duration-150">
+                  <WarningIcon />
+                  <span>Download failed retry again</span>
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Error Popup Modal */}
+      {showErrorModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-xs">
+          <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-xl border border-[#CBD5E1] flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200">
+            <button
+              onClick={() => setShowErrorModal(false)}
+              className="absolute right-4 top-4 text-[#616161] hover:text-[#181818] transition-colors p-1"
+              aria-label="Close"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+
+            <div className="h-10 w-10 rounded-xl bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center font-bold text-lg">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <h3 className="text-lg font-semibold text-[#181818]">Something went wrong on our end</h3>
+              <p className="text-sm text-[#616161]">We couldn't process your download.</p>
+              <p className="text-xs text-[#888888] flex items-center gap-1 mt-1">
+                <ClockIcon /> Error code SRV-503
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 pt-2">
+              <a
+                href="mailto:support@macgence.com"
+                className="flex-1 rounded-xl bg-[#F1F5F9] px-4 py-2.5 text-center text-sm font-semibold text-[#181818] hover:bg-[#E2E8F0] transition-colors"
+              >
+                Contact support
+              </a>
+              <button
+                onClick={() => {
+                  setShowErrorModal(false)
+                  handleDownloadSample()
+                }}
+                className="flex-1 rounded-xl bg-[#2563EB] px-4 py-2.5 text-center text-sm font-semibold text-white hover:bg-[#1D4FD7] transition-colors"
+              >
+                Retry
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Enterprise Test Packet Card */}
       <div className="rounded-2xl border border-[#CBD5E1] bg-white p-6 md:p-8">
@@ -115,6 +303,41 @@ export function PricingOptions({
   )
 }
 
+function DownloadIconWhite() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M8 2v8m0 0l-3-3m3 3l3-3M3 12h10"></path>
+    </svg>
+  )
+}
+
+function SpinnerIcon() {
+  return (
+    <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+  )
+}
+
+function ClockIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#616161" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="8" cy="8" r="6"></circle>
+      <path d="M8 4.5V8l2.5 1.5"></path>
+    </svg>
+  )
+}
+
+function WarningIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#DC2626" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M8 2L1.5 13h13L8 2z"></path>
+      <path d="M8 6v3.5M8 11.5h.01"></path>
+    </svg>
+  )
+}
+
 function DownloadIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#616161" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -158,3 +381,4 @@ function FileIcon() {
     </svg>
   )
 }
+
