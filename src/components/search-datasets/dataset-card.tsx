@@ -184,6 +184,8 @@ export function DatasetCard({ dataset, isLoggedIn = false, isSaved = false }: Da
           initialSaved={isSaved}
           isLoggedIn={isLoggedIn}
           variant="light"
+          label="Add to wishlist"
+          savedLabel="Wishlisted"
         />
         <Link
           href={`/datasets/${slug}`}

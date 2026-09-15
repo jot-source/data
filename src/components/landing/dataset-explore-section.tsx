@@ -55,8 +55,8 @@ export function DatasetExploreSection() {
         </h2>
 
         <div className="rounded-xl sm:rounded-3xl bg-[#283350] p-2.5 sm:p-4 md:p-8">
-          {/* Search bar — search button nested on right corner */}
-          <form onSubmit={handleSearch} className="mb-3 sm:mb-6 relative flex items-center rounded-md sm:rounded-xl bg-white p-1 sm:p-1.5 pl-3 sm:pl-4 shadow-sm border border-transparent focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-[#2563EB]/20 transition-all">
+          {/* Search bar — magnifying glass on mobile per Figma, button on desktop */}
+          <form onSubmit={handleSearch} className="mb-3 sm:mb-6 relative flex items-center rounded-lg sm:rounded-xl bg-white p-1 sm:p-1.5 pl-3 sm:pl-4 shadow-sm border border-transparent focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-[#2563EB]/20 transition-all">
             <input
               type="text"
               value={draftSearch}
@@ -64,9 +64,21 @@ export function DatasetExploreSection() {
               placeholder="Eg: search health care datasets"
               className="flex-1 min-w-0 bg-transparent pr-2 sm:pr-3 py-1.5 sm:py-2 text-xs sm:text-sm text-[#181818] outline-none placeholder:text-[#616161] sm:placeholder:text-[#8C8C8C]"
             />
+            {/* Mobile Magnifying Glass Icon */}
             <button
               type="submit"
-              className="shrink-0 rounded-md sm:rounded-lg bg-[#2563EB] px-3 sm:px-6 py-1.5 sm:py-2.5 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-[#1D4ED8] active:scale-95"
+              className="flex sm:hidden h-8 w-8 items-center justify-center text-[#8C8C8C] hover:text-[#2563EB]"
+              aria-label="Search"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </button>
+            {/* Desktop Search Button */}
+            <button
+              type="submit"
+              className="hidden sm:inline-flex shrink-0 rounded-md sm:rounded-lg bg-[#2563EB] px-3 sm:px-6 py-1.5 sm:py-2.5 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-[#1D4ED8] active:scale-95"
             >
               Search
             </button>
