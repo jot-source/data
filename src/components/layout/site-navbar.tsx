@@ -577,46 +577,48 @@ export function SiteHeader({ initialUser }: { initialUser: SessionUser | null })
         )}
       </div>
 
-      {/* Mobile Top Header Right (< 768px): Hamburger Menu icon (☰) + compact Get Started / Cart button */}
-      <div className="flex items-center gap-2 md:hidden">
+      {/* Mobile Top Header Right (< 768px): Cart button + Profile/Get Started + Hamburger Menu icon (☰) */}
+      <div className="flex items-center gap-2.5 md:hidden">
+        {/* Mobile Cart Button (40px x 40px - Figma spec) */}
+        <Link
+          href="/cart"
+          className="relative flex h-10 w-10 items-center justify-center rounded-[8px] border border-[#CBD5E1] bg-[#EFF6FF] text-[#616161] hover:bg-[#DBEAFE] hover:text-[#1E293B] transition-colors shrink-0"
+          aria-label="Cart"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="9" cy="21" r="1" />
+            <circle cx="20" cy="21" r="1" />
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+          </svg>
+          {cartCount > 0 && (
+            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#2563EB] text-white text-[10px] font-bold ring-1 ring-white shadow-sm">
+              {cartCount}
+            </span>
+          )}
+        </Link>
+
         {user ? (
-          <div className="flex items-center gap-2">
-            <Link
-              href="/cart"
-              className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-[#2563EB] text-white shrink-0"
-              aria-label="Cart"
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <circle cx="9" cy="21" r="1" />
-                <circle cx="20" cy="21" r="1" />
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-              </svg>
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#2563EB] text-white text-[10px] font-bold ring-1 ring-white">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
-            <Link
-              href="/profile"
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0F1B3D] text-white font-semibold text-xs"
-              aria-label="My profile"
-            >
-              {user.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
-            </Link>
-          </div>
+          <Link
+            href="/profile"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0F1B3D] text-white font-semibold text-xs shrink-0"
+            aria-label="My profile"
+          >
+            {user.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
+          </Link>
         ) : (
           <button
             type="button"
             onClick={() => open('sign-up')}
-            className="rounded-lg bg-[#2563EB] px-3.5 py-1.5 font-public-sans text-xs font-semibold text-white transition-colors hover:bg-[#1d4ed8] whitespace-nowrap"
+            className="rounded-lg bg-[#2563EB] px-3.5 py-2 font-public-sans text-xs font-semibold text-white transition-colors hover:bg-[#1d4ed8] whitespace-nowrap"
           >
             Get Started
           </button>
@@ -624,7 +626,7 @@ export function SiteHeader({ initialUser }: { initialUser: SessionUser | null })
         <button
           type="button"
           onClick={() => setMobileNavOpen((prev) => !prev)}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#CBD5E1] bg-white text-[#181818] transition-colors hover:bg-[#F8FAFC] text-xl leading-none select-none shrink-0"
+          className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#CBD5E1] bg-white text-[#181818] transition-colors hover:bg-[#F8FAFC] text-xl leading-none select-none shrink-0"
           aria-label="Toggle Navigation Menu"
           aria-expanded={mobileNavOpen}
         >

@@ -22,12 +22,12 @@ export function ProviderCtaSection() {
   const openAuth = useAuthModal((s) => s.open)
 
   return (
-    <section className="w-full max-w-[100vw] overflow-x-hidden bg-white py-14 md:py-24">
+    <section className="w-full max-w-[100vw] overflow-x-hidden bg-white py-8 md:py-24">
       <div className="mx-auto w-full max-w-[1200px] px-4 sm:px-5">
 
         {/* Banner */}
         <div
-          className="relative overflow-hidden rounded-2xl md:rounded-[20px] p-6 sm:p-10 lg:p-12 min-h-[260px] md:min-h-[304px] flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8"
+          className="relative overflow-hidden rounded-xl md:rounded-[20px] p-4 sm:p-10 lg:p-12 min-h-[170px] md:min-h-[304px] flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 sm:gap-8"
           style={{
             background:
               'linear-gradient(90deg, #2749B8 0%, #3A6BF0 50%, #5C8CF7 100%)',
@@ -57,20 +57,20 @@ export function ProviderCtaSection() {
           />
 
           {/* Content */}
-          <div className="relative z-10 flex w-full max-w-[680px] flex-col items-start gap-4 sm:gap-5">
+          <div className="relative z-10 flex w-full max-w-[680px] flex-col items-start gap-2.5 sm:gap-5">
             {/* Tag */}
-            <div className="inline-flex items-center justify-center rounded-full bg-white/[0.14] px-5 py-1.5 font-public-sans text-sm sm:text-base font-semibold text-[#DCE6FF]">
+            <div className="inline-flex items-center justify-center rounded-full bg-white/[0.14] px-3 sm:px-5 py-0.5 sm:py-1.5 font-public-sans text-[12px] sm:text-base font-semibold text-[#DCE6FF]">
               Data provider
             </div>
 
-            <div className="flex flex-col gap-2 sm:gap-3">
+            <div className="flex flex-col gap-1.5 sm:gap-3">
               {/* Title */}
-              <h2 className="font-public-sans text-2xl sm:text-4xl lg:text-5xl font-semibold leading-tight text-white">
+              <h2 className="font-public-sans text-[16px] sm:text-4xl lg:text-5xl font-medium sm:font-semibold leading-tight text-white">
                 Become a data provider
               </h2>
 
               {/* Description */}
-              <p className="font-public-sans text-sm sm:text-lg lg:text-xl font-medium leading-relaxed text-[#DCE6FF] max-w-[640px]">
+              <p className="font-public-sans text-[10px] sm:text-lg lg:text-xl font-normal sm:font-medium leading-relaxed text-[#DCE6FF] max-w-[640px]">
                 List your datasets on our platform, reach thousands of teams
                 searching for data, and earn from every download.
               </p>
@@ -80,7 +80,7 @@ export function ProviderCtaSection() {
           {/* Button */}
           <button
             onClick={() => openAuth('sign-up')}
-            className="relative z-10 shrink-0 inline-flex h-12 sm:h-14 w-full sm:w-auto min-w-[148px] items-center justify-center rounded-xl bg-[#E9F0FD] px-8 font-public-sans text-base font-semibold text-[#2565EB] shadow-md transition-transform hover:scale-105 active:scale-95 focus:outline-none"
+            className="relative z-10 shrink-0 inline-flex h-11 sm:h-14 w-[120px] sm:w-auto sm:min-w-[148px] items-center justify-center rounded-lg sm:rounded-xl bg-[#F1F5F9] sm:bg-[#E9F0FD] px-4 sm:px-8 font-public-sans text-xs sm:text-base font-semibold text-[#181818] sm:text-[#2565EB] shadow-md transition-transform hover:scale-105 active:scale-95 focus:outline-none"
           >
             Join now
           </button>

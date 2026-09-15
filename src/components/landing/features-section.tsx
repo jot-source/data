@@ -33,7 +33,7 @@ export function FeaturesSection() {
       <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center px-4">
 
         {/* Shield graphic — responsive cluster on mobile */}
-        <div className="relative mb-12 sm:mb-16 h-[180px] sm:h-[200px] w-[367px] max-w-full select-none scale-[0.82] sm:scale-100 origin-center">
+        <div className="relative mb-6 sm:mb-16 h-[100px] sm:h-[200px] w-[367px] max-w-full select-none scale-[0.5] sm:scale-100 origin-center">
           {/* Left gold shield (key / access) — rotate -15deg */}
           <div
             className="absolute z-10 filter drop-shadow-[0_12px_24px_rgba(246,196,83,0.3)] transition-transform duration-300 hover:scale-105"
@@ -60,83 +60,34 @@ export function FeaturesSection() {
         </div>
 
         {/* Heading */}
-        <h2
-          className="text-center"
-          style={{
-            fontFamily: "'Public Sans', sans-serif",
-            fontWeight: 700,
-            fontSize: 32,
-            lineHeight: '48px',
-            color: '#FFFFFF',
-            marginBottom: 12,
-            maxWidth: 854,
-          }}
-        >
+        <h2 className="text-center font-public-sans text-xs sm:text-3xl font-medium sm:font-bold text-white mb-2 sm:mb-3 max-w-[854px] leading-4 sm:leading-[48px]">
           Human-Verified, Scalable &amp; Secure Datasets
         </h2>
-        <p
-          className="text-center"
-          style={{
-            fontFamily: "'Public Sans', sans-serif",
-            fontWeight: 400,
-            fontSize: 16,
-            lineHeight: '24px',
-            color: '#FFFFFF',
-            marginBottom: 64,
-            maxWidth: 854,
-          }}
-        >
+        <p className="text-center font-public-sans text-[8px] sm:text-base font-normal text-[#CCCCCC] sm:text-white mb-6 sm:mb-16 max-w-[854px] leading-3 sm:leading-6 px-2">
           Every dataset is reviewed by domain experts, encrypted end to end, and access controlled from day one
         </p>
 
-        {/* Stat cards */}
-        <div className="grid w-full grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Stat cards — 2x2 on mobile per Figma */}
+        <div className="grid w-full grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4 sm:gap-5">
           {STATS.map((s) => (
             <div
               key={s.label}
-              className="flex flex-col justify-center"
+              className="flex flex-col justify-center rounded-lg sm:rounded-xl bg-[#16161D] p-3 sm:p-5 min-h-[100px] sm:min-h-[164px] border-b-[6px] sm:border-b-0 sm:border-l-[6px]"
               style={{
-                minHeight: 164,
-                background: '#16161D',
-                borderLeft: `6px solid ${s.color}`,
-                borderRadius: 12,
-                paddingLeft: 18,
-                paddingRight: 16,
-                gap: 8,
+                borderColor: s.color,
               }}
             >
               <div
-                style={{
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontWeight: 800,
-                  fontSize: 40,
-                  lineHeight: '48px',
-                  color: s.color,
-                }}
+                className="font-public-sans text-sm sm:text-4xl font-medium sm:font-extrabold leading-5 sm:leading-[48px]"
+                style={{ color: s.color }}
               >
                 {s.value}
               </div>
-              <div className="flex flex-col" style={{ gap: 4 }}>
-                <div
-                  style={{
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontWeight: 400,
-                    fontSize: 14,
-                    lineHeight: '20px',
-                    color: '#CCCCCC',
-                  }}
-                >
+              <div className="flex flex-col gap-0.5 sm:gap-1 mt-1 sm:mt-2">
+                <div className="font-public-sans text-[10px] sm:text-sm font-normal text-[#CCCCCC] uppercase tracking-wide">
                   {s.label}
                 </div>
-                <div
-                  style={{
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 600,
-                    fontSize: 14,
-                    lineHeight: '20px',
-                    color: '#FFFFFF',
-                  }}
-                >
+                <div className="font-public-sans text-[8px] sm:text-sm font-normal text-white">
                   {s.sub}
                 </div>
               </div>

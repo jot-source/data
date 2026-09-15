@@ -71,19 +71,85 @@ export function HowItWorksSection() {
   }, [isInView, isHovered])
 
   return (
-    <section id="how-it-works" ref={sectionRef} className="w-full max-w-[100vw] overflow-x-hidden scroll-mt-4 bg-[#F5F8FF] py-14 sm:py-24 border-t border-[#CBD5E1]">
+    <section id="how-it-works" ref={sectionRef} className="w-full max-w-[100vw] overflow-x-hidden scroll-mt-4 bg-white sm:bg-[#F5F8FF] py-8 sm:py-24 border-t border-[#CBD5E1]">
       <div className="mx-auto max-w-[1200px] px-4 sm:px-5 flex flex-col items-center">
 
-        <h2 className="mb-4 text-center text-2xl sm:text-3xl font-bold tracking-tight text-[#181818] md:text-4xl">
+        {/* Desktop Header */}
+        <h2 className="hidden sm:block mb-4 text-center text-2xl sm:text-3xl font-bold tracking-tight text-[#181818] md:text-4xl">
           From discovery to delivery in four steps
         </h2>
-        <p className="mb-14 sm:mb-20 text-center text-sm sm:text-base text-[#616161] max-w-2xl">
+        <p className="hidden sm:block mb-14 sm:mb-20 text-center text-sm sm:text-base text-[#616161] max-w-2xl">
           A simple, transparent path from finding the right data to getting it in your hands.
         </p>
 
-        {/* Timeline visualization */}
+        {/* Mobile View (< sm): Vertical Stepper per Figma */}
+        <div className="flex w-full flex-col sm:hidden">
+          <h2 className="mb-6 text-left font-public-sans text-[18px] font-semibold leading-tight text-[#181818]">
+            How it works
+          </h2>
+
+          <div className="flex flex-col">
+            {STEPS.map((step, idx) => {
+              const isActive = activeStep === step.id
+              const isPast = activeStep > step.id
+              const isLast = idx === STEPS.length - 1
+
+              return (
+                <div 
+                  key={step.id} 
+                  className="flex items-start gap-4 cursor-pointer"
+                  onClick={() => setActiveStep(step.id)}
+                >
+                  {/* Left: Step Circle + Vertical Dashed Connector */}
+                  <div className="flex flex-col items-center">
+                    <div
+                      className={cn(
+                        "flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-all duration-300",
+                        isActive
+                          ? "bg-[#2563EB] text-white shadow-md shadow-blue-500/20"
+                          : isPast
+                            ? "bg-white border border-[#2563EB] text-[#2563EB]"
+                            : "border border-[#CBD5E1] bg-white text-[#8C8C8C]"
+                      )}
+                    >
+                      <span className="scale-75">{step.icon}</span>
+                    </div>
+
+                    {!isLast && (
+                      <div
+                        className={cn(
+                          "w-0 flex-1 border-l-2 border-dashed my-1 min-h-[44px]",
+                          isActive || isPast
+                            ? "border-[#2563EB]"
+                            : "border-[#C9C9C9]"
+                        )}
+                      />
+                    )}
+                  </div>
+
+                  {/* Right: Title & Description */}
+                  <div className={cn("flex flex-col pt-1.5 pb-6", isLast && "pb-0")}>
+                    <h3
+                      className={cn(
+                        "font-public-sans text-[12px] font-semibold leading-4 transition-colors",
+                        isActive ? "text-[#2563EB]" : "text-[#181818]"
+                      )}
+                    >
+                      {step.title}
+                    </h3>
+                    <p className="mt-1 font-public-sans text-[10px] leading-4 text-[#616161]">
+                      {step.description}
+                    </p>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Desktop View (>= sm): Horizontal Timeline visualization */}
         <div
-          className="relative w-full max-w-3xl mb-14 sm:mb-16"
+          className="hidden sm:block relative w-full max-w-3xl mb-14 sm:mb-16"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
@@ -131,9 +197,9 @@ export function HowItWorksSection() {
           </div>
         </div>
 
-        {/* Active Step Details Card */}
+        {/* Desktop View: Active Step Details Card */}
         <div
-          className="w-full max-w-3xl rounded-3xl border border-[#CBD5E1] bg-white p-5 sm:p-8 md:p-10 transition-all duration-300"
+          className="hidden sm:block w-full max-w-3xl rounded-3xl border border-[#CBD5E1] bg-white p-5 sm:p-8 md:p-10 transition-all duration-300"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
