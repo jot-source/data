@@ -1,7 +1,10 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
+import { useAuthModal } from '@/stores/auth-modal.store'
 
 /*
   FAQ section — Figma spec:
@@ -57,7 +60,33 @@ const FAQS = [
 ]
 
 export function FaqSection() {
+  const router = useRouter()
+  const openAuthModal = useAuthModal((s) => s.open)
+  const [supabase] = useState(() => createClient())
+  const [user, setUser] = useState<unknown>(null)
   const [openId, setOpenId] = useState<number | null>(1)
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) setUser(user)
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [supabase])
+
+  const handleTalkToTeamClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    const element = document.getElementById('customize')
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      router.push('/#customize')
+    }
+  }
 
   const toggle = (id: number) => {
     setOpenId((prev) => (prev === id ? null : id))
@@ -85,9 +114,10 @@ export function FaqSection() {
           </div>
 
           <div>
-            <Link
+            <a
               href="/meet"
-              className="inline-flex items-center justify-center transition-colors hover:bg-[#1D4ED8] focus:outline-none"
+              onClick={handleTalkToTeamClick}
+              className="inline-flex items-center justify-center transition-colors hover:bg-[#1D4ED8] focus:outline-none cursor-pointer"
               style={{
                 width: 172,
                 height: 48,
@@ -102,7 +132,7 @@ export function FaqSection() {
               }}
             >
               Talk to the Team
-            </Link>
+            </a>
           </div>
         </div>
 

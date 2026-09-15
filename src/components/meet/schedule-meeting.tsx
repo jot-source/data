@@ -91,6 +91,7 @@ export function ScheduleMeeting() {
     email: '',
     organization: '',
     role: '',
+    budgetRange: 'Under $15k',
     notes: '',
   })
   const [submitting, setSubmitting] = useState(false)
@@ -179,6 +180,7 @@ export function ScheduleMeeting() {
           email: formData.email,
           organization: formData.organization,
           role: formData.role,
+          budgetRange: formData.budgetRange,
           notes: formData.notes,
         }),
       })
@@ -499,17 +501,19 @@ export function ScheduleMeeting() {
                   </div>
 
                   <div>
-                    <label htmlFor="role" className="block text-xs font-semibold text-[#475569] mb-1.5">
-                      Your Role
+                    <label htmlFor="budgetRange" className="block text-xs font-semibold text-[#475569] mb-1.5">
+                      Estimated Project Budget *
                     </label>
-                    <input
-                      id="role"
-                      type="text"
-                      placeholder="AI Engineer / Product Lead"
-                      value={formData.role}
-                      onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                      className="w-full h-11 px-4 rounded-xl border border-[#CBD5E1] text-sm text-[#181818] outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB]"
-                    />
+                    <select
+                      id="budgetRange"
+                      value={formData.budgetRange}
+                      onChange={(e) => setFormData({ ...formData, budgetRange: e.target.value })}
+                      className="w-full h-11 px-4 rounded-xl border border-[#CBD5E1] text-sm text-[#181818] bg-white outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB]"
+                    >
+                      <option value="Under $15k">Under $15k</option>
+                      <option value="$15k - $50k">$15k - $50k</option>
+                      <option value="$50k+">$50k+ (High Budget / Enterprise)</option>
+                    </select>
                   </div>
                 </div>
 
@@ -616,7 +620,7 @@ export function ScheduleMeeting() {
                   onClick={() => {
                     setStep(1)
                     setSelectedTimeSlot('')
-                    setFormData({ name: '', email: '', organization: '', role: '', notes: '' })
+                    setFormData({ name: '', email: '', organization: '', role: '', budgetRange: 'Under $15k', notes: '' })
                   }}
                   className="h-11 px-6 rounded-xl bg-[#2563EB] text-xs font-semibold text-white hover:bg-[#1D4FD7] shadow-sm transition-colors"
                 >

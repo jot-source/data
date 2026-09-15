@@ -48,16 +48,16 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${publicSans.variable} ${spaceGrotesk.variable} antialiased max-w-[100vw] overflow-x-hidden`}
+      className={`${geistSans.variable} ${geistMono.variable} ${publicSans.variable} ${spaceGrotesk.variable} antialiased max-w-[100vw] overflow-x-clip`}
       data-scroll-behavior="smooth"
     >
       <body
-        className="min-h-screen flex flex-col bg-[#0a0e1a] text-white font-[family-name:var(--font-geist-sans)] max-w-[100vw] overflow-x-hidden"
+        className="min-h-screen flex flex-col bg-[#0a0e1a] text-white font-[family-name:var(--font-geist-sans)] max-w-[100vw] overflow-x-clip"
         suppressHydrationWarning
       >
         <Providers>
           <SiteHeader initialUser={sessionUser} />
-          <div className="flex-1 flex flex-col w-full max-w-[100vw] overflow-x-hidden">
+          <div className="flex-1 flex flex-col w-full max-w-[100vw]">
             {children}
           </div>
           <SiteFooter />

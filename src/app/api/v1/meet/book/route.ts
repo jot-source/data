@@ -8,7 +8,7 @@ import { createBooking, getBookingsForDate } from '@/services/booking.service'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { date, timeSlot, name, email, organization, role, notes } = body
+    const { date, timeSlot, name, email, organization, role, notes, budgetRange } = body
 
     if (!date || !timeSlot || !name || !email) {
       return NextResponse.json(
@@ -36,6 +36,7 @@ export async function POST(request: NextRequest) {
       organization,
       role,
       notes,
+      budgetRange,
     })
 
     return NextResponse.json({

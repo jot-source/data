@@ -27,7 +27,7 @@ export function ProviderCtaSection() {
 
         {/* Banner */}
         <div
-          className="relative overflow-hidden rounded-2xl md:rounded-[20px] p-6 sm:p-10 lg:p-12 min-h-[260px] md:min-h-[304px]"
+          className="relative overflow-hidden rounded-2xl md:rounded-[20px] p-6 sm:p-10 lg:p-12 min-h-[260px] md:min-h-[304px] flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8"
           style={{
             background:
               'linear-gradient(90deg, #2749B8 0%, #3A6BF0 50%, #5C8CF7 100%)',
@@ -75,15 +75,15 @@ export function ProviderCtaSection() {
                 searching for data, and earn from every download.
               </p>
             </div>
-
-            {/* Button — full-width on mobile, absolute pinned on lg */}
-            <button
-              onClick={() => openAuth('sign-up')}
-              className="mt-2 inline-flex h-12 sm:h-14 w-full sm:w-auto items-center justify-center rounded-xl bg-[#E9F0FD] px-8 font-public-sans text-base font-semibold text-[#2565EB] shadow-md transition-transform hover:scale-105 active:scale-95 focus:outline-none lg:absolute lg:right-12 lg:top-1/2 lg:mt-0 lg:-translate-y-1/2"
-            >
-              Join now
-            </button>
           </div>
+
+          {/* Button */}
+          <button
+            onClick={() => openAuth('sign-up')}
+            className="relative z-10 shrink-0 inline-flex h-12 sm:h-14 w-full sm:w-auto min-w-[148px] items-center justify-center rounded-xl bg-[#E9F0FD] px-8 font-public-sans text-base font-semibold text-[#2565EB] shadow-md transition-transform hover:scale-105 active:scale-95 focus:outline-none"
+          >
+            Join now
+          </button>
         </div>
 
       </div>

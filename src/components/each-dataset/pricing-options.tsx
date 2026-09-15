@@ -1,6 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
+import { useRouter } from 'next/navigation'
+import { useCartStore } from '@/stores/cart.store'
 import { useDatasetActions } from '@/hooks/use-dataset-actions'
 import type { DatasetDetail } from '@/types/dataset'
 
@@ -11,20 +14,56 @@ export function PricingOptions({
 }: {
   dataset: DatasetDetail
   isLoggedIn?: boolean
-  owned?: boolean
+  owned?: boolean  
 }) {
-  const price = dataset.price ? Number(dataset.price) : 0
+  const router = useRouter()
+  const price = 199
   const sampleDownloadUrl = dataset.sampleUrl || '/dummy-data/sample-dataset.csv'
   const hasSample = Boolean(sampleDownloadUrl)
 
   const [sampleStatus, setSampleStatus] = useState<'idle' | 'preparing' | 'failed'>('idle')
   const [isSlow, setIsSlow] = useState(false)
   const [showErrorModal, setShowErrorModal] = useState(false)
+  const [showCartModal, setShowCartModal] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const [clickHistory, setClickHistory] = useState<number[]>([])
   const [cooldownSeconds, setCooldownSeconds] = useState(0)
 
-  const { promptSignIn, downloadDataset, buy, buying, buyError } =
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!showCartModal) return
+    const timer = setTimeout(() => {
+      setShowCartModal(false)
+    }, 4000)
+    return () => clearTimeout(timer)
+  }, [showCartModal])
+
+  const { promptSignIn, downloadDataset } =
     useDatasetActions(dataset.id, isLoggedIn)
+
+  const { addItem, items } = useCartStore()
+  const testPacketId = `${dataset.id}-test-packet`
+  const isTestPacketInCart = items.some((item) => item.id === testPacketId)
+
+  const handleAddToCartTestPacket = () => {
+    if (!isLoggedIn) {
+      promptSignIn()
+      return
+    }
+    addItem({
+      id: testPacketId,
+      title: dataset.title || 'Medical Imaging Annotation',
+      subtitle: 'Enterprise test packet · 250k records · CSV/JSON/Parquet',
+      badge: 'Test packet',
+      price: 199,
+      tags: ['250k records', '500 mb', 'CSV, JSON, Parquet', '90 days access'],
+      iconType: 'text',
+    })
+    setShowCartModal(true)
+  }
 
   // Countdown timer for rate-limit cooldown
   useEffect(() => {
@@ -271,10 +310,10 @@ export function PricingOptions({
           {/* Right: Price + CTA */}
           <div className="flex flex-col items-start gap-4">
             {isLoggedIn ? (
-              <span className="text-3xl font-bold text-[#181818]">${price}</span>
+              <span className="text-3xl font-bold text-[#181818]">$199</span>
             ) : (
               <button onClick={promptSignIn} className="flex items-center gap-2" title="Sign in to view price">
-                <span className="select-none text-3xl font-bold text-[#181818] blur-[6px]">$888</span>
+                <span className="select-none text-3xl font-bold text-[#181818] blur-[6px]">$199</span>
                 <span className="text-xs font-medium text-[#2563EB] hover:underline">Sign in to view price</span>
               </button>
             )}
@@ -288,17 +327,79 @@ export function PricingOptions({
               </button>
             ) : (
               <button
-                onClick={buy}
-                disabled={buying}
-                className="rounded-lg bg-[#2563EB] px-8 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#1D4ED8] disabled:opacity-60"
+                onClick={handleAddToCartTestPacket}
+                className={`rounded-lg px-8 py-2.5 font-public-sans text-sm font-semibold text-white transition-all active:scale-[0.99] shadow-sm ${
+                  isTestPacketInCart
+                    ? 'bg-emerald-600 hover:bg-emerald-700'
+                    : 'bg-[#2563EB] hover:bg-[#1D4ED8]'
+                }`}
               >
-                {buying ? 'Redirecting…' : isLoggedIn ? 'Buy now' : 'Sign in to buy'}
+                {isTestPacketInCart ? '✓ Added to cart' : 'Add to cart'}
               </button>
             )}
-            {buyError && <p className="text-sm text-red-500">{buyError.message}</p>}
           </div>
         </div>
       </div>
+
+      {/* "Added to cart" Figma Spec Floating Popup rendered via Portal directly on document.body */}
+      {showCartModal && mounted && createPortal(
+        <div className="fixed inset-0 z-[9999] pointer-events-auto overflow-hidden">
+          {/* Dark Backdrop Dim Overlay Blur covering the ENTIRE window including sticky nav */}
+          <div
+            className="fixed inset-0 bg-black/40 backdrop-blur-[2px] animate-in fade-in duration-200"
+            onClick={() => setShowCartModal(false)}
+          />
+
+          {/* Grid Container matching page 1200px layout anchoring popup at top right */}
+          <div className="mx-auto w-full max-w-[1200px] px-4 sm:px-5 relative z-[10000] pt-20 sm:pt-[92px] flex justify-end pointer-events-none">
+            <div className="w-full max-w-[360px] rounded-2xl border border-[#CBD5E1] bg-white p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-200 flex flex-col gap-5 text-[#181818] pointer-events-auto">
+              {/* Header: Added to cart */}
+              <div className="flex items-center gap-2">
+                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#22C55E] text-white">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <h4 className="font-public-sans text-sm font-semibold text-[#181818]">
+                  Added to cart
+                </h4>
+              </div>
+
+              {/* Middle Item Box */}
+              <div className="flex items-center gap-3 border-t border-[#F1F5F9] pt-3">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#0F1B3D] text-white shadow-xs">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <polyline points="21 15 16 10 5 21" />
+                  </svg>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h5 className="font-public-sans text-sm font-medium text-[#2B2B2B] truncate">
+                    {dataset.title || 'Multilingual Chatbot Intent Corpus'}
+                  </h5>
+                  <p className="mt-0.5 font-public-sans text-xs text-[#64748B]">
+                    $199
+                  </p>
+                </div>
+              </div>
+
+              {/* CTA Button: Go to cart */}
+              <button
+                onClick={() => {
+                  setShowCartModal(false)
+                  router.push('/cart')
+                }}
+                className="flex h-11 w-full items-center justify-center rounded-xl bg-[#2563EB] font-public-sans text-sm font-semibold text-white transition-all hover:bg-[#1D4ED8] active:scale-[0.99] shadow-sm"
+              >
+                Go to cart
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
     </div>
   )
 }

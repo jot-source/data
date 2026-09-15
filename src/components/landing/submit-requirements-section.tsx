@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 const FEATURES = [
   'Any language, dialect, or regional variant',
@@ -11,6 +12,7 @@ const FEATURES = [
 ]
 
 export function SubmitRequirementsSection() {
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
 
@@ -31,6 +33,9 @@ export function SubmitRequirementsSection() {
       if (res.ok) {
         setSuccess(true)
         e.currentTarget.reset()
+        setTimeout(() => {
+          router.push('/meet')
+        }, 800)
       } else {
         alert('Failed to send request. Please try again later.')
       }

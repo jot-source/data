@@ -1,8 +1,3 @@
-// components/datasets/dataset-results.tsx
-// The right-hand pane of the explore page: result count + sort dropdown,
-// the card grid itself, and pagination. This is the ONLY part of the explore
-// page that scrolls internally — the filters sidebar stays put (see
-// app/(public)/datasets/page.tsx for the split-scroll layout).
 'use client'
 
 import { useDatasets } from '@/hooks/use-datasets'
@@ -22,11 +17,11 @@ function SortDropdown() {
   const setSort = useDatasetFilters((s) => s.setSort)
 
   return (
-    <label className="flex items-center gap-1.5 font-public-sans text-sm text-[#181818]">
+    <label className="flex items-center gap-1.5 font-public-sans text-base font-medium leading-[24px] text-[#2B2B2B]">
       <select
         value={sort}
         onChange={(e) => setSort(e.target.value as DatasetSort)}
-        className="cursor-pointer appearance-none rounded-md border-none bg-transparent py-1 pr-1 font-medium focus:outline-none"
+        className="cursor-pointer appearance-none rounded-md border-none bg-transparent py-1 pr-1 font-medium text-[#2B2B2B] focus:outline-none"
       >
         {Object.entries(SORT_LABELS).map(([value, label]) => (
           <option key={value} value={value}>
@@ -35,7 +30,7 @@ function SortDropdown() {
         ))}
       </select>
       <svg width="12" height="7" viewBox="0 0 12 7" fill="none" aria-hidden="true">
-        <path d="M1 1l5 5 5-5" stroke="#616161" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M1 1l5 5 5-5" stroke="#2B2B2B" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </label>
   )
@@ -90,9 +85,9 @@ export function DatasetResults({
   const setPage = useDatasetFilters((s) => s.setPage)
 
   return (
-    <div className="flex flex-col gap-4 px-8 py-6">
-      <div className="flex items-center justify-between">
-        <p className="font-public-sans text-sm text-[#616161]">
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between pt-1 font-public-sans">
+        <p className="font-public-sans text-base font-medium leading-[24px] text-[#2B2B2B]">
           {isPending
             ? 'Loading datasets…'
             : `${data?.pagination.total ?? 0} datasets match your results`}
@@ -113,9 +108,7 @@ export function DatasetResults({
       )}
 
       <div
-        className={`grid grid-cols-1 gap-4 transition-opacity md:grid-cols-2 ${
-          isPlaceholderData ? 'opacity-60' : 'opacity-100'
-        }`}
+        className={`grid grid-cols-1 gap-5 md:grid-cols-2 ${isPlaceholderData ? 'opacity-60' : 'opacity-100'}`}
       >
         {data?.datasets.map((dataset) => (
           <DatasetCard

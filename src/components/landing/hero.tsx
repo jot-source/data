@@ -1,10 +1,39 @@
-// components/landing/hero.tsx
-// Landing hero: headline, supporting copy, and the two primary CTAs, centered
-// over the decorative ribbon line-art in the top-left and bottom-right corners.
+'use client'
 
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
+import { useAuthModal } from '@/stores/auth-modal.store'
 
 export function Hero() {
+  const router = useRouter()
+  const openAuthModal = useAuthModal((s) => s.open)
+  const [supabase] = useState(() => createClient())
+  const [user, setUser] = useState<unknown>(null)
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) setUser(user)
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [supabase])
+
+  const handleScheduleCallClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    const element = document.getElementById('customize')
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      router.push('/#customize')
+    }
+  }
+
   return (
     <section className="relative flex min-h-[560px] sm:min-h-[640px] md:min-h-[736px] w-full max-w-[100vw] flex-col items-center justify-center overflow-hidden bg-white px-4 py-14 sm:px-6 md:py-24">
       {/* Decorative ribbons (transparent PNGs in /public/hero) */}
@@ -46,12 +75,13 @@ export function Hero() {
           >
             Explore marketplace
           </Link>
-          <Link
+          <a
             href="/meet"
-            className="flex h-12 w-full sm:w-auto items-center justify-center rounded-xl border border-[#CBD5E1] bg-white px-8 font-public-sans text-base font-semibold text-[#2563EB] shadow-sm transition-all hover:border-[#2563EB] hover:bg-[#EFF6FF] active:scale-[0.98]"
+            onClick={handleScheduleCallClick}
+            className="flex h-12 w-full sm:w-auto items-center justify-center rounded-xl border border-[#CBD5E1] bg-white px-8 font-public-sans text-base font-semibold text-[#2563EB] shadow-sm transition-all hover:border-[#2563EB] hover:bg-[#EFF6FF] active:scale-[0.98] cursor-pointer"
           >
             Schedule a Call
-          </Link>
+          </a>
         </div>
       </div>
     </section>

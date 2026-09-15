@@ -4,9 +4,10 @@ import { useEffect, useState, useRef } from 'react'
 import { useAuthModal } from '@/stores/auth-modal.store'
 import { BrandLogo } from '../landing/brand-logo'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useDatasetFacets } from '@/hooks/use-dataset-facets'
+import { useCartStore } from '@/stores/cart.store'
 import { useDatasetFilters, type FacetKey } from '@/stores/dataset-filters.store'
 import type { SessionUser } from '@/services/auth.service'
 // (type-only import — auth.service.ts itself, which touches next/headers and
@@ -375,16 +376,22 @@ function ResourcesMenu({ close }: { close: () => void }) {
 export function SiteHeader({ initialUser }: { initialUser: SessionUser | null }) {
   const { open } = useAuthModal()
   const router = useRouter()
+  const pathname = usePathname()
   const [user, setUser] = useState<HeaderUser | null>(initialUser)
-  // Created once per mount, not per render — @supabase/ssr's client isn't
-  // free to recreate: doing so in the render body (with the client in the
-  // effect's dep array) tears down and re-subscribes the auth listener on
-  // every re-render, which is what caused the header to jitter.
   const [supabase] = useState(() => createClient())
 
   const [activeMenu, setActiveMenu] = useState<string | null>(null)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const rawCartCount = useCartStore((s) => s.items.length)
+  const cartCount = mounted ? rawCartCount : 0
+  const isCartSelected = pathname === '/cart' || cartCount > 0
 
   // Sign-in/up happen through a *server-side* Supabase client (the Server
   // Action), so this browser client never observes them directly — the
@@ -423,8 +430,10 @@ export function SiteHeader({ initialUser }: { initialUser: SessionUser | null })
     }, 150)
   }
 
+  const isCartPage = pathname === '/cart'
+
   return (
-    <header className="relative z-[90] flex h-16 w-full max-w-[100vw] items-center justify-between bg-white px-4 sm:px-10 lg:px-[120px] py-3 border-b border-[#F1F5F9]">
+    <header className={`sticky top-0 z-[90] ${isCartPage ? 'hidden sm:flex' : 'flex'} h-16 w-full max-w-[100vw] items-center justify-between bg-white px-4 sm:px-10 lg:px-[120px] py-3 border-b border-[#F1F5F9]`}>
       <Link href={'/'} className="shrink-0 flex items-center">
         <BrandLogo />
       </Link>
@@ -481,47 +490,81 @@ export function SiteHeader({ initialUser }: { initialUser: SessionUser | null })
       {/* Desktop Profile / CTA Button */}
       <div className="hidden md:flex items-center">
         {user ? (
-          <div 
-            className="relative"
-            onMouseEnter={() => handleMouseEnter('profile-menu')}
-            onMouseLeave={handleMouseLeave}
-          >
-            <button
-              type="button"
-              className="flex items-center gap-2 rounded-full bg-[#EBF1FF] py-1.5 pl-1.5 pr-4 transition-colors hover:bg-blue-100"
+          <div className="flex items-center gap-3">
+            {/* Pure SVG/React Cart Button (44px x 44px - Figma Selected vs Normal state) */}
+            <Link
+              href="/cart"
+              className={`relative flex h-[44px] w-[44px] items-center justify-center rounded-[12px] transition-all active:scale-95 shrink-0 ${
+                isCartSelected
+                  ? 'bg-[#2563EB] text-white shadow-sm hover:bg-[#1d4ed8]'
+                  : 'bg-[#EBF1FF] text-[#475569] hover:bg-[#DBEAFE] hover:text-[#1E293B]'
+              }`}
+              title="Cart"
             >
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0F1B3D] text-white font-semibold text-sm">
-                {user.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
-              </div>
-              <span className="font-public-sans text-sm font-semibold text-[#2563EB]">
-                My profile
-              </span>
-              <Chevron open={activeMenu === 'profile-menu'} />
-            </button>
-            
-            {activeMenu === 'profile-menu' && (
-              <div className="absolute right-0 mt-2 w-48 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                <div className="py-1">
-                  <Link
-                    href="/profile"
-                    onClick={() => setActiveMenu(null)}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    My Profile
-                  </Link>
-                  <button
-                    onClick={async () => {
-                      await supabase.auth.signOut()
-                      setActiveMenu(null)
-                      router.refresh()
-                    }}
-                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                  >
-                    Logout
-                  </button>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="9" cy="21" r="1" />
+                <circle cx="20" cy="21" r="1" />
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+              </svg>
+              {cartCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#2563EB] text-white text-[11px] font-bold ring-2 ring-white shadow-md">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+
+            {/* My Profile Dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={() => handleMouseEnter('profile-menu')}
+              onMouseLeave={handleMouseLeave}
+            >
+              <button
+                type="button"
+                className="flex h-[44px] items-center gap-2 rounded-full bg-[#EBF1FF] py-1.5 pl-1.5 pr-4 transition-colors hover:bg-blue-100"
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0F1B3D] text-white font-semibold text-sm">
+                  {user.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
                 </div>
-              </div>
-            )}
+                <span className="font-public-sans text-sm font-semibold text-[#2563EB]">
+                  My profile
+                </span>
+                <Chevron open={activeMenu === 'profile-menu'} />
+              </button>
+
+              {activeMenu === 'profile-menu' && (
+                <div className="absolute right-0 mt-2 w-48 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                  <div className="py-1">
+                    <Link
+                      href="/profile"
+                      onClick={() => setActiveMenu(null)}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-public-sans"
+                    >
+                      My Profile
+                    </Link>
+                    <button
+                      onClick={async () => {
+                        await supabase.auth.signOut()
+                        setActiveMenu(null)
+                        router.refresh()
+                      }}
+                      className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 font-public-sans"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         ) : (
           <button
@@ -534,16 +577,41 @@ export function SiteHeader({ initialUser }: { initialUser: SessionUser | null })
         )}
       </div>
 
-      {/* Mobile Top Header Right (< 768px): Hamburger Menu icon (☰) + compact Get Started button */}
+      {/* Mobile Top Header Right (< 768px): Hamburger Menu icon (☰) + compact Get Started / Cart button */}
       <div className="flex items-center gap-2 md:hidden">
         {user ? (
-          <Link
-            href="/profile"
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0F1B3D] text-white font-semibold text-xs"
-            aria-label="My profile"
-          >
-            {user.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/cart"
+              className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-[#2563EB] text-white shrink-0"
+              aria-label="Cart"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <circle cx="9" cy="21" r="1" />
+                <circle cx="20" cy="21" r="1" />
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+              </svg>
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#2563EB] text-white text-[10px] font-bold ring-1 ring-white">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+            <Link
+              href="/profile"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0F1B3D] text-white font-semibold text-xs"
+              aria-label="My profile"
+            >
+              {user.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
+            </Link>
+          </div>
         ) : (
           <button
             type="button"

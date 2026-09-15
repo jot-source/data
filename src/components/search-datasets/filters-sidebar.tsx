@@ -94,11 +94,10 @@ function QualityScoreFilter() {
             key={threshold}
             type="button"
             onClick={() => setMinQuality(active ? null : threshold)}
-            className={`rounded-lg border px-3 py-1.5 font-public-sans text-xs font-semibold transition-all ${
-              active
+            className={`rounded-lg border px-3 py-1.5 font-public-sans text-xs font-semibold transition-all ${active
                 ? 'border-[#BFDBFE] bg-[#EFF6FF] text-[#2563EB]'
                 : 'border-[#E2E8F0] bg-[#F8FAFC] text-[#475569] hover:bg-[#F1F5F9] hover:text-[#181818]'
-            }`}
+              }`}
           >
             {threshold}+ quality
           </button>
@@ -115,7 +114,7 @@ export function FiltersSidebar() {
   const [advancedOpen, setAdvancedOpen] = useState(false)
 
   return (
-    <div className="flex h-full flex-col gap-4 overflow-y-auto p-6">
+    <div className="rounded-[16px] border border-[#CBD5E1] bg-white p-6 shadow-2xs flex flex-col gap-4 max-h-[calc(100vh-110px)] overflow-y-auto font-public-sans">
       <div className="flex items-center justify-between">
         <span className="font-public-sans text-xs font-semibold tracking-wide text-[#8C8C8C]">
           FILTERS

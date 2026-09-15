@@ -1,13 +1,3 @@
-// app/(public)/datasets/page.tsx
-// Explore/browse page — reached from the hero's "Explore marketplace" CTA.
-//
-// Scroll model: The page scrolls naturally (SiteHeader scrolls away with it).
-// ExploreSearchHeader is a full-width sticky band that starts as a tall blue
-// hero and, on scroll, collapses to just the search field sitting in the
-// results column. Its band goes transparent there, so the FiltersSidebar —
-// which sticks at the same top-0 — shows through and sits level with the search
-// bar, while the DatasetResults grid scrolls underneath.
-
 import { cookies } from 'next/headers'
 import { getSessionUserId } from '@/services/auth.service'
 import { getSavedDatasetIds } from '@/actions/saved-dataset.actions'
@@ -22,15 +12,19 @@ export default async function DatasetsPage() {
   const savedIds = await getSavedDatasetIds()
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#F5F7FA] text-[#181818]">
+    <div className="flex min-h-screen flex-col bg-[#F5F7FA] text-[#181818] font-public-sans">
+      {/* Hero Header Banner at top of page */}
       <ExploreSearchHeader />
 
-      <div className="mx-auto flex w-full max-w-[1440px] flex-1 items-start">
-        <aside className="sticky top-0 h-screen w-[320px] shrink-0 overflow-y-auto border-r border-[#E5E5E5] bg-[#F5F7FA] pb-8">
+      {/* Main 2-Column Layout: Left 320px Sidebar + Right 1000px Content (Max 1440px layout width) */}
+      <div className="mx-auto flex w-full max-w-[1440px] gap-8 px-4 sm:px-8 lg:px-12 pt-6 pb-16 items-start">
+        {/* Left Sticky Filters Sidebar (Figma Spec: 320px x 648px Hug, 24px padding, 16px radius) */}
+        <aside className="sticky top-[76px] w-[320px] shrink-0 self-start hidden md:block">
           <FiltersSidebar />
         </aside>
 
-        <main className="flex-1 pb-16">
+        {/* Right Main Content Column (Aligned Search Box + Dataset Results Cards Grid) */}
+        <main className="flex-1 min-w-0 flex flex-col gap-4">
           <DatasetResults isLoggedIn={isLoggedIn} savedDatasetIds={Array.from(savedIds)} />
         </main>
       </div>
