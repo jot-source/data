@@ -73,7 +73,7 @@ function GridIcon() {
 
 /* ---------- Shared shell: left rail tabs + right item grid + footer ---------- */
 
-type MenuItem = { title: string; subtitle: string; onSelect: () => void }
+type MenuItem = { title: string; subtitle: string; isSelected?: boolean; onSelect: () => void }
 type MenuTab = { id: string; label: string; count?: number }
 
 function MegaMenuShell({
@@ -125,7 +125,8 @@ function MegaMenuShell({
                   height: 44,
                   padding: '10px 16px',
                   borderRadius: 8,
-                  background: isActive ? '#EFF6FF' : 'transparent',
+                  background: isActive ? '#DBEAFE' : 'transparent',
+                  border: isActive ? '1px solid #BFDBFE' : '1px solid transparent',
                 }}
               >
                 <span
@@ -134,7 +135,7 @@ function MegaMenuShell({
                     fontWeight: isActive ? 600 : 500,
                     fontSize: 15,
                     lineHeight: '22px',
-                    color: isActive ? '#2563EB' : '#475569',
+                    color: isActive ? '#1D4ED8' : '#475569',
                   }}
                 >
                   {tab.label}
@@ -143,10 +144,10 @@ function MegaMenuShell({
                   <span
                     style={{
                       fontFamily: "'Public Sans', sans-serif",
-                      fontWeight: 500,
+                      fontWeight: 600,
                       fontSize: 14,
                       lineHeight: '20px',
-                      color: isActive ? '#2563EB' : '#94A3B8',
+                      color: isActive ? '#1D4ED8' : '#94A3B8',
                     }}
                   >
                     {String(tab.count).padStart(2, '0')}
@@ -164,56 +165,60 @@ function MegaMenuShell({
             className="grid flex-1 auto-rows-min grid-cols-2 content-start overflow-y-auto overscroll-contain"
             style={{ gap: 16, paddingRight: 4, scrollbarWidth: 'thin' }}
           >
-            {items.map((item) => (
-              <button
-                key={item.title}
-                type="button"
-                onClick={item.onSelect}
-                className="group flex shrink-0 items-center text-left transition-all focus:outline-none hover:border-[#2563EB] hover:shadow-[0_4px_16px_rgba(37,99,235,0.12)]"
-                style={{
-                  height: 64,
-                  minHeight: 64,
-                  padding: 8,
-                  gap: 14,
-                  borderRadius: 8,
-                  border: '1px solid #F1F5F9',
-                  background: '#FFFFFF',
-                }}
-              >
-                <div
-                  className="flex shrink-0 items-center justify-center text-[#2563EB] transition-colors group-hover:bg-[#DBEAFE]"
-                  style={{ width: 48, height: 48, background: '#EFF6FF', borderRadius: 8 }}
+            {items.map((item, idx) => {
+              const isCardSelected = item.isSelected ?? (idx === 0)
+              return (
+                <button
+                  key={item.title}
+                  type="button"
+                  onClick={item.onSelect}
+                  className="group flex shrink-0 items-center text-left transition-all focus:outline-none hover:border-[#2563EB] hover:shadow-[0_4px_16px_rgba(37,99,235,0.12)]"
+                  style={{
+                    height: 64,
+                    minHeight: 64,
+                    padding: 8,
+                    gap: 14,
+                    borderRadius: 8,
+                    border: isCardSelected ? '1.5px solid #2563EB' : '1px solid #E2E8F0',
+                    boxShadow: isCardSelected ? '0px 2px 10px rgba(37, 99, 235, 0.15)' : 'none',
+                    background: '#FFFFFF',
+                  }}
                 >
-                  <GridIcon />
-                </div>
-                <div className="flex min-w-0 flex-col" style={{ gap: 2 }}>
-                  <span
-                    className="line-clamp-1 transition-colors group-hover:text-[#2563EB]"
-                    style={{
-                      fontFamily: "'Public Sans', sans-serif",
-                      fontWeight: 600,
-                      fontSize: 15,
-                      lineHeight: '22px',
-                      color: '#181818',
-                    }}
+                  <div
+                    className="flex shrink-0 items-center justify-center text-[#2563EB] transition-colors group-hover:bg-[#DBEAFE]"
+                    style={{ width: 48, height: 48, background: isCardSelected ? '#DBEAFE' : '#EFF6FF', borderRadius: 8 }}
                   >
-                    {item.title}
-                  </span>
-                  <span
-                    className="line-clamp-1"
-                    style={{
-                      fontFamily: "'Public Sans', sans-serif",
-                      fontWeight: 400,
-                      fontSize: 12,
-                      lineHeight: '16px',
-                      color: '#64748B',
-                    }}
-                  >
-                    {item.subtitle}
-                  </span>
-                </div>
-              </button>
-            ))}
+                    <GridIcon />
+                  </div>
+                  <div className="flex min-w-0 flex-col" style={{ gap: 2 }}>
+                    <span
+                      className="line-clamp-1 transition-colors group-hover:text-[#2563EB]"
+                      style={{
+                        fontFamily: "'Public Sans', sans-serif",
+                        fontWeight: 600,
+                        fontSize: 15,
+                        lineHeight: '22px',
+                        color: isCardSelected ? '#2563EB' : '#181818',
+                      }}
+                    >
+                      {item.title}
+                    </span>
+                    <span
+                      className="line-clamp-1"
+                      style={{
+                        fontFamily: "'Public Sans', sans-serif",
+                        fontWeight: 400,
+                        fontSize: 12,
+                        lineHeight: '16px',
+                        color: '#64748B',
+                      }}
+                    >
+                      {item.subtitle}
+                    </span>
+                  </div>
+                </button>
+              )
+            })}
             {items.length === 0 && (
               <div
                 className="col-span-2 flex items-center justify-center"
