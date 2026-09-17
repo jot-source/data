@@ -95,8 +95,8 @@ function QualityScoreFilter() {
             type="button"
             onClick={() => setMinQuality(active ? null : threshold)}
             className={`rounded-lg border px-3 py-1.5 font-public-sans text-xs font-semibold transition-all ${active
-                ? 'border-[#BFDBFE] bg-[#EFF6FF] text-[#2563EB]'
-                : 'border-[#E2E8F0] bg-[#F8FAFC] text-[#475569] hover:bg-[#F1F5F9] hover:text-[#181818]'
+              ? 'border-[#BFDBFE] bg-[#EFF6FF] text-[#2563EB]'
+              : 'border-[#E2E8F0] bg-[#F8FAFC] text-[#475569] hover:bg-[#F1F5F9] hover:text-[#181818]'
               }`}
           >
             {threshold}+ quality

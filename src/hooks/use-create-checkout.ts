@@ -28,12 +28,25 @@ async function createCheckout(datasetId: string) {
   return body.data
 }
 
-/** Starts a Dodo checkout session for a dataset, then redirects to Dodo's hosted page. */
-export function useCreateCheckout(){
+/** Starts a Dodo checkout session for a dataset. */
+export function useCreateCheckout(options?: {
+  onSuccess?: (data: { checkoutUrl: string; orderId: string }) => void
+  onError?: (error: Error) => void
+}) {
   return useMutation({
     mutationFn: createCheckout,
     onSuccess: (data) => {
-      window.location.href = data.checkoutUrl
+      if (options?.onSuccess) {
+        options.onSuccess(data)
+      } else {
+        window.location.href = data.checkoutUrl
+      }
+    },
+    onError: (err) => {
+      if (options?.onError) {
+        options.onError(err)
+      }
     },
   })
 }
+

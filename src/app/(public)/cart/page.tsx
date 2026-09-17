@@ -5,6 +5,8 @@ import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import { useCartStore } from '@/stores/cart.store'
 import { toggleSaveDataset } from '@/actions/saved-dataset.actions'
+import { useCreateCheckout } from '@/hooks/use-create-checkout'
+import { DodoOverlayModal } from '@/components/checkout/dodo-overlay-modal'
 
 export default function CartPage() {
   const [mounted, setMounted] = useState(false)
@@ -18,6 +20,46 @@ export default function CartPage() {
   const [ndaState, setNdaState] = useState<'required' | 'pending' | 'signed'>('required')
   const [showPolicyModal, setShowPolicyModal] = useState(false)
   const [itemToRemove, setItemToRemove] = useState<string | null>(null)
+
+  // Dodo Payments Overlay State
+  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null)
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false)
+  const [isProcessingCheckout, setIsProcessingCheckout] = useState(false)
+
+  const checkoutMutation = useCreateCheckout({
+    onSuccess: (data) => {
+      setIsProcessingCheckout(false)
+      setCheckoutUrl(data.checkoutUrl)
+      setIsOverlayOpen(true)
+    },
+    onError: (err) => {
+      setIsProcessingCheckout(false)
+      alert(err.message || 'Failed to start Dodo checkout session.')
+    },
+  })
+
+  const handlePurchase = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    if (ndaState !== 'signed') {
+      cycleNdaState()
+      return
+    }
+
+    if (items.length === 0 || isProcessingCheckout) return
+
+    setIsProcessingCheckout(true)
+
+    try {
+      // Use item's dataset ID, or fallback to real seeded dataset ID in database
+      const datasetId = items[0]?.id && !items[0].id.startsWith('cart-')
+        ? items[0].id
+        : '3b7a13ec-a92a-40c4-a995-11841bec136f'
+
+      await checkoutMutation.mutateAsync(datasetId)
+    } catch {
+      setIsProcessingCheckout(false)
+    }
+  }
 
   const cycleNdaState = () => {
     if (ndaState === 'required') setNdaState('pending')
@@ -430,22 +472,30 @@ export default function CartPage() {
 
               {/* Desktop-Only Purchase Button (Desktop view sync) */}
               <div className="hidden sm:block mt-2">
-                <Link
-                  href={ndaState === 'signed' ? '/checkout' : '#'}
-                  onClick={(e) => {
-                    if (ndaState !== 'signed') {
-                      e.preventDefault()
-                      cycleNdaState()
-                    }
-                  }}
+                <button
+                  type="button"
+                  onClick={handlePurchase}
+                  disabled={isProcessingCheckout}
                   className={`flex w-full items-center justify-center rounded-xl py-3.5 font-public-sans text-base font-semibold transition-all shadow-md ${
                     ndaState === 'signed'
                       ? 'bg-[#2563EB] text-white hover:bg-[#1d4ed8] active:scale-[0.99]'
                       : 'bg-[#F1F5F9] text-[#94A3B8] cursor-not-allowed hover:bg-[#E2E8F0]'
                   }`}
                 >
-                  {ndaState === 'signed' ? 'Purchase' : 'Purchase (Agreement required)'}
-                </Link>
+                  {isProcessingCheckout ? (
+                    <span className="flex items-center gap-2">
+                      <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24" fill="none">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      Opening Checkout...
+                    </span>
+                  ) : ndaState === 'signed' ? (
+                    'Purchase'
+                  ) : (
+                    'Purchase (Agreement required)'
+                  )}
+                </button>
               </div>
 
             </div>
@@ -467,22 +517,28 @@ export default function CartPage() {
             </div>
 
             {/* Right side: 170px Purchase Button (Frame 1597881787 - Active vs Disabled depending on NDA state) */}
-            <Link
-              href={ndaState === 'signed' ? '/checkout' : '#'}
-              onClick={(e) => {
-                if (ndaState !== 'signed') {
-                  e.preventDefault()
-                  cycleNdaState()
-                }
-              }}
+            <button
+              type="button"
+              onClick={handlePurchase}
+              disabled={isProcessingCheckout}
               className={`inline-flex h-11 w-[170px] shrink-0 items-center justify-center rounded-xl font-public-sans text-sm font-semibold shadow-xs transition-all ${
                 ndaState === 'signed'
                   ? 'bg-[#2563EB] text-white hover:bg-[#1d4ed8] active:scale-[0.99]'
                   : 'bg-[#F1F5F9] text-[#94A3B8] cursor-not-allowed'
               }`}
             >
-              Purchase
-            </Link>
+              {isProcessingCheckout ? (
+                <span className="flex items-center gap-1.5 text-xs">
+                  <svg className="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  Processing...
+                </span>
+              ) : (
+                'Purchase'
+              )}
+            </button>
           </div>
         )}
 
@@ -578,6 +634,18 @@ export default function CartPage() {
           </div>,
           document.body
         )}
+
+        {/* Dodo Payments Overlay Modal */}
+        <DodoOverlayModal
+          checkoutUrl={checkoutUrl}
+          isOpen={isOverlayOpen}
+          onClose={() => setIsOverlayOpen(false)}
+          onPaymentSuccess={() => {
+            setIsOverlayOpen(false)
+            useCartStore.getState().clearCart()
+            window.location.href = '/checkout/success'
+          }}
+        />
 
       </div>
     </main>
