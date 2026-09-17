@@ -21,7 +21,8 @@ export function SubmitRequirementsSection() {
     setLoading(true)
     setSuccess(false)
 
-    const formData = new FormData(e.currentTarget)
+    const formElement = e.currentTarget
+    const formData = new FormData(formElement)
     
     try {
       const res = await fetch('/api/v1/contact', {
@@ -32,10 +33,8 @@ export function SubmitRequirementsSection() {
       
       if (res.ok) {
         setSuccess(true)
-        e.currentTarget.reset()
-        setTimeout(() => {
-          router.push('/meet')
-        }, 800)
+        formElement.reset()
+        router.push('/meet')
       } else {
         alert('Failed to send request. Please try again later.')
       }
