@@ -4,6 +4,7 @@ import { useDatasets } from '@/hooks/use-datasets'
 import { useDatasetFilters } from '@/stores/dataset-filters.store'
 import type { DatasetSort } from '@/validations/dataset.schema'
 import { DatasetCard } from './dataset-card'
+import { DatasetCardSkeleton } from './dataset-card-skeleton'
 
 const SORT_LABELS: Record<DatasetSort, string> = {
   recent: 'Last updated',
@@ -101,24 +102,32 @@ export function DatasetResults({
         </p>
       )}
 
-      {!isError && data && data.datasets.length === 0 && (
+      {!isError && !isPending && data && data.datasets.length === 0 && (
         <p className="rounded-lg border border-[#E5E5E5] bg-white px-4 py-8 text-center font-public-sans text-sm text-[#8C8C8C]">
           No datasets match your filters. Try clearing some of them.
         </p>
       )}
 
-      <div
-        className={`grid grid-cols-1 gap-5 md:grid-cols-2 ${isPlaceholderData ? 'opacity-60' : 'opacity-100'}`}
-      >
-        {data?.datasets.map((dataset) => (
-          <DatasetCard
-            key={dataset.id}
-            dataset={dataset}
-            isLoggedIn={isLoggedIn}
-            isSaved={savedSet.has(dataset.id)}
-          />
-        ))}
-      </div>
+      {isPending ? (
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <DatasetCardSkeleton key={i} />
+          ))}
+        </div>
+      ) : (
+        <div
+          className={`grid grid-cols-1 gap-5 md:grid-cols-2 ${isPlaceholderData ? 'opacity-60' : 'opacity-100'}`}
+        >
+          {data?.datasets.map((dataset) => (
+            <DatasetCard
+              key={dataset.id}
+              dataset={dataset}
+              isLoggedIn={isLoggedIn}
+              isSaved={savedSet.has(dataset.id)}
+            />
+          ))}
+        </div>
+      )}
 
       {data && (
         <Pagination page={page} totalPages={data.pagination.totalPages} onChange={setPage} />

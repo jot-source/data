@@ -1,17 +1,22 @@
-// lib/dodo.ts — Dodo Payments SDK client singleton
+// lib/dodo.ts — Dodo Payments SDK client
 import DodoPayments from 'dodopayments'
 
-const globalForDodo = globalThis as unknown as { dodo: DodoPayments }
+export function getDodoClient(): DodoPayments {
+  const bearerToken = process.env.DODO_PAYMENTS_API_KEY || ''
+  const environment = (process.env.DODO_PAYMENTS_ENVIRONMENT as 'test_mode' | 'live_mode' | undefined) ?? 'test_mode'
 
-function createDodoClient() {
   return new DodoPayments({
-    bearerToken: process.env.DODO_PAYMENTS_API_KEY || 'dummy_api_key_for_testing',
-    environment:
-      (process.env.DODO_PAYMENTS_ENVIRONMENT as 'test_mode' | 'live_mode' | undefined) ??
-      'test_mode',
+    bearerToken,
+    environment,
   })
 }
 
-export const dodo = globalForDodo.dodo ?? createDodoClient()
+// Proxy wrapper so existing calls `dodo.checkoutSessions.create` always use the latest environment variables
+export const dodo = new Proxy({} as DodoPayments, {
+  get(_target, prop: keyof DodoPayments) {
+    const client = getDodoClient()
+    const value = client[prop]
+    return typeof value === 'function' ? value.bind(client) : value
+  },
+})
 
-if (process.env.NODE_ENV !== 'production') globalForDodo.dodo = dodo
