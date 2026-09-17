@@ -66,9 +66,49 @@ function formatDateYYYYMMDD(d: Date): string {
   return `${year}-${month}-${day}`
 }
 
+// Popular global timezones for user selection
+const POPULAR_TIMEZONES = [
+  { value: 'America/New_York', label: 'US Eastern Time (New York)' },
+  { value: 'America/Chicago', label: 'US Central Time (Chicago)' },
+  { value: 'America/Denver', label: 'US Mountain Time (Denver)' },
+  { value: 'America/Los_Angeles', label: 'US Pacific Time (Los Angeles)' },
+  { value: 'Europe/London', label: 'UK Time (London)' },
+  { value: 'Europe/Paris', label: 'Central European Time (Paris)' },
+  { value: 'Asia/Kolkata', label: 'India Standard Time (Kolkata)' },
+  { value: 'Asia/Dubai', label: 'Gulf Standard Time (Dubai)' },
+  { value: 'Asia/Singapore', label: 'Singapore Time (Singapore)' },
+  { value: 'Asia/Tokyo', label: 'Japan Standard Time (Tokyo)' },
+  { value: 'Australia/Sydney', label: 'Australian Eastern Time (Sydney)' },
+]
+
+function getTimezoneOffsetString(timeZone: string): string {
+  try {
+    const formatter = new Intl.DateTimeFormat('en-US', { timeZone, timeZoneName: 'shortOffset' })
+    const parts = formatter.formatToParts(new Date())
+    const tzPart = parts.find((p) => p.type === 'timeZoneName')
+    return tzPart ? tzPart.value : 'GMT'
+  } catch {
+    return 'GMT'
+  }
+}
+
 export function ScheduleMeeting() {
   const [step, setStep] = useState<1 | 2 | 3>(1)
   
+  // Timezone state with browser auto-detection
+  const [userTimezone, setUserTimezone] = useState<string>('Asia/Kolkata')
+
+  useEffect(() => {
+    try {
+      const detectedTz = Intl.DateTimeFormat().resolvedOptions().timeZone
+      if (detectedTz) {
+        setUserTimezone(detectedTz)
+      }
+    } catch {
+      // Fallback
+    }
+  }, [])
+
   // Date selection state
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date())
   const [selectedDate, setSelectedDate] = useState<string>(() => {
@@ -359,11 +399,32 @@ export function ScheduleMeeting() {
 
               {/* Right Column: Time Slots */}
               <div className="lg:col-span-5 flex flex-col gap-4 border-t lg:border-t-0 lg:border-l border-[#E2E8F0] pt-6 lg:pt-0 lg:pl-8">
-                <div>
+                <div className="flex flex-col gap-2">
                   <h3 className="font-semibold text-base text-[#181818]">Select Time Slot</h3>
-                  <p className="text-xs text-[#616161] mt-0.5">
-                    {formatDisplayDate(selectedDate)} (GMT+05:30)
+                  <p className="text-xs text-[#616161]">
+                    {formatDisplayDate(selectedDate)} ({getTimezoneOffsetString(userTimezone)})
                   </p>
+
+                  {/* Dynamic Global Timezone Selector */}
+                  <div className="mt-1 flex items-center gap-1.5 rounded-lg border border-[#CBD5E1] bg-[#F8FAFC] px-2.5 py-1.5 text-xs text-[#475569]">
+                    <Globe className="h-3.5 w-3.5 text-[#2563EB] shrink-0" />
+                    <select
+                      value={userTimezone}
+                      onChange={(e) => setUserTimezone(e.target.value)}
+                      className="w-full bg-transparent text-xs font-medium text-[#181818] outline-none cursor-pointer"
+                    >
+                      {!POPULAR_TIMEZONES.some((tz) => tz.value === userTimezone) && (
+                        <option value={userTimezone}>
+                          {userTimezone} ({getTimezoneOffsetString(userTimezone)})
+                        </option>
+                      )}
+                      {POPULAR_TIMEZONES.map((tz) => (
+                        <option key={tz.value} value={tz.value}>
+                          {tz.label} ({getTimezoneOffsetString(tz.value)})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
                 {loadingSlots ? (
@@ -427,7 +488,9 @@ export function ScheduleMeeting() {
                   <CalendarIcon className="h-5 w-5 text-[#2563EB]" />
                   <div>
                     <p className="text-sm font-semibold text-[#181818]">{formatDisplayDate(selectedDate)}</p>
-                    <p className="text-xs text-[#475569]">{selectedTimeSlot} (30 min discovery call)</p>
+                    <p className="text-xs text-[#475569]">
+                      {selectedTimeSlot} ({getTimezoneOffsetString(userTimezone)} • 30 min call)
+                    </p>
                   </div>
                 </div>
                 <button

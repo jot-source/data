@@ -18,10 +18,11 @@ export function SubmitRequirementsSection() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    const formElement = e.currentTarget
     setLoading(true)
     setSuccess(false)
 
-    const formData = new FormData(e.currentTarget)
+    const formData = new FormData(formElement)
     
     try {
       const res = await fetch('/api/v1/contact', {
@@ -32,10 +33,8 @@ export function SubmitRequirementsSection() {
       
       if (res.ok) {
         setSuccess(true)
-        e.currentTarget.reset()
-        setTimeout(() => {
-          router.push('/meet')
-        }, 800)
+        formElement.reset()
+        router.push('/meet')
       } else {
         alert('Failed to send request. Please try again later.')
       }
@@ -49,38 +48,22 @@ export function SubmitRequirementsSection() {
   return (
     <section
       id="customize"
-      className="w-full max-w-[100vw] overflow-x-hidden scroll-mt-4 text-white px-4 py-8 sm:px-6 sm:py-24"
+      className="w-full max-w-[100vw] overflow-x-hidden scroll-mt-4 text-white px-4 py-16 sm:px-6 sm:py-24"
       style={{
         background: 'radial-gradient(69.37% 177.6% at 50% 50%, #0F1427 57.35%, #36488D 100%)',
       }}
     >
-      <div className="mx-auto flex max-w-[1200px] flex-col items-center gap-6 sm:gap-12 lg:flex-row lg:items-start lg:justify-between lg:gap-16">
+      <div className="mx-auto flex max-w-[1200px] flex-col items-center gap-12 lg:flex-row lg:items-start lg:justify-between lg:gap-16">
         
         {/* Left Side: Copy & Checks */}
-        <div className="flex w-full flex-1 flex-col pt-0 sm:pt-4 max-w-[520px]">
-          {/* Mobile Heading (< sm) */}
-          <h2 className="sm:hidden mb-2 font-public-sans text-[16px] font-semibold tracking-tight text-white leading-tight">
-            Need custom data?
-          </h2>
-
-          {/* Desktop Heading (>= sm) */}
+        <div className="flex flex-1 flex-col pt-2 max-w-[611px] space-y-8">
           <h2 
-            className="hidden sm:block mb-6 sm:mb-8 font-public-sans text-3xl sm:text-5xl font-bold tracking-tight text-white leading-[1.15]"
+            className="font-public-sans text-3xl sm:text-4xl md:text-[48px] font-semibold text-white leading-tight sm:leading-[64px]"
           >
             Need custom data
           </h2>
 
-          {/* Mobile Subtitle (< sm) */}
-          <p className="sm:hidden mb-6 font-public-sans text-[12px] text-[#CCCCCC] leading-relaxed">
-            From niche dialects to complex multi-modal annotations, we build custom datasets to power your proprietary models.
-          </p>
-
-          {/* Desktop Subtitle (>= sm) */}
-          <p className="hidden sm:block mb-8 sm:mb-10 font-public-sans text-base sm:text-lg text-[#CBD5E1] leading-relaxed">
-            From niche dialects to complex multi-modal annotations, we build custom datasets to power your proprietary models.
-          </p>
-
-          <div className="hidden sm:flex flex-col gap-4 sm:gap-5">
+          <div className="flex flex-col gap-3">
             {FEATURES.map((feature, i) => (
               <div key={i} className="flex items-center gap-3">
                 <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-[#0F1427] shadow-sm">
@@ -95,47 +78,47 @@ export function SubmitRequirementsSection() {
         </div>
 
         {/* Right Side: Form Card */}
-        <div className="w-full max-w-[343px] sm:max-w-[540px] rounded-2xl sm:rounded-3xl bg-white p-4 sm:p-9 shadow-2xl border border-slate-100">
-          <h3 className="mb-4 sm:mb-6 font-public-sans text-base sm:text-2xl font-bold tracking-tight text-[#181818]">
+        <div className="w-full max-w-[540px] rounded-3xl bg-white p-5 sm:p-9 shadow-2xl border border-slate-100">
+          <h3 className="mb-6 font-public-sans text-xl sm:text-2xl font-bold tracking-tight text-[#181818]">
             Submit your requirements
           </h3>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:gap-4">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {/* Full Name */}
-            <div className="flex flex-col gap-1 sm:gap-1.5">
-              <label htmlFor="name" className="font-public-sans text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#475569]">Full name</label>
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="name" className="font-public-sans text-xs font-bold uppercase tracking-wider text-[#475569]">Full name</label>
               <input 
                 id="name"
                 name="name"
                 required
                 type="text" 
                 placeholder="E.g. Nitish Reddy"
-                className="h-10 sm:h-auto rounded-xl border border-[#CBD5E1] bg-[#F8FAFC] px-3.5 sm:px-4 py-2 sm:py-3 font-public-sans text-xs sm:text-sm text-[#181818] outline-none placeholder:text-[#94A3B8] focus:bg-white focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 transition-all"
+                className="rounded-xl border border-[#CBD5E1] bg-[#F8FAFC] px-4 py-3 font-public-sans text-sm text-[#181818] outline-none placeholder:text-[#94A3B8] focus:bg-white focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 transition-all"
               />
             </div>
 
             {/* Email */}
-            <div className="flex flex-col gap-1 sm:gap-1.5">
-              <label htmlFor="email" className="font-public-sans text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#475569]">Email</label>
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="email" className="font-public-sans text-xs font-bold uppercase tracking-wider text-[#475569]">Email</label>
               <input 
                 id="email"
                 name="email"
                 required
                 type="email" 
                 placeholder="E.g. nitish@company.com"
-                className="h-10 sm:h-auto rounded-xl border border-[#CBD5E1] bg-[#F8FAFC] px-3.5 sm:px-4 py-2 sm:py-3 font-public-sans text-xs sm:text-sm text-[#181818] outline-none placeholder:text-[#94A3B8] focus:bg-white focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 transition-all"
+                className="rounded-xl border border-[#CBD5E1] bg-[#F8FAFC] px-4 py-3 font-public-sans text-sm text-[#181818] outline-none placeholder:text-[#94A3B8] focus:bg-white focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 transition-all"
               />
             </div>
 
             {/* Data Type */}
-            <div className="flex flex-col gap-1 sm:gap-1.5">
-              <label htmlFor="dataType" className="font-public-sans text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#475569]">Data Type</label>
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="dataType" className="font-public-sans text-xs font-bold uppercase tracking-wider text-[#475569]">Data Type</label>
               <div className="relative">
                 <select 
                   id="dataType"
                   name="dataType"
                   required
-                  className="h-10 sm:h-auto w-full appearance-none rounded-xl border border-[#CBD5E1] bg-[#F8FAFC] px-3.5 sm:px-4 py-2 sm:py-3 font-public-sans text-xs sm:text-sm text-[#181818] outline-none focus:bg-white focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 transition-all"
+                  className="w-full appearance-none rounded-xl border border-[#CBD5E1] bg-[#F8FAFC] px-4 py-3 font-public-sans text-sm text-[#181818] outline-none focus:bg-white focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 transition-all"
                   defaultValue=""
                 >
                   <option value="" disabled className="text-gray-400">Select data type</option>
@@ -154,27 +137,27 @@ export function SubmitRequirementsSection() {
             </div>
 
             {/* Project Description */}
-            <div className="flex flex-col gap-1 sm:gap-1.5">
-              <label htmlFor="description" className="font-public-sans text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#475569]">Project Description</label>
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="description" className="font-public-sans text-xs font-bold uppercase tracking-wider text-[#475569]">Project Description</label>
               <textarea 
                 id="description"
                 name="description"
                 required
                 rows={3}
                 placeholder="Describe the AI use case you are building and what data you need..."
-                className="h-24 sm:h-auto sm:rows-3 resize-none rounded-xl border border-[#CBD5E1] bg-[#F8FAFC] px-3.5 sm:px-4 py-2 sm:py-3 font-public-sans text-xs sm:text-sm text-[#181818] outline-none placeholder:text-[#94A3B8] focus:bg-white focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 transition-all"
+                className="resize-none rounded-xl border border-[#CBD5E1] bg-[#F8FAFC] px-4 py-3 font-public-sans text-sm text-[#181818] outline-none placeholder:text-[#94A3B8] focus:bg-white focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 transition-all"
               ></textarea>
             </div>
 
             {/* Estimated Budget */}
-            <div className="flex flex-col gap-1 sm:gap-1.5">
-              <label htmlFor="budget" className="font-public-sans text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#475569]">Estimated Budget</label>
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="budget" className="font-public-sans text-xs font-bold uppercase tracking-wider text-[#475569]">Estimated Budget</label>
               <div className="relative">
                 <select 
                   id="budget"
                   name="budget"
                   required
-                  className="h-10 sm:h-auto w-full appearance-none rounded-xl border border-[#CBD5E1] bg-[#F8FAFC] px-3.5 sm:px-4 py-2 sm:py-3 font-public-sans text-xs sm:text-sm text-[#181818] outline-none focus:bg-white focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 transition-all"
+                  className="w-full appearance-none rounded-xl border border-[#CBD5E1] bg-[#F8FAFC] px-4 py-3 font-public-sans text-sm text-[#181818] outline-none focus:bg-white focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 transition-all"
                   defaultValue=""
                 >
                   <option value="" disabled className="text-gray-400">Select Budget range</option>
@@ -192,20 +175,20 @@ export function SubmitRequirementsSection() {
             </div>
 
             {/* Submit */}
-            <div className="mt-2 sm:mt-3 flex flex-col gap-2 sm:gap-3">
+            <div className="mt-3 flex flex-col gap-3">
               <button 
                 type="submit"
                 disabled={loading}
-                className="h-11 sm:h-auto w-full rounded-xl bg-[#2563EB] py-2.5 sm:py-3.5 font-public-sans text-sm sm:text-base font-semibold text-white shadow-[0_4px_14px_rgba(37,99,235,0.35)] transition-all hover:bg-[#1D4ED8] hover:shadow-[0_6px_20px_rgba(37,99,235,0.45)] active:scale-[0.98] disabled:opacity-70 flex items-center justify-center"
+                className="w-full rounded-xl bg-[#2563EB] py-3.5 font-public-sans text-base font-semibold text-white shadow-[0_4px_14px_rgba(37,99,235,0.35)] transition-all hover:bg-[#1D4ED8] hover:shadow-[0_6px_20px_rgba(37,99,235,0.45)] active:scale-[0.98] disabled:opacity-70"
               >
                 {loading ? 'Submitting...' : 'Submit your requirements'}
               </button>
               
               {success && (
-                <p className="text-center text-xs sm:text-sm font-medium text-green-600">Request submitted successfully!</p>
+                <p className="text-center text-sm font-medium text-green-600">Request submitted successfully!</p>
               )}
               
-              <p className="text-center text-[10px] sm:text-xs text-[#64748B]">
+              <p className="text-center text-xs text-[#64748B]">
                 We respond within 1 business day. No commitment required.
               </p>
             </div>
