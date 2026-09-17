@@ -42,8 +42,8 @@ export function ExploreSearchHeader() {
   return (
     <div
       className={cn(
-        'sticky top-[76px] z-40 shrink-0 transition-colors duration-300 ease-in-out font-public-sans',
-        isScrolled ? 'pointer-events-none bg-transparent' : 'bg-[#0F1B3D]'
+        'sticky top-[64px] z-40 shrink-0 transition-colors duration-300 ease-in-out font-public-sans',
+        isScrolled ? 'pointer-events-none bg-transparent' : 'bg-[linear-gradient(90deg,#212F58_0%,#1B2237_50%,#212F58_100%)]'
       )}
     >
       <div className="mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-12">
@@ -51,7 +51,7 @@ export function ExploreSearchHeader() {
           className={cn(
             'transition-all duration-300 ease-in-out',
             isScrolled
-              ? 'pointer-events-auto ml-0 md:ml-[352px] max-w-[1000px] p-0 bg-transparent'
+              ? 'pointer-events-auto ml-0 md:ml-[352px] max-w-[1000px] bg-[#F5F7FA] pt-2 pb-2'
               : 'py-8 text-center'
           )}
         >

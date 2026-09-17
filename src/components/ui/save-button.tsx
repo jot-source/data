@@ -56,19 +56,19 @@ export function SaveButton({
       type="button"
       onClick={handleClick}
       disabled={isPending}
-      aria-label={saved ? 'Unsave dataset' : 'Save dataset'}
-      className={`flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200 disabled:opacity-60 ${
+      aria-label={saved ? 'Remove from wishlist' : 'Add to wishlist'}
+      className={`flex items-center gap-1.5 rounded-md px-1 py-1.5 text-sm font-medium transition-all duration-200 disabled:opacity-60 ${
         isDark
           ? saved
             ? 'bg-white/20 text-white'
             : 'bg-white/10 text-white hover:bg-white/20'
           : saved
             ? 'text-[#2563EB]'
-            : 'text-[#616161] hover:text-[#181818]'
+            : 'text-[#2B2B2B] hover:text-[#181818]'
       }`}
     >
-      <BookmarkIcon filled={saved} className="h-5 w-5" />
-      {saved ? 'Saved' : 'Save'}
+      <BookmarkIcon filled={saved} className="h-5 w-5 text-[#2B2B2B]" />
+      {saved ? 'Added to wishlist' : 'Add to wishlist'}
     </button>
   )
 }

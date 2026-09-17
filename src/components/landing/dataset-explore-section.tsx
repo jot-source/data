@@ -48,13 +48,13 @@ export function DatasetExploreSection() {
   }
 
   return (
-    <section className="w-full max-w-[100vw] overflow-x-hidden bg-[#EFF6FF] py-12 sm:py-16">
+    <section className="w-full max-w-[100vw] overflow-x-hidden bg-[#EFF6FF] py-16 sm:py-[120px]">
       <div className="mx-auto max-w-[1200px] px-4 sm:px-5">
-        <h2 className="mb-8 sm:mb-10 text-center text-2xl font-bold text-[#181818] md:text-3xl">
+        <h2 className="mb-8 sm:mb-12 text-center text-2xl font-bold text-[#181818] md:text-3xl lg:text-[40px] leading-tight">
           We got every dataset you need. Search and explore now.
         </h2>
 
-        <div className="rounded-3xl bg-[#283350] p-4 md:p-8">
+        <div className="rounded-3xl bg-[linear-gradient(90deg,#212F58_0%,#1B2237_50%,#212F58_100%)] p-4 md:p-8">
           {/* Search bar — search button nested on right corner */}
           <form onSubmit={handleSearch} className="mb-6 relative flex items-center rounded-xl bg-white p-1.5 pl-3 sm:pl-4 shadow-sm border border-transparent focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-[#2563EB]/20 transition-all">
             <input
@@ -73,18 +73,20 @@ export function DatasetExploreSection() {
           </form>
 
           {/* Filter bar */}
-          <div className="mb-6 rounded-2xl bg-white p-5 border border-[#E2E8F0] shadow-sm">
-            <div className="mb-3.5 flex items-center justify-between">
-              <span className="text-sm font-bold text-[#181818]">Filter by</span>
-              {activeTags.length > 0 && (
-                <button type="button" onClick={clearAll} className="text-xs font-semibold text-[#2563EB] hover:underline">
-                  Clear all
-                </button>
-              )}
+          <div className="mb-6 rounded-2xl bg-white p-4 shadow-sm border border-[#E2E8F0]/60 space-y-6">
+            <div className="flex items-center justify-between">
+              <span className="text-sm sm:text-base font-bold text-[#181818]">Filter by</span>
+              <button
+                type="button"
+                onClick={clearAll}
+                className="text-sm font-medium text-[#181818] transition-opacity hover:opacity-80 leading-6 inline-flex items-center justify-center h-6"
+              >
+                Clear all
+              </button>
             </div>
             
             {/* Filter pills */}
-            <div className="mb-2 flex flex-wrap gap-2.5">
+            <div className="flex flex-wrap items-center gap-[10px]">
               <FilterDropdown 
                 label="Industry" 
                 count={facets.industry.length}
@@ -115,7 +117,7 @@ export function DatasetExploreSection() {
               <QualityDropdown quality={minQuality} setQuality={setMinQuality} />
 
               <FilterDropdown 
-                label="More (Use cases)" 
+                label="More" 
                 count={facets.useCase.length}
                 options={facetsData?.useCase?.map(f => f.value) || []}
                 selected={facets.useCase}
@@ -125,14 +127,14 @@ export function DatasetExploreSection() {
 
             {/* Active tags */}
             {activeTags.length > 0 && (
-              <div className="flex flex-wrap gap-2 pt-3 border-t border-[#F1F5F9] mt-3">
+              <div className="flex flex-wrap gap-3 pt-4 border-t border-[#F1F5F9]">
                 {activeTags.map((tag, i) => (
                   <span
                     key={i}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-[#BFDBFE] bg-[#EFF6FF] px-3 py-1.5 text-xs font-medium text-[#1E40AF]"
+                    className="inline-flex h-[32px] items-center gap-[10px] rounded-full border border-[#CBD5E1] bg-[#DBEAFE] px-4 py-2 text-xs font-medium text-[#0032B8]"
                   >
                     {tag.label}
-                    <button type="button" onClick={tag.onRemove} className="text-[#3B82F6] hover:text-[#1E40AF]">
+                    <button type="button" onClick={tag.onRemove} className="text-[#0032B8] hover:opacity-75">
                       <XIcon />
                     </button>
                   </span>
@@ -153,14 +155,14 @@ export function DatasetExploreSection() {
             ))}
           </div>
 
-          {/* View all button — fill color */}
+          {/* View all button — white card button */}
           <div className="mt-8 flex justify-center">
             <Link
               href="/datasets"
-              className="inline-flex items-center gap-2.5 rounded-xl bg-[#2563EB] px-8 py-3.5 text-sm font-semibold text-white shadow-[0_4px_14px_rgba(37,99,235,0.35)] transition-all hover:bg-[#1D4ED8] hover:shadow-[0_6px_20px_rgba(37,99,235,0.45)] active:scale-[0.98]"
+              className="inline-flex h-[40px] items-center gap-2 rounded-xl border border-[#CBD5E1] bg-white px-4 text-xs sm:text-sm font-medium text-[#0032B8] shadow-sm transition-all hover:bg-[#F8FAFC] active:scale-[0.98]"
             >
               View all {data?.pagination.total || 0} Datasets
-              <ArrowRightIcon />
+              <ChevronRightIcon />
             </Link>
           </div>
         </div>
@@ -212,15 +214,11 @@ function FilterDropdown({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={`inline-flex items-center gap-1.5 rounded-lg border px-3.5 py-2 text-xs font-semibold transition-all ${
-          isActive 
-            ? 'bg-[#EFF6FF] text-[#2563EB] border-[#BFDBFE]' 
-            : 'bg-[#F8FAFC] text-[#475569] border-[#E2E8F0] hover:bg-[#F1F5F9] hover:text-[#181818]'
-        }`}
+        className="inline-flex h-[36px] items-center gap-[10px] rounded-xl border border-[#CBD5E1] bg-[#DBEAFE] px-3 py-2 text-xs font-medium text-[#0032B8] transition-all hover:bg-[#C8DEFF]"
       >
-        {label}
+        <span>{label}</span>
         {count > 0 && (
-          <span className={`flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold ${isActive ? 'bg-[#DBEAFE] text-[#1D4ED8]' : 'bg-[#E2E8F0] text-[#475569]'}`}>
+          <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-[#0032B8] px-1 text-[10px] font-bold text-white">
             {count}
           </span>
         )}
@@ -263,20 +261,15 @@ function SortDropdown({ sort, setSort }: { sort: DatasetSort, setSort: (s: Datas
   useOnClickOutside(ref, () => setOpen(false))
 
   const activeLabel = SORT_OPTIONS.find(o => o.value === sort)?.label
-  const isActive = sort !== 'recent' || open
 
   return (
     <div className="relative" ref={ref}>
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={`inline-flex items-center gap-1.5 rounded-lg border px-3.5 py-2 text-xs font-semibold transition-all ${
-          isActive 
-            ? 'bg-[#EFF6FF] text-[#2563EB] border-[#BFDBFE]' 
-            : 'bg-[#F8FAFC] text-[#475569] border-[#E2E8F0] hover:bg-[#F1F5F9] hover:text-[#181818]'
-        }`}
+        className="inline-flex h-[36px] items-center gap-[10px] rounded-xl border border-[#CBD5E1] bg-[#DBEAFE] px-3 py-2 text-xs font-medium text-[#0032B8] transition-all hover:bg-[#C8DEFF]"
       >
-        Sort: {activeLabel}
+        <span>Sort: {activeLabel}</span>
         <ChevronDownIcon />
       </button>
 
@@ -302,20 +295,14 @@ function QualityDropdown({ quality, setQuality }: { quality: number | null, setQ
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, () => setOpen(false))
 
-  const isActive = quality !== null || open
-
   return (
     <div className="relative" ref={ref}>
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={`inline-flex items-center gap-1.5 rounded-lg border px-3.5 py-2 text-xs font-semibold transition-all ${
-          isActive 
-            ? 'bg-[#EFF6FF] text-[#2563EB] border-[#BFDBFE]' 
-            : 'bg-[#F8FAFC] text-[#475569] border-[#E2E8F0] hover:bg-[#F1F5F9] hover:text-[#181818]'
-        }`}
+        className="inline-flex h-[36px] items-center gap-[10px] rounded-xl border border-[#CBD5E1] bg-[#DBEAFE] px-3 py-2 text-xs font-medium text-[#0032B8] transition-all hover:bg-[#C8DEFF]"
       >
-        Data quality score {quality !== null ? `(${quality}+)` : ''}
+        <span>Data quality score {quality !== null ? `(${quality}+)` : ''}</span>
         <ChevronDownIcon />
       </button>
 
@@ -360,6 +347,14 @@ function ArrowRightIcon() {
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <line x1="5" y1="12" x2="19" y2="12"></line>
       <polyline points="12 5 19 12 12 19"></polyline>
+    </svg>
+  )
+}
+
+function ChevronRightIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m9 18 6-6-6-6" />
     </svg>
   )
 }

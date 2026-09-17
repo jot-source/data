@@ -74,16 +74,16 @@ export function HowItWorksSection() {
     <section id="how-it-works" ref={sectionRef} className="w-full max-w-[100vw] overflow-x-hidden scroll-mt-4 bg-[#F5F8FF] py-14 sm:py-24 border-t border-[#CBD5E1]">
       <div className="mx-auto max-w-[1200px] px-4 sm:px-5 flex flex-col items-center">
 
-        <h2 className="mb-4 text-center text-2xl sm:text-3xl font-bold tracking-tight text-[#181818] md:text-4xl">
-          From discovery to delivery in four steps
+        <h2 className="mb-3 text-center text-3xl font-bold tracking-tight text-[#181818] sm:text-4xl md:text-[40px] leading-snug">
+          How it works
         </h2>
-        <p className="mb-14 sm:mb-20 text-center text-sm sm:text-base text-[#616161] max-w-2xl">
+        <p className="mb-14 sm:mb-20 text-center text-base sm:text-lg font-normal text-[#444444] max-w-2xl leading-7 sm:leading-8">
           A simple, transparent path from finding the right data to getting it in your hands.
         </p>
 
         {/* Timeline visualization */}
         <div
-          className="relative w-full max-w-3xl mb-14 sm:mb-16"
+          className="relative w-full max-w-[600px] mb-14 sm:mb-16"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
@@ -107,7 +107,7 @@ export function HowItWorksSection() {
                   <button
                     onClick={() => setActiveStep(step.id)}
                     className={cn(
-                      "flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-full transition-all duration-500",
+                      "flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full transition-all duration-500",
                       isActive
                         ? "bg-[#2563EB] text-white shadow-[0_0_30px_rgba(37,99,235,0.4)] scale-110 border-none"
                         : isPast
@@ -133,22 +133,22 @@ export function HowItWorksSection() {
 
         {/* Active Step Details Card */}
         <div
-          className="w-full max-w-3xl rounded-3xl border border-[#CBD5E1] bg-white p-5 sm:p-8 md:p-10 transition-all duration-300"
+          className="w-full max-w-[1000px] rounded-[26.67px] border border-[#C9C9C9] bg-white p-6 sm:p-7 md:p-[26.67px] transition-all duration-300 shadow-sm"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-4 sm:gap-6 md:gap-10">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-[36.67px]">
             {/* Big Blue Icon Square */}
-            <div className="flex h-16 w-16 sm:h-24 sm:w-24 shrink-0 items-center justify-center rounded-2xl bg-[#2563EB] text-white transition-all duration-500">
-              <span className="scale-90 sm:scale-125">{STEPS[activeStep - 1].icon}</span>
+            <div className="flex h-20 w-20 sm:h-[90px] sm:w-[90px] shrink-0 items-center justify-center rounded-2xl bg-[#2563EB] text-white transition-all duration-500">
+              <span className="scale-110 sm:scale-125">{STEPS[activeStep - 1].icon}</span>
             </div>
 
             {/* Text Content */}
-            <div className="flex flex-col gap-3">
-              <h3 className="text-2xl font-bold text-[#181818]">
+            <div className="flex flex-col gap-2">
+              <h3 className="text-[22px] sm:text-[26.67px] font-semibold text-[#181818] leading-tight sm:leading-[40px]">
                 {STEPS[activeStep - 1].title}
               </h3>
-              <p className="text-[#616161] leading-relaxed">
+              <p className="text-sm sm:text-base text-[#616161] leading-relaxed max-w-[750px]">
                 {STEPS[activeStep - 1].description}
               </p>
             </div>

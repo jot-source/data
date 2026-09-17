@@ -101,7 +101,19 @@ function EmailStep({ onSent, onSignIn }: { onSent: (email: string) => void; onSi
       : 'h-[44px] w-full rounded-lg border border-[#ECECEC] bg-white px-3 text-sm text-[#111111] outline-none transition-colors focus:border-[#2563EB] font-[family-name:var(--font-public-sans)] placeholder:text-[#A0A0A0]'
 
   return (
-    <div className={`flex flex-col font-[family-name:var(--font-public-sans)] ${isEmailEntered ? 'gap-8 my-auto' : 'gap-5'}`}>
+    <div className={`flex flex-col font-[family-name:var(--font-public-sans)] ${isEmailEntered ? 'gap-6 my-auto' : 'gap-4'}`}>
+      {/* Top Back Button (Figma: ← Back, 8px gap, 14px 600 #616161) */}
+      <button
+        type="button"
+        onClick={onSignIn}
+        className="flex items-center gap-2 text-[14px] leading-[20px] font-semibold text-[#616161] transition-colors hover:text-[#181818] self-start"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
+        <span>Back</span>
+      </button>
+
       {/* Top Password Reset Illustration Banner (Figma Image 2: 407×180, 9px radius) */}
       {!isEmailEntered && (
         <div className="relative h-[180px] w-full overflow-hidden rounded-[9px]">
@@ -143,14 +155,14 @@ function EmailStep({ onSent, onSignIn }: { onSent: (email: string) => void; onSi
           {error && <p className="text-xs font-medium text-[#DC2626]">{error}</p>}
         </div>
 
-        {/* Dynamic Action Button: "Back to login" when empty, "Continue" when email entered */}
+        {/* Action Button */}
         <button
           type="submit"
           disabled={loading}
           className="flex h-[44px] w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] text-sm font-semibold text-white tracking-normal transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading && <Spinner />}
-          {loading ? 'Sending…' : isEmailEntered ? 'Continue' : 'Back to login'}
+          {loading ? 'Sending…' : isEmailEntered ? 'Continue' : 'Send verification code'}
         </button>
       </form>
 
@@ -264,7 +276,19 @@ function OtpStep({
   const isFilled = digits.every(d => d !== '')
 
   return (
-    <div className="flex flex-col gap-5 font-[family-name:var(--font-public-sans)]">
+    <div className="flex flex-col gap-4 font-[family-name:var(--font-public-sans)]">
+      {/* Top Back Button (Figma: ← Back, 8px gap, 14px 600 #616161) */}
+      <button
+        type="button"
+        onClick={onBack}
+        className="flex items-center gap-2 text-[14px] leading-[20px] font-semibold text-[#616161] transition-colors hover:text-[#181818] self-start"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
+        <span>Back</span>
+      </button>
+
       {/* Title & Email Display Row */}
       <div className="flex flex-col gap-1">
         <h1 className="text-[24px] font-semibold leading-[32px] text-[#111111]">
@@ -274,12 +298,11 @@ function OtpStep({
           We sent an 8 digit code to
         </p>
 
-        <div className="mt-0.5 flex items-center gap-1.5 text-sm font-semibold text-[#111111]">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="2" y="4" width="20" height="16" rx="2" />
-            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+        <div className="mt-1 flex items-center gap-2 text-sm font-semibold text-[#111111]">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#2563EB">
+            <path d="M1.5 4.5a2.5 2.5 0 0 1 2.5-2.5h16a2.5 2.5 0 0 1 2.5 2.5v15a2.5 2.5 0 0 1-2.5 2.5h-16a2.5 2.5 0 0 1-2.5-2.5v-15zm3.172.5l7.328 6.107L19.328 5H4.672zM21 6.57l-7.79 6.492a1.875 1.875 0 0 1-2.42 0L3 6.57V19.5c0 .552.448 1 1 1h16c.552 0 1-.448 1-1V6.57z" />
           </svg>
-          <span>{email}</span>
+          <span className="font-semibold text-sm text-[#111111]">{email}</span>
           <button
             type="button"
             onClick={onBack}
@@ -297,7 +320,7 @@ function OtpStep({
       {/* 8-Digit OTP Input Boxes (348px width, 38x44px boxes, #E0E0E0 border, 6px gap) */}
       <div className="flex flex-col gap-2 w-full max-w-[348px]">
         <span className="text-[11px] font-semibold uppercase tracking-wider text-[#616161]">
-          Enter 8 DIGIT CODE
+          ENTER 8 DIGIT CODE
         </span>
 
         <div className="flex items-center justify-between gap-1.5" onPaste={onPaste}>
@@ -433,15 +456,15 @@ function NewPasswordStep({
       >
         {show ? (
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        ) : (
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9.88 9.88a3 3 0 0 0 4.24 4.24" />
             <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
             <path d="M6.61 6.61A13.5 13.5 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" />
             <line x1="2" y1="2" x2="22" y2="22" />
-          </svg>
-        ) : (
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-            <circle cx="12" cy="12" r="3" />
           </svg>
         )}
       </button>
@@ -449,16 +472,34 @@ function NewPasswordStep({
   }
 
   return (
-    <div className="flex flex-col gap-5 font-[family-name:var(--font-public-sans)]">
+    <div className="flex flex-col gap-4 font-[family-name:var(--font-public-sans)]">
+      {/* Top Back Button (Figma: ← Back, 8px gap, 14px 600 #616161) */}
+      <button
+        type="button"
+        onClick={() => open('sign-in')}
+        className="flex items-center gap-2 text-[14px] leading-[20px] font-semibold text-[#616161] transition-colors hover:text-[#181818] self-start"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
+        <span>Back</span>
+      </button>
+
+      {/* Heading Block (Figma: Heading/H3 24px/32px SemiBold #111111) */}
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold leading-8 text-[#181818]">Create new password</h1>
-        <p className="text-xs leading-4 text-[#616161]">Almost there! set a new password to get back into your account</p>
+        <h1 className="text-[24px] font-semibold leading-[32px] text-[#111111]">Create new password</h1>
+        <p className="text-[12px] font-normal leading-[16px] text-[#616161]">
+          Almost there! set a new password to get back into your account
+        </p>
       </div>
 
+      {/* Separator Line between heading block and input fields */}
+      <div className="h-px w-full bg-[#DDDDDD]" />
+
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
-        {/* Enter new password */}
+        {/* Enter password */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="reset-new-password" className="text-sm font-medium text-[#444444]">Enter new password</label>
+          <label htmlFor="reset-new-password" className="text-sm font-medium text-[#444444]">Enter password</label>
           <div className={passwordWrap}>
             <input
               id="reset-new-password"

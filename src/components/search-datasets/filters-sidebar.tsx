@@ -35,25 +35,32 @@ function FacetCheckboxList({
   }
 
   return (
-    <ul className="flex max-h-48 flex-col gap-2 overflow-y-auto">
-      {options.map((option) => (
-        <li key={option.value}>
-          <label className="flex cursor-pointer items-center justify-between gap-2 rounded px-1 py-0.5 hover:bg-[#F5F7FA]">
-            <span className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={selected.includes(option.value)}
-                onChange={() => toggleFacet(facetKey, option.value)}
-                className="h-4 w-4 rounded border-[#DDDDDD] text-[#2563EB] focus:ring-[#2563EB]"
-              />
-              <span className="font-public-sans text-sm text-[#181818]">{option.value}</span>
-            </span>
-            <span className="font-public-sans text-xs text-[#8C8C8C]">
-              {String(option.count).padStart(2, '0')}
-            </span>
-          </label>
-        </li>
-      ))}
+    <ul className="flex max-h-48 flex-col gap-1.5 overflow-y-auto pr-1">
+      {options.map((option) => {
+        const isChecked = selected.includes(option.value)
+        return (
+          <li key={option.value}>
+            <label
+              className={`flex cursor-pointer items-center justify-between gap-2 rounded-lg px-2.5 py-1.5 transition-colors ${
+                isChecked ? 'bg-[#EFF6FF]' : 'hover:bg-[#F5F7FA]'
+              }`}
+            >
+              <span className="flex items-center gap-2.5">
+                <input
+                  type="checkbox"
+                  checked={isChecked}
+                  onChange={() => toggleFacet(facetKey, option.value)}
+                  className="h-4 w-4 rounded border-[#CBD5E1] text-[#2563EB] focus:ring-[#2563EB]"
+                />
+                <span className="font-public-sans text-sm font-medium text-[#181818]">{option.value}</span>
+              </span>
+              <span className="font-public-sans text-xs text-[#8C8C8C]">
+                {String(option.count).padStart(2, '0')}
+              </span>
+            </label>
+          </li>
+        )
+      })}
     </ul>
   )
 }
@@ -110,24 +117,21 @@ function QualityScoreFilter() {
 export function FiltersSidebar() {
   const { data: facets } = useDatasetFacets()
   const clearAll = useDatasetFilters((s) => s.clearAll)
-  const active = useDatasetFilters(hasActiveFilters)
   const [advancedOpen, setAdvancedOpen] = useState(false)
 
   return (
-    <div className="rounded-[16px] border border-[#CBD5E1] bg-white p-6 shadow-2xs flex flex-col gap-4 max-h-[calc(100vh-110px)] overflow-y-auto font-public-sans">
+    <div className="w-full max-w-[320px] rounded-2xl border border-[#DDDDDD] bg-white p-6 shadow-2xs flex flex-col gap-4 max-h-[calc(100vh-110px)] overflow-y-auto font-public-sans">
       <div className="flex items-center justify-between">
-        <span className="font-public-sans text-xs font-semibold tracking-wide text-[#8C8C8C]">
+        <span className="font-public-sans text-sm font-medium tracking-wide text-[#8C8C8C]">
           FILTERS
         </span>
-        {active && (
-          <button
-            type="button"
-            onClick={clearAll}
-            className="font-public-sans text-xs font-medium text-[#2563EB] hover:underline"
-          >
-            Clear all
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={clearAll}
+          className="font-public-sans text-sm font-medium text-[#2563EB] hover:underline transition-colors"
+        >
+          Clear all
+        </button>
       </div>
 
       <FilterSection title="Industry" defaultOpen>

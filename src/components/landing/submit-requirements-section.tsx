@@ -57,24 +57,20 @@ export function SubmitRequirementsSection() {
       <div className="mx-auto flex max-w-[1200px] flex-col items-center gap-12 lg:flex-row lg:items-start lg:justify-between lg:gap-16">
         
         {/* Left Side: Copy & Checks */}
-        <div className="flex flex-1 flex-col pt-4 max-w-[520px]">
+        <div className="flex flex-1 flex-col pt-2 max-w-[611px] space-y-8">
           <h2 
-            className="mb-6 sm:mb-8 font-public-sans text-3xl sm:text-5xl font-bold tracking-tight text-white leading-[1.15]"
+            className="font-public-sans text-3xl sm:text-4xl md:text-[48px] font-semibold text-white leading-tight sm:leading-[64px]"
           >
-            Need data that<br />doesn&apos;t exist yet?
+            Need custom data
           </h2>
 
-          <p className="mb-8 sm:mb-10 font-public-sans text-base sm:text-lg text-[#CBD5E1] leading-relaxed">
-            From niche dialects to complex multi-modal annotations, we build custom datasets to power your proprietary models.
-          </p>
-
-          <div className="flex flex-col gap-4 sm:gap-5">
+          <div className="flex flex-col gap-3">
             {FEATURES.map((feature, i) => (
-              <div key={i} className="flex items-center gap-3.5">
+              <div key={i} className="flex items-center gap-3">
                 <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-[#0F1427] shadow-sm">
                   <CheckIcon />
                 </div>
-                <span className="font-public-sans text-sm sm:text-lg font-medium text-white/95">
+                <span className="font-public-sans text-base sm:text-lg font-normal text-white leading-7">
                   {feature}
                 </span>
               </div>

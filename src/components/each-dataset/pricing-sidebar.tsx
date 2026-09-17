@@ -40,6 +40,15 @@ export function PricingSidebar({
     return () => clearTimeout(timer)
   }, [showCartModal])
 
+  const scrollToSamples = () => {
+    const el = document.getElementById('samples')
+    if (el) {
+      const yOffset = -100
+      const y = el.getBoundingClientRect().top + window.scrollY + yOffset
+      window.scrollTo({ top: y, behavior: 'smooth' })
+    }
+  }
+
   const handleAddToCart = () => {
     if (!isLoggedIn) {
       promptSignIn()
@@ -58,7 +67,7 @@ export function PricingSidebar({
   }
 
   return (
-    <div className="sticky top-4 w-full relative">
+    <div className="sticky top-24 w-full">
       <div className="flex flex-col gap-5 rounded-2xl border border-[#CBD5E1] bg-white p-6 shadow-sm">
 
         {/* Dataset Code & Category */}
@@ -119,11 +128,19 @@ export function PricingSidebar({
           ))}
         </ul>
 
-        {/* Primary CTA — Add to cart / Download */}
-        {owned ? (
+        {/* Primary CTA — Add to cart / Sign in to buy / Download */}
+        {!isLoggedIn ? (
+          <button
+            onClick={promptSignIn}
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] font-public-sans text-sm font-semibold text-white transition-all hover:bg-[#1D4ED8] active:scale-[0.99] shadow-sm cursor-pointer"
+          >
+            <CartIcon />
+            Sign in to buy
+          </button>
+        ) : owned ? (
           <button
             onClick={downloadDataset}
-            className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#22C55E] px-4 font-public-sans text-sm font-semibold text-white transition-all hover:bg-[#16A34A] active:scale-[0.99]"
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#22C55E] px-4 font-public-sans text-sm font-semibold text-white transition-all hover:bg-[#16A34A] active:scale-[0.99] cursor-pointer"
           >
             <DownloadIcon />
             Download dataset
@@ -131,7 +148,7 @@ export function PricingSidebar({
         ) : (
           <button
             onClick={handleAddToCart}
-            className={`flex h-11 w-full items-center justify-center gap-2 rounded-xl font-public-sans text-sm font-semibold text-white transition-all active:scale-[0.99] shadow-sm ${
+            className={`flex h-12 w-full items-center justify-center gap-2 rounded-xl font-public-sans text-sm font-semibold text-white transition-all active:scale-[0.99] shadow-sm cursor-pointer ${
               isInCart
                 ? 'bg-emerald-600 hover:bg-emerald-700'
                 : 'bg-[#2563EB] hover:bg-[#1D4ED8]'
@@ -141,10 +158,10 @@ export function PricingSidebar({
           </button>
         )}
 
-        {/* Links */}
-        <div className="flex items-center justify-between text-xs pt-1">
+        {/* Links — center aligned with 16px gap per Figma Spec Frame 1597881782 */}
+        <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-public-sans text-center pt-1">
           {hasSample ? (
-            <button onClick={downloadSample} className="flex items-center gap-1 text-[#2563EB] hover:underline">
+            <button onClick={downloadSample} className="inline-flex items-center gap-1 text-[#2563EB] hover:underline whitespace-nowrap cursor-pointer">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="7 10 12 15 17 10" />
@@ -153,10 +170,17 @@ export function PricingSidebar({
               Download sample
             </button>
           ) : (
-            <span className="text-[#8C8C8C]">No sample</span>
+            <button onClick={scrollToSamples} className="inline-flex items-center gap-1 text-[#2563EB] hover:underline whitespace-nowrap cursor-pointer">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Free sample
+            </button>
           )}
-          <a href="#" className="text-[#2563EB] hover:underline">Refund policy</a>
-          <a href="#" className="text-[#2563EB] hover:underline">Data licensing terms</a>
+          <a href="#" className="text-[#2563EB] hover:underline whitespace-nowrap">Refund policy</a>
+          <a href="#" className="text-[#2563EB] hover:underline whitespace-nowrap">Data licensing terms</a>
         </div>
 
       </div>
@@ -227,6 +251,16 @@ function DownloadIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M8 2v8m0 0l-3-3m3 3l3-3M3 12h10"></path>
+    </svg>
+  )
+}
+
+function CartIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="9" cy="21" r="1" />
+      <circle cx="20" cy="21" r="1" />
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
     </svg>
   )
 }

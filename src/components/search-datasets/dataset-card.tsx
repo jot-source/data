@@ -12,7 +12,7 @@ const MAX_VISIBLE_LANGUAGES = 2
 
 function StatChip({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] px-2.5 py-1 font-public-sans text-xs font-medium text-[#475569]">
+    <span className="inline-flex h-8 items-center gap-2 rounded-full border border-[#CBD5E1] bg-[#EFF6FF] px-3 py-2 font-public-sans text-xs font-medium text-[#1E293B]">
       {icon}
       {label}
     </span>
@@ -187,7 +187,7 @@ export function DatasetCard({ dataset, isLoggedIn = false, isSaved = false }: Da
         />
         <Link
           href={`/datasets/${slug}`}
-          className="flex items-center gap-1.5 rounded-lg border border-[#BFDBFE] bg-[#EFF6FF] px-4 py-2 font-public-sans text-sm font-semibold text-[#2563EB] transition-all hover:bg-[#2563EB] hover:text-white"
+          className="inline-flex h-[40px] items-center gap-2 rounded-xl border border-[#2563EB] bg-white px-5 font-public-sans text-sm font-semibold text-[#2563EB] transition-all hover:bg-[#2563EB] hover:text-white"
         >
           View dataset
           {ICONS.chevron}

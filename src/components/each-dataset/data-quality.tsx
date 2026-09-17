@@ -1,12 +1,7 @@
 export function DataQuality() {
   return (
     <div id="data-quality" className="scroll-mt-32 flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h2 className="text-lg font-semibold text-[#181818]">Data quality &amp; validation</h2>
-        <p className="text-sm text-[#616161] leading-5">
-          One glance to see whether this dataset has already been independently checked and a clear next step if it hasn&apos;t.
-        </p>
-      </div>
+      <h2 className="text-lg font-semibold text-[#181818]">Data quality &amp; validation</h2>
 
       {/* Green validation card */}
       <div className="flex items-center gap-0 rounded-xl border border-[#CBD5E1] bg-[#DCFCE7] p-3">

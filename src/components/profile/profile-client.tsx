@@ -40,10 +40,7 @@ export function ProfileClient({ user, savedDatasets = [], orders = [] }: Profile
         {/* Right Content */}
         <main className="flex-1">
           {activeTab === 'Account info' && (
-            <div className="space-y-12">
-              <AccountInfoForm user={user} />
-              <SecuritySettings />
-            </div>
+            <AccountInfoForm user={user} />
           )}
 
           {activeTab === 'My orders' && (

@@ -86,8 +86,8 @@ export function DatasetResults({
   const setPage = useDatasetFilters((s) => s.setPage)
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between pt-1 font-public-sans">
+    <div className="flex flex-col gap-5">
+      <div className="sticky top-[132px] z-30 flex items-center justify-between bg-[#F5F7FA] py-2 font-public-sans">
         <p className="font-public-sans text-base font-medium leading-[24px] text-[#2B2B2B]">
           {isPending
             ? 'Loading datasets…'
@@ -109,14 +109,14 @@ export function DatasetResults({
       )}
 
       {isPending ? (
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {Array.from({ length: 6 }).map((_, i) => (
             <DatasetCardSkeleton key={i} />
           ))}
         </div>
       ) : (
         <div
-          className={`grid grid-cols-1 gap-5 md:grid-cols-2 ${isPlaceholderData ? 'opacity-60' : 'opacity-100'}`}
+          className={`grid grid-cols-1 gap-6 md:grid-cols-2 ${isPlaceholderData ? 'opacity-60' : 'opacity-100'}`}
         >
           {data?.datasets.map((dataset) => (
             <DatasetCard

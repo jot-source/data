@@ -148,26 +148,21 @@ export function PricingOptions({
   }
 
   return (
-    <div id="samples" className="scroll-mt-32 flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h2 className="text-lg font-semibold text-[#181818]">Try a sample before licensing.</h2>
-        <p className="text-sm text-[#616161] leading-5">
-          A test packet is a representative sample of the full dataset, allowing you to validate quality, compatibility, and fit before purchasing a license.
-        </p>
-      </div>
+    <div id="samples" className="scroll-mt-32 flex flex-col gap-6 font-public-sans">
+      <h2 className="text-lg font-semibold text-[#181818]">Try a sample before licensing.</h2>
 
-      {/* Free Sample Card */}
-      <div className="rounded-2xl border border-[#CBD5E1] bg-white p-6 md:p-8">
-        <div className="flex flex-col md:flex-row items-start gap-8">
-          {/* Left: Details */}
-          <div className="flex-1 flex flex-col gap-5">
-            <div className="flex flex-col gap-2">
-              <h3 className="text-base font-semibold text-[#181818]">Free Sample</h3>
-              <p className="text-sm text-[#616161]">
+      {/* ─── Card 1: Free Sample Card (Figma: bg-[#EFF6FF], border-[#2563EB], rounded-[20px], padding 24px) ─── */}
+      <div className="rounded-[20px] border border-[#2563EB] bg-[#EFF6FF] p-6">
+        <div className="flex flex-col md:flex-row items-stretch gap-6 md:gap-8">
+          {/* Left: Details (Figma: 303px width, gap 24px) */}
+          <div className="w-full md:w-[303px] shrink-0 flex flex-col justify-between gap-6">
+            <div className="flex flex-col gap-1">
+              <h3 className="text-[20px] leading-[28px] font-bold text-[#181818]">Free Sample</h3>
+              <p className="text-[12px] leading-[16px] font-normal text-[#616161]">
                 Preview the dataset&apos;s structure, format, and annotation quality.
               </p>
             </div>
-            <ul className="flex flex-col gap-2.5 text-sm text-[#616161]">
+            <ul className="flex flex-col gap-2.5 text-[12px] leading-[16px] text-[#616161]">
               <li className="flex items-center gap-2"><DownloadIcon /> 1 download</li>
               <li className="flex items-center gap-2"><FolderIcon /> 50 mb</li>
               <li className="flex items-center gap-2"><BarIcon /> 5,000 records</li>
@@ -175,38 +170,56 @@ export function PricingOptions({
               <li className="flex items-center gap-2"><FileIcon /> CSV</li>
             </ul>
           </div>
+
+          {/* Vertical Divider Line (Figma spec: 1px #DDDDDD) */}
+          <div className="hidden md:block w-[1px] bg-[#DDDDDD] self-stretch my-1 shrink-0" />
+
           {/* Right: Price + CTA */}
-          <div className="flex flex-col items-start gap-4 min-w-[240px]">
-            <span className="text-3xl font-bold text-[#181818]">Free</span>
-            <p className="text-sm text-[#616161]">Ideal for previewing the dataset and testing basic pipeline compatibility.</p>
+          <div className="flex-1 shrink-0 flex flex-col justify-between gap-5">
+            <div className="flex flex-col gap-1">
+              <span className="text-[32px] leading-[48px] font-bold text-[#181818]">Free</span>
+              <p className="text-[12px] leading-[16px] font-normal text-[#616161]">
+                Ideal for previewing the dataset and testing basic pipeline compatibility.
+              </p>
+            </div>
             
             <div className="flex flex-col items-start gap-2 w-full">
-              <button
-                onClick={handleDownloadSample}
-                disabled={!hasSample || sampleStatus === 'preparing' || cooldownSeconds > 0}
-                className={`w-full md:w-auto flex items-center justify-center gap-2 rounded-lg px-8 py-2.5 text-sm font-semibold text-white transition-all active:scale-[0.99] disabled:cursor-not-allowed ${
-                  cooldownSeconds > 0
-                    ? 'bg-[#94A3B8] opacity-90'
-                    : 'bg-[#2563EB] hover:bg-[#1D4FD7] disabled:opacity-75'
-                }`}
-              >
-                {cooldownSeconds > 0 ? (
-                  <>
-                    <ClockIcon />
-                    <span>Please wait ({cooldownSeconds}s)</span>
-                  </>
-                ) : sampleStatus === 'preparing' ? (
-                  <>
-                    <SpinnerIcon />
-                    <span>Preparing...</span>
-                  </>
-                ) : (
-                  <>
-                    <DownloadIconWhite />
-                    <span>{hasSample ? 'Download sample' : 'No sample available'}</span>
-                  </>
-                )}
-              </button>
+              {!isLoggedIn ? (
+                <button
+                  onClick={promptSignIn}
+                  className="w-full md:w-auto flex items-center justify-center gap-2 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] px-6 py-3 text-[14px] leading-[20px] font-semibold text-white transition-all active:scale-[0.99] shadow-xs"
+                >
+                  <DownloadIconWhite />
+                  <span>Login to download</span>
+                </button>
+              ) : (
+                <button
+                  onClick={handleDownloadSample}
+                  disabled={!hasSample || sampleStatus === 'preparing' || cooldownSeconds > 0}
+                  className={`w-full md:w-auto flex items-center justify-center gap-2 rounded-lg px-6 py-3 text-[14px] leading-[20px] font-semibold text-white transition-all active:scale-[0.99] disabled:cursor-not-allowed ${
+                    cooldownSeconds > 0
+                      ? 'bg-[#94A3B8] opacity-90'
+                      : 'bg-[#2563EB] hover:bg-[#1D4ED8] disabled:opacity-75'
+                  }`}
+                >
+                  {cooldownSeconds > 0 ? (
+                    <>
+                      <ClockIcon />
+                      <span>Please wait ({cooldownSeconds}s)</span>
+                    </>
+                  ) : sampleStatus === 'preparing' ? (
+                    <>
+                      <SpinnerIcon />
+                      <span>Preparing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <DownloadIconWhite />
+                      <span>{hasSample ? 'Download sample' : 'No sample available'}</span>
+                    </>
+                  )}
+                </button>
+              )}
 
               {/* Cooldown limit notice */}
               {cooldownSeconds > 0 && (
@@ -238,7 +251,7 @@ export function PricingOptions({
 
       {/* Error Popup Modal */}
       {showErrorModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-xs">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-xs font-public-sans">
           <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-xl border border-[#CBD5E1] flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200">
             <button
               onClick={() => setShowErrorModal(false)}
@@ -288,18 +301,18 @@ export function PricingOptions({
         </div>
       )}
 
-      {/* Enterprise Test Packet Card */}
-      <div className="rounded-2xl border border-[#CBD5E1] bg-white p-6 md:p-8">
-        <div className="flex flex-col md:flex-row items-start gap-8">
-          {/* Left: Details */}
-          <div className="flex-1 flex flex-col gap-5">
-            <div className="flex flex-col gap-2">
-              <h3 className="text-base font-semibold text-[#181818]">Enterprise test packet</h3>
-              <p className="text-sm text-[#616161]">
+      {/* ─── Card 2: Enterprise Test Packet Card (Figma: bg-white, border-[#CBD5E1], rounded-[20px], padding 24px) ─── */}
+      <div className="rounded-[20px] border border-[#CBD5E1] bg-white p-6">
+        <div className="flex flex-col md:flex-row items-stretch gap-6 md:gap-8">
+          {/* Left: Details (Figma: 303px width, gap 24px) */}
+          <div className="w-full md:w-[303px] shrink-0 flex flex-col justify-between gap-6">
+            <div className="flex flex-col gap-1">
+              <h3 className="text-[20px] leading-[28px] font-bold text-[#181818]">Enterprise test packet</h3>
+              <p className="text-[12px] leading-[16px] font-normal text-[#616161]">
                 Validate the full dataset with a larger, production-ready sample before licensing.
               </p>
             </div>
-            <ul className="flex flex-col gap-2.5 text-sm text-[#616161]">
+            <ul className="flex flex-col gap-2.5 text-[12px] leading-[16px] text-[#616161]">
               <li className="flex items-center gap-2"><DownloadIcon /> 3 download</li>
               <li className="flex items-center gap-2"><FolderIcon /> 500 mb</li>
               <li className="flex items-center gap-2"><BarIcon /> 2,50,000 records</li>
@@ -307,36 +320,54 @@ export function PricingOptions({
               <li className="flex items-center gap-2"><FileIcon /> CSV, JSON, Parquet</li>
             </ul>
           </div>
+
+          {/* Vertical Divider Line (Figma spec: 1px #DDDDDD) */}
+          <div className="hidden md:block w-[1px] bg-[#DDDDDD] self-stretch my-1 shrink-0" />
+
           {/* Right: Price + CTA */}
-          <div className="flex flex-col items-start gap-4">
-            {isLoggedIn ? (
-              <span className="text-3xl font-bold text-[#181818]">$199</span>
-            ) : (
-              <button onClick={promptSignIn} className="flex items-center gap-2" title="Sign in to view price">
-                <span className="select-none text-3xl font-bold text-[#181818] blur-[6px]">$199</span>
-                <span className="text-xs font-medium text-[#2563EB] hover:underline">Sign in to view price</span>
-              </button>
-            )}
-            <p className="text-sm text-[#616161]">Ideal for previewing the dataset and testing basic pipeline compatibility.</p>
-            {owned ? (
-              <button
-                onClick={downloadDataset}
-                className="rounded-lg bg-[#22C55E] px-8 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#16A34A]"
-              >
-                Download dataset
-              </button>
-            ) : (
-              <button
-                onClick={handleAddToCartTestPacket}
-                className={`rounded-lg px-8 py-2.5 font-public-sans text-sm font-semibold text-white transition-all active:scale-[0.99] shadow-sm ${
-                  isTestPacketInCart
-                    ? 'bg-emerald-600 hover:bg-emerald-700'
-                    : 'bg-[#2563EB] hover:bg-[#1D4ED8]'
-                }`}
-              >
-                {isTestPacketInCart ? '✓ Added to cart' : 'Add to cart'}
-              </button>
-            )}
+          <div className="flex-1 shrink-0 flex flex-col justify-between gap-5">
+            <div className="flex flex-col gap-1">
+              {isLoggedIn ? (
+                <span className="text-[32px] leading-[48px] font-bold text-[#181818]">$199</span>
+              ) : (
+                <button onClick={promptSignIn} className="flex items-center gap-2 text-left" title="Sign in to view price">
+                  <span className="select-none text-[32px] leading-[48px] font-bold text-[#181818] blur-[6px]">$199</span>
+                  <span className="text-xs font-medium text-[#2563EB] hover:underline">Sign in to view price</span>
+                </button>
+              )}
+              <p className="text-[12px] leading-[16px] font-normal text-[#616161]">
+                Ideal for previewing the dataset and testing basic pipeline compatibility.
+              </p>
+            </div>
+
+            <div className="w-full">
+              {!isLoggedIn ? (
+                <button
+                  onClick={promptSignIn}
+                  className="w-full md:w-auto flex items-center justify-center gap-2 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] px-6 py-3 text-[14px] leading-[20px] font-semibold text-white transition-all active:scale-[0.99] shadow-xs"
+                >
+                  <span>Login to view price</span>
+                </button>
+              ) : owned ? (
+                <button
+                  onClick={downloadDataset}
+                  className="w-full md:w-auto flex items-center justify-center gap-2 rounded-lg bg-[#22C55E] hover:bg-[#16A34A] px-6 py-3 text-[14px] leading-[20px] font-semibold text-white transition-colors shadow-xs"
+                >
+                  <span>Download dataset</span>
+                </button>
+              ) : (
+                <button
+                  onClick={handleAddToCartTestPacket}
+                  className={`w-full md:w-auto flex items-center justify-center gap-2 rounded-lg px-6 py-3 font-public-sans text-[14px] leading-[20px] font-semibold text-white transition-all active:scale-[0.99] shadow-xs ${
+                    isTestPacketInCart
+                      ? 'bg-emerald-600 hover:bg-emerald-700'
+                      : 'bg-[#2563EB] hover:bg-[#1D4ED8]'
+                  }`}
+                >
+                  <span>{isTestPacketInCart ? '✓ Added to cart' : 'Add to cart'}</span>
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
