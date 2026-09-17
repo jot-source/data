@@ -68,7 +68,7 @@ export function SaveButton({
             : 'bg-white/10 text-white hover:bg-white/20'
           : saved
             ? 'text-[#2563EB]'
-            : 'text-[#616161] hover:text-[#181818]'
+            : 'text-[#2B2B2B] hover:text-[#181818]'
       }`}
     >
       <BookmarkIcon filled={saved} className="h-4 w-4 sm:h-5 sm:w-5" />

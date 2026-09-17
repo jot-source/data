@@ -65,7 +65,7 @@ export default async function DatasetDetailPage({
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F7FB] text-[#181818] w-full max-w-[100vw] overflow-x-hidden">
+    <div className="min-h-screen bg-[#F4F7FB] text-[#181818] w-full max-w-full overflow-x-clip">
       <div className="mx-auto w-full max-w-[1200px] px-4 sm:px-5 py-6">
 
         {/* Breadcrumb */}

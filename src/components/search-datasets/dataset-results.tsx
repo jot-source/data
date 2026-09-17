@@ -175,14 +175,14 @@ export function DatasetResults({
       )}
 
       {isPending ? (
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {Array.from({ length: 6 }).map((_, i) => (
             <DatasetCardSkeleton key={i} />
           ))}
         </div>
       ) : (
         <div
-          className={`grid grid-cols-1 gap-5 md:grid-cols-2 ${isPlaceholderData ? 'opacity-60' : 'opacity-100'}`}
+          className={`grid grid-cols-1 gap-6 md:grid-cols-2 ${isPlaceholderData ? 'opacity-60' : 'opacity-100'}`}
         >
           {data?.datasets.map((dataset) => (
             <DatasetCard

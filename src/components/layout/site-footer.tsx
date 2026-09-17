@@ -31,13 +31,7 @@ export function SiteFooter() {
   const year = new Date().getFullYear()
 
   return (
-    <footer
-      className="w-full max-w-[100vw] relative overflow-x-hidden pb-10 pt-14 sm:pt-16 text-white"
-      style={{
-        background:
-          'radial-gradient(ellipse 60% 80% at 8% 50%, rgba(37, 99, 235, 0.2) 0%, transparent 65%), radial-gradient(ellipse 60% 80% at 92% 50%, rgba(59, 130, 246, 0.16) 0%, transparent 65%), #0B1220',
-      }}
-    >
+    <footer className="w-full max-w-[100vw] relative overflow-x-hidden pb-10 pt-14 sm:pt-16 text-white bg-[#0B0F1F]">
       <div className="mx-auto w-full max-w-[1200px] px-4 sm:px-5">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div className="flex flex-col items-start">

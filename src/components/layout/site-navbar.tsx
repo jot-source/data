@@ -93,6 +93,13 @@ function MegaMenuShell({
   footerAction: string
   onFooterClick: () => void
 }) {
+  const [hoveredCardTitle, setHoveredCardTitle] = useState<string | null>(null)
+
+  const handleTabChange = (id: string) => {
+    setHoveredCardTitle(null)
+    onTabChange(id)
+  }
+
   return (
     <div
       className="overflow-hidden bg-white"
@@ -118,8 +125,8 @@ function MegaMenuShell({
               <button
                 key={tab.id}
                 type="button"
-                onMouseEnter={() => onTabChange(tab.id)}
-                onClick={() => onTabChange(tab.id)}
+                onMouseEnter={() => handleTabChange(tab.id)}
+                onClick={() => handleTabChange(tab.id)}
                 className="flex w-full items-center justify-between transition-colors focus:outline-none"
                 style={{
                   height: 44,
@@ -166,11 +173,12 @@ function MegaMenuShell({
             style={{ gap: 16, paddingRight: 4, scrollbarWidth: 'thin' }}
           >
             {items.map((item, idx) => {
-              const isCardSelected = item.isSelected ?? (idx === 0)
+              const isCardSelected = item.isSelected ?? (hoveredCardTitle ? hoveredCardTitle === item.title : idx === 0)
               return (
                 <button
                   key={item.title}
                   type="button"
+                  onMouseEnter={() => setHoveredCardTitle(item.title)}
                   onClick={item.onSelect}
                   className="group flex shrink-0 items-center text-left transition-all focus:outline-none hover:border-[#2563EB] hover:shadow-[0_4px_16px_rgba(37,99,235,0.12)]"
                   style={{

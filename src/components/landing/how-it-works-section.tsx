@@ -173,7 +173,7 @@ export function HowItWorksSection() {
                   <button
                     onClick={() => setActiveStep(step.id)}
                     className={cn(
-                      "flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-full transition-all duration-500",
+                      "flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full transition-all duration-500",
                       isActive
                         ? "bg-[#2563EB] text-white shadow-[0_0_30px_rgba(37,99,235,0.4)] scale-110 border-none"
                         : isPast
@@ -203,18 +203,18 @@ export function HowItWorksSection() {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-4 sm:gap-6 md:gap-10">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-[36.67px]">
             {/* Big Blue Icon Square */}
-            <div className="flex h-16 w-16 sm:h-24 sm:w-24 shrink-0 items-center justify-center rounded-2xl bg-[#2563EB] text-white transition-all duration-500">
-              <span className="scale-90 sm:scale-125">{STEPS[activeStep - 1].icon}</span>
+            <div className="flex h-20 w-20 sm:h-[90px] sm:w-[90px] shrink-0 items-center justify-center rounded-2xl bg-[#2563EB] text-white transition-all duration-500">
+              <span className="scale-110 sm:scale-125">{STEPS[activeStep - 1].icon}</span>
             </div>
 
             {/* Text Content */}
-            <div className="flex flex-col gap-3">
-              <h3 className="text-2xl font-bold text-[#181818]">
+            <div className="flex flex-col gap-2">
+              <h3 className="text-[22px] sm:text-[26.67px] font-semibold text-[#181818] leading-tight sm:leading-[40px]">
                 {STEPS[activeStep - 1].title}
               </h3>
-              <p className="text-[#616161] leading-relaxed">
+              <p className="text-sm sm:text-base text-[#616161] leading-relaxed max-w-[750px]">
                 {STEPS[activeStep - 1].description}
               </p>
             </div>

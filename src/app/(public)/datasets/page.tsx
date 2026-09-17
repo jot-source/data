@@ -17,9 +17,9 @@ export default async function DatasetsPage() {
       <ExploreSearchHeader />
 
       {/* Main 2-Column Layout: Left 320px Sidebar + Right 1000px Content (Max 1440px layout width) */}
-      <div className="mx-auto flex w-full max-w-[1440px] gap-8 px-4 sm:px-8 lg:px-12 pt-6 pb-16 items-start">
+      <div className="mx-auto flex w-full max-w-[1440px] gap-8 px-4 sm:px-8 lg:px-12 pt-8 sm:pt-10 pb-16 items-start">
         {/* Left Sticky Filters Sidebar (Figma Spec: 320px x 648px Hug, 24px padding, 16px radius) */}
-        <aside className="sticky top-[76px] w-[320px] shrink-0 self-start hidden md:block">
+        <aside className="sticky top-[76px] z-20 w-[320px] shrink-0 self-start hidden md:block">
           <FiltersSidebar />
         </aside>
 

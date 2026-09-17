@@ -127,7 +127,7 @@ export function DatasetExploreSection() {
               <QualityDropdown quality={minQuality} setQuality={setMinQuality} />
 
               <FilterDropdown 
-                label="More (Use cases)" 
+                label="More" 
                 count={facets.useCase.length}
                 options={facetsData?.useCase?.map(f => f.value) || []}
                 selected={facets.useCase}
@@ -144,7 +144,7 @@ export function DatasetExploreSection() {
                     className="inline-flex items-center gap-1.5 rounded-lg border border-[#BFDBFE] bg-[#EFF6FF] px-2.5 py-1 text-[11px] font-medium text-[#1E40AF]"
                   >
                     {tag.label}
-                    <button type="button" onClick={tag.onRemove} className="text-[#3B82F6] hover:text-[#1E40AF]">
+                    <button type="button" onClick={tag.onRemove} className="text-[#0032B8] hover:opacity-75">
                       <XIcon />
                     </button>
                   </span>
@@ -231,7 +231,7 @@ function FilterDropdown({
             : 'bg-[#DBEAFE] sm:bg-[#F8FAFC] text-[#0032B8] sm:text-[#475569] border-[#CBD5E1] sm:border-[#E2E8F0] hover:bg-[#EFF6FF] hover:text-[#0032B8]'
         }`}
       >
-        {label}
+        <span>{label}</span>
         {count > 0 && (
           <span className={`flex h-3.5 sm:h-4 min-w-3.5 sm:min-w-4 items-center justify-center rounded-full px-1 text-[9px] sm:text-[10px] font-bold ${isActive ? 'bg-[#2563EB] text-white' : 'bg-[#CBD5E1] text-[#1E293B]'}`}>
             {count}
@@ -329,7 +329,7 @@ function QualityDropdown({ quality, setQuality }: { quality: number | null, setQ
             : 'bg-[#DBEAFE] sm:bg-[#F8FAFC] text-[#0032B8] sm:text-[#475569] border-[#CBD5E1] sm:border-[#E2E8F0] hover:bg-[#EFF6FF] hover:text-[#0032B8]'
         }`}
       >
-        Data quality score {quality !== null ? `(${quality}+)` : ''}
+        <span>Data quality score {quality !== null ? `(${quality}+)` : ''}</span>
         <ChevronDownIcon />
       </button>
 
@@ -374,6 +374,14 @@ function ArrowRightIcon() {
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <line x1="5" y1="12" x2="19" y2="12"></line>
       <polyline points="12 5 19 12 12 19"></polyline>
+    </svg>
+  )
+}
+
+function ChevronRightIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m9 18 6-6-6-6" />
     </svg>
   )
 }

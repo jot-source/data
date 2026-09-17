@@ -60,12 +60,7 @@ export function FAQSection() {
 
   return (
     <div id="faq" className="scroll-mt-32 flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h2 className="text-lg font-semibold text-[#181818]">Questions before you buy</h2>
-        <p className="text-sm text-[#616161] leading-5">
-          Answers to what buyers ask most. Can&apos;t find yours? Reach out and our team will get back within a day.
-        </p>
-      </div>
+      <h2 className="text-lg font-semibold text-[#181818]">Questions before you buy</h2>
 
       <div className="flex flex-col gap-3">
         {FAQS.map((faq, i) => (

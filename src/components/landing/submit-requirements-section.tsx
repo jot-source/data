@@ -67,7 +67,7 @@ export function SubmitRequirementsSection() {
           <h2 
             className="hidden sm:block mb-6 sm:mb-8 font-public-sans text-3xl sm:text-5xl font-bold tracking-tight text-white leading-[1.15]"
           >
-            Need data that<br />doesn&apos;t exist yet?
+            Need custom data
           </h2>
 
           {/* Mobile Subtitle (< sm) */}
@@ -82,11 +82,11 @@ export function SubmitRequirementsSection() {
 
           <div className="hidden sm:flex flex-col gap-4 sm:gap-5">
             {FEATURES.map((feature, i) => (
-              <div key={i} className="flex items-center gap-3.5">
+              <div key={i} className="flex items-center gap-3">
                 <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-[#0F1427] shadow-sm">
                   <CheckIcon />
                 </div>
-                <span className="font-public-sans text-sm sm:text-lg font-medium text-white/95">
+                <span className="font-public-sans text-base sm:text-lg font-normal text-white leading-7">
                   {feature}
                 </span>
               </div>

@@ -58,7 +58,7 @@ export function Hero() {
           <h1 className="w-full font-public-sans text-2xl sm:text-5xl md:text-[64px] font-semibold sm:font-bold leading-8 sm:leading-tight md:leading-[78px] tracking-tight text-[#181818]">
             Discover High-Quality{' '}
             <br className="hidden sm:inline" />
-            <span className="text-[#2563EB]">AI Training data</span> at scale
+            <span className="font-medium text-[#2563EB]">AI Training data</span> at scale
           </h1>
           <p className="w-full max-w-[760px] font-public-sans text-xs sm:text-lg md:text-xl font-normal leading-4 sm:leading-relaxed text-[#444444] sm:text-[#475569] px-1 sm:px-2">
             Access curated datasets across text, image, audio, video, RLHF, and
