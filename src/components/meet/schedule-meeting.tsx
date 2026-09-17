@@ -37,7 +37,64 @@ interface ConfirmedBooking {
   notes?: string
 }
 
-// List of standard national & international holidays (MM-DD format)
+// Global list of major international timezones
+const TIMEZONES = [
+  { value: 'Asia/Kolkata', label: 'Asia/Kolkata (IST - India, UTC+5:30)' },
+  { value: 'America/New_York', label: 'America/New_York (EST/EDT - US East, UTC-4)' },
+  { value: 'America/Chicago', label: 'America/Chicago (CST/CDT - US Central, UTC-5)' },
+  { value: 'America/Denver', label: 'America/Denver (MST/MDT - US Mountain, UTC-6)' },
+  { value: 'America/Los_Angeles', label: 'America/Los_Angeles (PST/PDT - US Pacific, UTC-7)' },
+  { value: 'Europe/London', label: 'Europe/London (GMT/BST - UK, UTC+1)' },
+  { value: 'Europe/Paris', label: 'Europe/Paris (CET/CEST - Central Europe, UTC+2)' },
+  { value: 'Europe/Berlin', label: 'Europe/Berlin (CET/CEST - Germany, UTC+2)' },
+  { value: 'Asia/Dubai', label: 'Asia/Dubai (GST - UAE, UTC+4)' },
+  { value: 'Asia/Singapore', label: 'Asia/Singapore (SGT - Singapore, UTC+8)' },
+  { value: 'Asia/Tokyo', label: 'Asia/Tokyo (JST - Japan, UTC+9)' },
+  { value: 'Australia/Sydney', label: 'Australia/Sydney (AEST/AEDT - Sydney, UTC+10)' },
+  { value: 'UTC', label: 'UTC (Universal Coordinated Time)' },
+]
+
+function getTimezoneOffsetLabel(timezone: string): string {
+  try {
+    const now = new Date()
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: timezone,
+      timeZoneName: 'short',
+    })
+    const parts = formatter.formatToParts(now)
+    const tzPart = parts.find((p) => p.type === 'timeZoneName')
+    return tzPart ? tzPart.value : timezone
+  } catch {
+    return timezone
+  }
+}
+
+function convertSlotTimeToZone(dateStr: string, slotTimeStr: string, targetTimezone: string): string {
+  if (!slotTimeStr) return ''
+  try {
+    const [time, period] = slotTimeStr.split(' ')
+    let [hours, minutes] = time.split(':').map(Number)
+    if (period === 'PM' && hours < 12) hours += 12
+    if (period === 'AM' && hours === 12) hours = 0
+
+    const hh = String(hours).padStart(2, '0')
+    const mm = String(minutes).padStart(2, '0')
+
+    const istIso = `${dateStr}T${hh}:${mm}:00+05:30`
+    const dateObj = new Date(istIso)
+
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: targetTimezone,
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    })
+    return formatter.format(dateObj)
+  } catch {
+    return slotTimeStr
+  }
+}
+
 const HOLIDAYS: Record<string, string> = {
   '01-01': "New Year's Day",
   '01-26': 'Republic Day',
@@ -56,7 +113,7 @@ function checkIsHoliday(dayDate: Date): string | null {
 
 function checkIsWeekend(dayDate: Date): boolean {
   const day = dayDate.getDay()
-  return day === 0 || day === 6 // 0 = Sunday, 6 = Saturday
+  return day === 0 || day === 6
 }
 
 function formatDateYYYYMMDD(d: Date): string {
@@ -112,7 +169,6 @@ export function ScheduleMeeting() {
   // Date selection state
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date())
   const [selectedDate, setSelectedDate] = useState<string>(() => {
-    // Default to today if weekday, else next available Monday
     const today = new Date()
     while (checkIsWeekend(today) || checkIsHoliday(today)) {
       today.setDate(today.getDate() + 1)
@@ -124,7 +180,7 @@ export function ScheduleMeeting() {
   // Slot availability
   const [slots, setSlots] = useState<TimeSlot[]>([])
   const [loadingSlots, setLoadingSlots] = useState(false)
-  
+
   // Form state
   const [formData, setFormData] = useState({
     name: '',
@@ -399,32 +455,48 @@ export function ScheduleMeeting() {
 
               {/* Right Column: Time Slots */}
               <div className="lg:col-span-5 flex flex-col gap-4 border-t lg:border-t-0 lg:border-l border-[#E2E8F0] pt-6 lg:pt-0 lg:pl-8">
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-semibold text-base text-[#181818]">Select Time Slot</h3>
-                  <p className="text-xs text-[#616161]">
-                    {formatDisplayDate(selectedDate)} ({getTimezoneOffsetString(userTimezone)})
-                  </p>
-
-                  {/* Dynamic Global Timezone Selector */}
-                  <div className="mt-1 flex items-center gap-1.5 rounded-lg border border-[#CBD5E1] bg-[#F8FAFC] px-2.5 py-1.5 text-xs text-[#475569]">
-                    <Globe className="h-3.5 w-3.5 text-[#2563EB] shrink-0" />
-                    <select
-                      value={userTimezone}
-                      onChange={(e) => setUserTimezone(e.target.value)}
-                      className="w-full bg-transparent text-xs font-medium text-[#181818] outline-none cursor-pointer"
-                    >
-                      {!POPULAR_TIMEZONES.some((tz) => tz.value === userTimezone) && (
-                        <option value={userTimezone}>
-                          {userTimezone} ({getTimezoneOffsetString(userTimezone)})
-                        </option>
-                      )}
-                      {POPULAR_TIMEZONES.map((tz) => (
-                        <option key={tz.value} value={tz.value}>
-                          {tz.label} ({getTimezoneOffsetString(tz.value)})
-                        </option>
-                      ))}
-                    </select>
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-base text-[#181818]">Select Time Slot</h3>
+                    <div className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#2563EB] bg-[#EFF6FF] px-2.5 py-1 rounded-full border border-[#BFDBFE]">
+                      <Globe className="h-3.5 w-3.5" />
+                      <span>International Sync</span>
+                    </div>
                   </div>
+
+                  {/* Timezone Selector Dropdown */}
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="tz-select" className="text-xs font-semibold text-[#475569] flex items-center gap-1.5">
+                      <Globe className="h-3.5 w-3.5 text-[#2563EB]" />
+                      <span>Your Time Zone:</span>
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="tz-select"
+                        value={userTimezone}
+                        onChange={(e) => setUserTimezone(e.target.value)}
+                        className="w-full h-10 pl-3 pr-8 rounded-xl border border-[#CBD5E1] bg-[#F8FAFC] text-xs font-medium text-[#181818] outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 transition-all cursor-pointer appearance-none"
+                      >
+                        {!TIMEZONES.some((t) => t.value === userTimezone) && (
+                          <option value={userTimezone}>{userTimezone} (Auto-detected)</option>
+                        )}
+                        {TIMEZONES.map((tz) => (
+                          <option key={tz.value} value={tz.value}>
+                            {tz.label}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#64748B]">
+                        <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+                          <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="text-xs text-[#64748B]">
+                    {formatDisplayDate(selectedDate)} • Timezone: <strong className="text-[#181818]">{getTimezoneOffsetLabel(userTimezone)}</strong>
+                  </p>
                 </div>
 
                 {loadingSlots ? (
@@ -437,22 +509,28 @@ export function ScheduleMeeting() {
                   <div className="grid grid-cols-2 gap-2.5 max-h-[320px] overflow-y-auto pr-1">
                     {slots.map((slot) => {
                       const isSelected = selectedTimeSlot === slot.time
+                      const convertedTime = convertSlotTimeToZone(selectedDate, slot.time, userTimezone)
 
                       return (
                         <button
                           key={slot.time}
                           disabled={!slot.available}
                           onClick={() => setSelectedTimeSlot(slot.time)}
-                          className={`h-11 rounded-xl text-sm font-semibold flex items-center justify-center transition-all border ${
+                          className={`h-12 rounded-xl text-xs sm:text-sm font-semibold flex flex-col items-center justify-center transition-all border p-1 ${
                             !slot.available
                               ? 'bg-[#F1F5F9] text-[#94A3B8] border-[#E2E8F0] line-through cursor-not-allowed'
                               : isSelected
-                              ? 'bg-[#2563EB] text-white border-[#2563EB] shadow-sm'
+                              ? 'bg-[#2563EB] text-white border-[#2563EB] shadow-md shadow-blue-500/20'
                               : 'bg-white text-[#181818] border-[#CBD5E1] hover:border-[#2563EB] hover:text-[#2563EB]'
                           }`}
                         >
-                          {slot.time}
-                          {!slot.available && <span className="ml-1 text-[10px] no-underline font-normal">(Booked)</span>}
+                          <span className="font-bold">{convertedTime}</span>
+                          {userTimezone !== 'Asia/Kolkata' && (
+                            <span className={`text-[10px] font-normal ${isSelected ? 'text-blue-100' : 'text-[#64748B]'}`}>
+                              ({slot.time} IST)
+                            </span>
+                          )}
+                          {!slot.available && <span className="text-[10px] no-underline font-normal">(Booked)</span>}
                         </button>
                       )
                     })}
@@ -489,7 +567,7 @@ export function ScheduleMeeting() {
                   <div>
                     <p className="text-sm font-semibold text-[#181818]">{formatDisplayDate(selectedDate)}</p>
                     <p className="text-xs text-[#475569]">
-                      {selectedTimeSlot} ({getTimezoneOffsetString(userTimezone)} • 30 min call)
+                      {convertSlotTimeToZone(selectedDate, selectedTimeSlot, userTimezone)} ({getTimezoneOffsetLabel(userTimezone)}) • 30 min discovery call
                     </p>
                   </div>
                 </div>
@@ -633,7 +711,7 @@ export function ScheduleMeeting() {
                   </div>
                   <div className="flex items-center gap-2 text-xs font-semibold text-[#2563EB] bg-[#EFF6FF] px-3 py-1 rounded-full">
                     <Clock className="h-3.5 w-3.5" />
-                    <span>{confirmedBooking.timeSlot} (30 min)</span>
+                    <span>{convertSlotTimeToZone(confirmedBooking.date, confirmedBooking.timeSlot, userTimezone)} ({getTimezoneOffsetLabel(userTimezone)}) • 30 min</span>
                   </div>
                 </div>
 
