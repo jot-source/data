@@ -48,7 +48,6 @@ export async function POST(req: Request) {
     if (!res.ok) {
       const errorText = await res.text()
       console.warn('Resend API Warning (Simulating success for client):', errorText)
-      // Fall back gracefully to success so the contact form submission and redirection to /meet does not fail
       return NextResponse.json({ success: true, simulated: true, note: 'Resend API returned non-200' })
     }
 
