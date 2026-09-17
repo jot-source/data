@@ -3,6 +3,8 @@ import { markOrderPaid, markOrderFailed } from '@/services/order.service'
 import { syncDatasetFromDodoProduct } from '@/services/payment.service'
 import { logger } from '@/lib/logger'
 
+export const dynamic = 'force-dynamic'
+
 /**
  * POST /api/v1/webhooks/dodo
  *
@@ -18,12 +20,17 @@ import { logger } from '@/lib/logger'
  * with `ipAddress`/`downloadedAt` at webhook time would record Dodo's server,
  * not the buyer's, and conflate "paid" with "downloaded".
  */
+const rawWebhookKey = process.env.DODO_PAYMENTS_WEBHOOK_KEY || ''
+const isValidWebhookKey =
+  rawWebhookKey.startsWith('whsec_') &&
+  !rawWebhookKey.includes('...') &&
+  !rawWebhookKey.includes('placeholder') &&
+  rawWebhookKey.length > 10
+
 export const POST = Webhooks({
-  webhookKey:
-    process.env.DODO_PAYMENTS_WEBHOOK_KEY &&
-    process.env.DODO_PAYMENTS_WEBHOOK_KEY !== 'whsec_test_placeholder'
-      ? process.env.DODO_PAYMENTS_WEBHOOK_KEY
-      : 'whsec_MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI=',
+  webhookKey: isValidWebhookKey
+    ? rawWebhookKey
+    : 'whsec_MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI=',
 
   onPaymentSucceeded: async (payload) => {
     const orderId = payload.data.metadata?.orderId
