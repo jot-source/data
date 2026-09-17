@@ -74,11 +74,11 @@ export function HowItWorksSection() {
     <section id="how-it-works" ref={sectionRef} className="w-full max-w-[100vw] overflow-x-hidden scroll-mt-4 bg-white sm:bg-[#F5F8FF] py-8 sm:py-24 border-t border-[#CBD5E1]">
       <div className="mx-auto max-w-[1200px] px-4 sm:px-5 flex flex-col items-center">
 
-        {/* Desktop Header */}
-        <h2 className="hidden sm:block mb-4 text-center text-2xl sm:text-3xl font-bold tracking-tight text-[#181818] md:text-4xl">
+        {/* Desktop Header per Figma spec */}
+        <h2 className="hidden sm:block mb-3 sm:mb-4 text-center font-public-sans text-3xl sm:text-[40px] md:text-[48px] font-bold leading-tight text-[#181818]">
           From discovery to delivery in four steps
         </h2>
-        <p className="hidden sm:block mb-14 sm:mb-20 text-center text-sm sm:text-base text-[#616161] max-w-2xl">
+        <p className="hidden sm:block mb-12 sm:mb-16 text-center font-public-sans text-base sm:text-lg md:text-xl font-normal leading-relaxed text-[#616161] max-w-2xl">
           A simple, transparent path from finding the right data to getting it in your hands.
         </p>
 
@@ -197,24 +197,24 @@ export function HowItWorksSection() {
           </div>
         </div>
 
-        {/* Desktop View: Active Step Details Card */}
+        {/* Desktop View: Active Step Details Card per Figma Spec (1000px x 170px, 26.67px radius, 0.83px #C9C9C9 border) */}
         <div
-          className="hidden sm:block w-full max-w-3xl rounded-3xl border border-[#CBD5E1] bg-white p-5 sm:p-8 md:p-10 transition-all duration-300"
+          className="hidden sm:block w-full max-w-[1000px] min-h-[170px] rounded-[26.67px] border-[0.83px] border-[#C9C9C9] bg-white p-[26.67px] transition-all duration-300 shadow-sm"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-[36.67px]">
-            {/* Big Blue Icon Square */}
-            <div className="flex h-20 w-20 sm:h-[90px] sm:w-[90px] shrink-0 items-center justify-center rounded-2xl bg-[#2563EB] text-white transition-all duration-500">
-              <span className="scale-110 sm:scale-125">{STEPS[activeStep - 1].icon}</span>
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-[26.67px]">
+            {/* Big Blue Icon Square (116.67px x 116.67px, 20px radius) */}
+            <div className="flex h-[116.67px] w-[116.67px] shrink-0 items-center justify-center rounded-[20px] bg-[#2563EB] text-white transition-all duration-500 shadow-md shadow-blue-500/20">
+              <span className="scale-[1.5]">{STEPS[activeStep - 1].icon}</span>
             </div>
 
-            {/* Text Content */}
-            <div className="flex flex-col gap-2">
-              <h3 className="text-[22px] sm:text-[26.67px] font-semibold text-[#181818] leading-tight sm:leading-[40px]">
+            {/* Text Content (8.33px gap, 26.67px title, 16px description) */}
+            <div className="flex flex-col gap-[8.33px]">
+              <h3 className="font-public-sans text-[22px] sm:text-[26.67px] font-semibold text-[#181818] leading-tight sm:leading-[40px]">
                 {STEPS[activeStep - 1].title}
               </h3>
-              <p className="text-sm sm:text-base text-[#616161] leading-relaxed max-w-[750px]">
+              <p className="font-public-sans text-sm sm:text-[16px] text-[#616161] leading-normal sm:leading-[24px] max-w-[780px]">
                 {STEPS[activeStep - 1].description}
               </p>
             </div>
