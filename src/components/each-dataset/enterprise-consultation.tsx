@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 /*
   Enterprise consultation banner — Figma spec:
@@ -20,15 +21,17 @@ import React, { useState } from 'react'
 */
 
 export function EnterpriseConsultation() {
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    const formElement = e.currentTarget
     setLoading(true)
     setSuccess(false)
 
-    const formData = new FormData(e.currentTarget)
+    const formData = new FormData(formElement)
     const body = Object.fromEntries(formData)
 
     const payload = {
@@ -48,7 +51,8 @@ export function EnterpriseConsultation() {
 
       if (res.ok) {
         setSuccess(true)
-        e.currentTarget.reset()
+        formElement.reset()
+        router.push('/meet')
       } else {
         alert('Failed to send request. Please try again later.')
       }

@@ -169,19 +169,11 @@ async function createGoogleCalendarEvent(booking: MeetingBooking) {
   if (period === 'PM' && hours < 12) hours += 12
   if (period === 'AM' && hours === 12) hours = 0
 
-  const startHourStr = String(hours).padStart(2, '0')
-  const startMinStr = String(minutes).padStart(2, '0')
-  const startIso = `${booking.date}T${startHourStr}:${startMinStr}:00+05:30`
+  const startDate = new Date(`${booking.date}T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00+05:30`)
+  const endDate = new Date(startDate.getTime() + 30 * 60 * 1000)
 
-  let endHours = hours
-  let endMinutes = minutes + 30
-  if (endMinutes >= 60) {
-    endHours += 1
-    endMinutes -= 60
-  }
-  const endHourStr = String(endHours).padStart(2, '0')
-  const endMinStr = String(endMinutes).padStart(2, '0')
-  const endIso = `${booking.date}T${endHourStr}:${endMinStr}:00+05:30`
+  const startIso = startDate.toISOString()
+  const endIso = endDate.toISOString()
 
   const hostEmail = booking.assignedHost || founderEmail
 
