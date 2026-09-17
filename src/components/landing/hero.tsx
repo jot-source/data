@@ -67,8 +67,14 @@ export function Hero() {
           </p>
         </div>
 
-        {/* CTA Buttons — 2-column side-by-side row on mobile per Figma (343px width), responsive on tablet/desktop */}
+        {/* CTA Buttons — Explore marketplace (left, primary) & Schedule a Call (right, secondary) */}
         <div className="flex w-full max-w-[343px] sm:max-w-none flex-row items-center justify-center gap-3 sm:gap-6">
+          <Link
+            href="/datasets"
+            className="flex h-11 sm:h-12 flex-1 sm:flex-initial sm:w-auto items-center justify-center rounded-[10px] sm:rounded-xl bg-[#2563EB] px-3 sm:px-8 font-public-sans text-sm sm:text-base font-semibold text-white shadow-[2px_2px_4px_rgba(37,99,235,0.25)] sm:shadow-[0_4px_14px_rgba(37,99,235,0.35)] transition-all hover:bg-[#1D4ED8] hover:shadow-[0_6px_20px_rgba(37,99,235,0.45)] active:scale-[0.98] whitespace-nowrap"
+          >
+            Explore marketplace
+          </Link>
           <a
             href="/meet"
             onClick={handleScheduleCallClick}
@@ -76,12 +82,6 @@ export function Hero() {
           >
             Schedule a Call
           </a>
-          <Link
-            href="/datasets"
-            className="flex h-11 sm:h-12 flex-1 sm:flex-initial sm:w-auto items-center justify-center rounded-[10px] sm:rounded-xl bg-[#2563EB] px-3 sm:px-8 font-public-sans text-sm sm:text-base font-semibold text-white shadow-[2px_2px_4px_rgba(37,99,235,0.25)] sm:shadow-[0_4px_14px_rgba(37,99,235,0.35)] transition-all hover:bg-[#1D4ED8] hover:shadow-[0_6px_20px_rgba(37,99,235,0.45)] active:scale-[0.98] whitespace-nowrap"
-          >
-            Explore marketplace
-          </Link>
         </div>
       </div>
     </section>
