@@ -94,26 +94,33 @@ export function FaqSection() {
 
   return (
     <section
-      className="w-full max-w-[100vw] overflow-x-hidden bg-white py-14 sm:py-20"
+      className="w-full max-w-[100vw] overflow-x-hidden bg-[#F8FAFC] sm:bg-white border-y border-[#ECECEC] sm:border-y-0 py-8 sm:py-20"
     >
-      <div className="mx-auto flex max-w-[1200px] flex-col justify-between gap-12 sm:gap-16 px-4 sm:px-5 lg:flex-row lg:items-start lg:gap-[130px]">
+      <div className="mx-auto flex max-w-[1200px] flex-col justify-between gap-6 sm:gap-16 px-4 sm:px-5 lg:flex-row lg:items-start lg:gap-[130px]">
 
         {/* Left: heading, subtitle, CTA */}
-        <div className="flex w-full max-w-[472px] flex-col gap-6 sm:gap-8">
-          <div className="flex flex-col gap-4 sm:gap-6">
+        <div className="flex w-full max-w-[472px] flex-col gap-4 sm:gap-8">
+          <div className="flex flex-col gap-2 sm:gap-6">
+            {/* Mobile Heading */}
+            <h2 className="sm:hidden font-public-sans font-semibold text-[18px] leading-6 text-[#181818]">
+              Questions before you buy
+            </h2>
+
+            {/* Desktop Heading */}
             <h2
-              className="font-public-sans font-semibold text-3xl sm:text-4xl lg:text-[48px] lg:leading-[64px] text-[#181818] max-w-[417px]"
+              className="hidden sm:block font-public-sans font-semibold text-3xl sm:text-4xl lg:text-[48px] lg:leading-[64px] text-[#181818] max-w-[417px]"
             >
               Questions before you buy
             </h2>
+
             <p
-              className="font-public-sans font-normal text-base sm:text-lg lg:text-[20px] lg:leading-[28px] text-[#616161]"
+              className="hidden sm:block font-public-sans font-normal text-base sm:text-lg lg:text-[20px] lg:leading-[28px] text-[#616161]"
             >
               Licensing, quality, delivery the answers teams ask before signing.
             </p>
           </div>
 
-          <div>
+          <div className="hidden sm:block">
             <a
               href="/meet"
               onClick={handleTalkToTeamClick}
@@ -144,11 +151,10 @@ export function FaqSection() {
             return (
               <div
                 key={faq.id}
-                className="w-full overflow-hidden transition-colors duration-300"
+                className="w-full overflow-hidden transition-colors duration-300 rounded-xl"
                 style={{
                   background: '#FFFFFF',
-                  border: `1px solid ${isOpen ? '#2565EB' : '#DDDDDD'}`,
-                  borderRadius: 12,
+                  border: `1px solid ${isOpen ? '#2565EB' : '#ECECEC'}`,
                 }}
               >
                 {/* Question row */}
@@ -156,20 +162,11 @@ export function FaqSection() {
                   type="button"
                   onClick={() => toggle(faq.id)}
                   aria-expanded={isOpen}
-                  className="flex w-full items-center justify-between gap-2 text-left outline-none focus:outline-none focus-visible:outline-none"
-                  style={{
-                    padding: '20px 16px',
-                    background: 'transparent',
-                    border: 'none',
-                  }}
+                  className="flex w-full items-center justify-between gap-2 text-left outline-none focus:outline-none focus-visible:outline-none px-4 py-3.5 sm:py-5"
                 >
                   <span
-                    className="transition-colors duration-300"
+                    className="font-public-sans font-medium text-[12px] sm:text-[14px] leading-5 transition-colors duration-300"
                     style={{
-                      fontFamily: "'Public Sans', sans-serif",
-                      fontWeight: 500,
-                      fontSize: 14,
-                      lineHeight: '20px',
                       color: isOpen ? '#2565EB' : '#181818',
                     }}
                   >
@@ -191,14 +188,7 @@ export function FaqSection() {
                 >
                   <div className="min-h-0 overflow-hidden">
                     <p
-                      style={{
-                        fontFamily: "'Public Sans', sans-serif",
-                        fontWeight: 400,
-                        fontSize: 12,
-                        lineHeight: '16px',
-                        color: '#616161',
-                        padding: '0 16px 20px 16px',
-                      }}
+                      className="font-public-sans font-normal text-[10px] sm:text-[12px] leading-4 text-[#616161] px-4 pb-3.5 sm:pb-5"
                     >
                       {faq.answer}
                     </p>

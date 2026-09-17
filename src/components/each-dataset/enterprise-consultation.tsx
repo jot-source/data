@@ -27,10 +27,10 @@ export function EnterpriseConsultation() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    const formElement = e.currentTarget
     setLoading(true)
     setSuccess(false)
 
-    const formElement = e.currentTarget
     const formData = new FormData(formElement)
     const body = Object.fromEntries(formData)
 

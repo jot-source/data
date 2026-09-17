@@ -123,9 +123,49 @@ function formatDateYYYYMMDD(d: Date): string {
   return `${year}-${month}-${day}`
 }
 
+// Popular global timezones for user selection
+const POPULAR_TIMEZONES = [
+  { value: 'America/New_York', label: 'US Eastern Time (New York)' },
+  { value: 'America/Chicago', label: 'US Central Time (Chicago)' },
+  { value: 'America/Denver', label: 'US Mountain Time (Denver)' },
+  { value: 'America/Los_Angeles', label: 'US Pacific Time (Los Angeles)' },
+  { value: 'Europe/London', label: 'UK Time (London)' },
+  { value: 'Europe/Paris', label: 'Central European Time (Paris)' },
+  { value: 'Asia/Kolkata', label: 'India Standard Time (Kolkata)' },
+  { value: 'Asia/Dubai', label: 'Gulf Standard Time (Dubai)' },
+  { value: 'Asia/Singapore', label: 'Singapore Time (Singapore)' },
+  { value: 'Asia/Tokyo', label: 'Japan Standard Time (Tokyo)' },
+  { value: 'Australia/Sydney', label: 'Australian Eastern Time (Sydney)' },
+]
+
+function getTimezoneOffsetString(timeZone: string): string {
+  try {
+    const formatter = new Intl.DateTimeFormat('en-US', { timeZone, timeZoneName: 'shortOffset' })
+    const parts = formatter.formatToParts(new Date())
+    const tzPart = parts.find((p) => p.type === 'timeZoneName')
+    return tzPart ? tzPart.value : 'GMT'
+  } catch {
+    return 'GMT'
+  }
+}
+
 export function ScheduleMeeting() {
   const [step, setStep] = useState<1 | 2 | 3>(1)
   
+  // Timezone state with browser auto-detection
+  const [userTimezone, setUserTimezone] = useState<string>('Asia/Kolkata')
+
+  useEffect(() => {
+    try {
+      const detectedTz = Intl.DateTimeFormat().resolvedOptions().timeZone
+      if (detectedTz) {
+        setUserTimezone(detectedTz)
+      }
+    } catch {
+      // Fallback
+    }
+  }, [])
+
   // Date selection state
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date())
   const [selectedDate, setSelectedDate] = useState<string>(() => {
@@ -136,20 +176,6 @@ export function ScheduleMeeting() {
     return formatDateYYYYMMDD(today)
   })
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>('')
-  
-  // Timezone state (auto-detects browser timezone)
-  const [userTimezone, setUserTimezone] = useState<string>('Asia/Kolkata')
-
-  useEffect(() => {
-    try {
-      const detected = Intl.DateTimeFormat().resolvedOptions().timeZone
-      if (detected) {
-        setUserTimezone(detected)
-      }
-    } catch {
-      // fallback
-    }
-  }, [])
   
   // Slot availability
   const [slots, setSlots] = useState<TimeSlot[]>([])
