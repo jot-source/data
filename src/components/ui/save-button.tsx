@@ -13,6 +13,8 @@ interface SaveButtonProps {
   isLoggedIn: boolean
   /** 'dark' for the dataset detail heading, 'light' for explore cards */
   variant?: 'dark' | 'light'
+  label?: string
+  savedLabel?: string
 }
 
 export function SaveButton({
@@ -20,6 +22,8 @@ export function SaveButton({
   initialSaved,
   isLoggedIn,
   variant = 'light',
+  label = 'Save',
+  savedLabel = 'Saved',
 }: SaveButtonProps) {
   const [saved, setSaved] = useState(initialSaved)
   const [isPending, startTransition] = useTransition()
@@ -56,8 +60,8 @@ export function SaveButton({
       type="button"
       onClick={handleClick}
       disabled={isPending}
-      aria-label={saved ? 'Remove from wishlist' : 'Add to wishlist'}
-      className={`flex items-center gap-1.5 rounded-md px-1 py-1.5 text-sm font-medium transition-all duration-200 disabled:opacity-60 ${
+      aria-label={saved ? (savedLabel ?? 'Unsave dataset') : (label ?? 'Save dataset')}
+      className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs sm:text-sm font-medium transition-all duration-200 disabled:opacity-60 cursor-pointer ${
         isDark
           ? saved
             ? 'bg-white/20 text-white'
@@ -67,8 +71,8 @@ export function SaveButton({
             : 'text-[#2B2B2B] hover:text-[#181818]'
       }`}
     >
-      <BookmarkIcon filled={saved} className="h-5 w-5 text-[#2B2B2B]" />
-      {saved ? 'Added to wishlist' : 'Add to wishlist'}
+      <BookmarkIcon filled={saved} className="h-4 w-4 sm:h-5 sm:w-5" />
+      <span>{saved ? savedLabel : label}</span>
     </button>
   )
 }

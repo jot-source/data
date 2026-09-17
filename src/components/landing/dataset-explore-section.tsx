@@ -48,45 +48,55 @@ export function DatasetExploreSection() {
   }
 
   return (
-    <section className="w-full max-w-[100vw] overflow-x-hidden bg-[#EFF6FF] py-16 sm:py-[120px]">
-      <div className="mx-auto max-w-[1200px] px-4 sm:px-5">
-        <h2 className="mb-8 sm:mb-12 text-center text-2xl font-bold text-[#181818] md:text-3xl lg:text-[40px] leading-tight">
+    <section className="w-full max-w-[100vw] overflow-x-hidden bg-[#EFF6FF] py-8 sm:py-16">
+      <div className="mx-auto max-w-[1200px] px-3 sm:px-5">
+        <h2 className="mb-5 sm:mb-10 text-center font-public-sans text-xs sm:text-2xl md:text-3xl font-medium sm:font-bold text-[#181818]">
           We got every dataset you need. Search and explore now.
         </h2>
 
-        <div className="rounded-3xl bg-[linear-gradient(90deg,#212F58_0%,#1B2237_50%,#212F58_100%)] p-4 md:p-8">
-          {/* Search bar — search button nested on right corner */}
-          <form onSubmit={handleSearch} className="mb-6 relative flex items-center rounded-xl bg-white p-1.5 pl-3 sm:pl-4 shadow-sm border border-transparent focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-[#2563EB]/20 transition-all">
+        <div className="rounded-xl sm:rounded-3xl bg-[#283350] p-2.5 sm:p-4 md:p-8">
+          {/* Search bar — magnifying glass on mobile per Figma, button on desktop */}
+          <form onSubmit={handleSearch} className="mb-3 sm:mb-6 relative flex items-center rounded-lg sm:rounded-xl bg-white p-1 sm:p-1.5 pl-3 sm:pl-4 shadow-sm border border-transparent focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-[#2563EB]/20 transition-all">
             <input
               type="text"
               value={draftSearch}
               onChange={(e) => setDraftSearch(e.target.value)}
               placeholder="Eg: search health care datasets"
-              className="flex-1 min-w-0 bg-transparent pr-2 sm:pr-3 py-2 text-sm text-[#181818] outline-none placeholder:text-[#8C8C8C]"
+              className="flex-1 min-w-0 bg-transparent pr-2 sm:pr-3 py-1.5 sm:py-2 text-xs sm:text-sm text-[#181818] outline-none placeholder:text-[#616161] sm:placeholder:text-[#8C8C8C]"
             />
+            {/* Mobile Magnifying Glass Icon */}
             <button
               type="submit"
-              className="shrink-0 rounded-lg bg-[#2563EB] px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-[#1D4ED8] active:scale-95"
+              className="flex sm:hidden h-8 w-8 items-center justify-center text-[#8C8C8C] hover:text-[#2563EB]"
+              aria-label="Search"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </button>
+            {/* Desktop Search Button */}
+            <button
+              type="submit"
+              className="hidden sm:inline-flex shrink-0 rounded-md sm:rounded-lg bg-[#2563EB] px-3 sm:px-6 py-1.5 sm:py-2.5 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-[#1D4ED8] active:scale-95"
             >
               Search
             </button>
           </form>
 
           {/* Filter bar */}
-          <div className="mb-6 rounded-2xl bg-white p-4 shadow-sm border border-[#E2E8F0]/60 space-y-6">
-            <div className="flex items-center justify-between">
-              <span className="text-sm sm:text-base font-bold text-[#181818]">Filter by</span>
-              <button
-                type="button"
-                onClick={clearAll}
-                className="text-sm font-medium text-[#181818] transition-opacity hover:opacity-80 leading-6 inline-flex items-center justify-center h-6"
-              >
-                Clear all
-              </button>
+          <div className="mb-3 sm:mb-6 rounded-lg sm:rounded-2xl bg-white p-3 sm:p-5 border border-[#DDDDDD] sm:border-[#E2E8F0] shadow-sm">
+            <div className="mb-2.5 sm:mb-3.5 flex items-center justify-between border-b border-[#DDDDDD] sm:border-transparent pb-2 sm:pb-0">
+              <span className="text-xs sm:text-sm font-normal sm:font-bold text-[#181818]">Filter by</span>
+              {activeTags.length > 0 && (
+                <button type="button" onClick={clearAll} className="text-xs font-normal sm:font-semibold text-[#181818] sm:text-[#2563EB] hover:underline">
+                  Clear all
+                </button>
+              )}
             </div>
             
             {/* Filter pills */}
-            <div className="flex flex-wrap items-center gap-[10px]">
+            <div className="mb-1 flex flex-wrap gap-2 sm:gap-2.5">
               <FilterDropdown 
                 label="Industry" 
                 count={facets.industry.length}
@@ -127,11 +137,11 @@ export function DatasetExploreSection() {
 
             {/* Active tags */}
             {activeTags.length > 0 && (
-              <div className="flex flex-wrap gap-3 pt-4 border-t border-[#F1F5F9]">
+              <div className="flex flex-wrap gap-2 pt-2.5 border-t border-[#F1F5F9] mt-2.5">
                 {activeTags.map((tag, i) => (
                   <span
                     key={i}
-                    className="inline-flex h-[32px] items-center gap-[10px] rounded-full border border-[#CBD5E1] bg-[#DBEAFE] px-4 py-2 text-xs font-medium text-[#0032B8]"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-[#BFDBFE] bg-[#EFF6FF] px-2.5 py-1 text-[11px] font-medium text-[#1E40AF]"
                   >
                     {tag.label}
                     <button type="button" onClick={tag.onRemove} className="text-[#0032B8] hover:opacity-75">
@@ -144,25 +154,26 @@ export function DatasetExploreSection() {
           </div>
 
           {/* Results count */}
-          <p className="mb-4 text-sm font-semibold text-white">
+          <p className="mb-3 sm:mb-4 text-[10px] sm:text-sm font-normal sm:font-semibold text-white">
             {isPending ? 'Loading...' : `${data?.pagination.total || 0} datasets match your results`}
           </p>
 
           {/* Dataset cards */}
-          <div className="grid gap-4 sm:grid-cols-2 min-h-[300px]">
+          <div className="grid gap-3 sm:gap-4 sm:grid-cols-2 min-h-[300px]">
             {!isPending && data?.datasets.slice(0, 4).map((dataset) => (
               <DatasetCard key={dataset.id} dataset={dataset} />
             ))}
           </div>
 
-          {/* View all button — white card button */}
-          <div className="mt-8 flex justify-center">
+          {/* View all button — 143x32 white with blue border on mobile, rich blue on tablet/desktop */}
+          <div className="mt-5 sm:mt-8 flex justify-center">
             <Link
               href="/datasets"
-              className="inline-flex h-[40px] items-center gap-2 rounded-xl border border-[#CBD5E1] bg-white px-4 text-xs sm:text-sm font-medium text-[#0032B8] shadow-sm transition-all hover:bg-[#F8FAFC] active:scale-[0.98]"
+              className="inline-flex h-8 sm:h-auto w-[143px] sm:w-auto items-center justify-center gap-2 rounded-lg sm:rounded-xl border border-[#2563EB] bg-white sm:bg-[#2563EB] px-3 sm:px-8 py-1.5 sm:py-3.5 font-public-sans text-xs sm:text-sm font-normal sm:font-semibold text-[#2565EB] sm:text-white shadow-none sm:shadow-[0_4px_14px_rgba(37,99,235,0.35)] transition-all hover:bg-[#EFF6FF] sm:hover:bg-[#1D4ED8] active:scale-[0.98]"
             >
-              View all {data?.pagination.total || 0} Datasets
-              <ChevronRightIcon />
+              View all datasets
+              <span className="hidden sm:inline">({data?.pagination.total || 0})</span>
+              <ArrowRightIcon />
             </Link>
           </div>
         </div>
@@ -214,11 +225,15 @@ function FilterDropdown({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="inline-flex h-[36px] items-center gap-[10px] rounded-xl border border-[#CBD5E1] bg-[#DBEAFE] px-3 py-2 text-xs font-medium text-[#0032B8] transition-all hover:bg-[#C8DEFF]"
+        className={`inline-flex items-center gap-1 sm:gap-1.5 rounded-[4px] sm:rounded-lg border px-2 py-1 sm:px-3.5 sm:py-2 text-[10px] sm:text-xs font-normal sm:font-semibold transition-all ${
+          isActive 
+            ? 'bg-[#DBEAFE] text-[#0032B8] border-[#CBD5E1]' 
+            : 'bg-[#DBEAFE] sm:bg-[#F8FAFC] text-[#0032B8] sm:text-[#475569] border-[#CBD5E1] sm:border-[#E2E8F0] hover:bg-[#EFF6FF] hover:text-[#0032B8]'
+        }`}
       >
         <span>{label}</span>
         {count > 0 && (
-          <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-[#0032B8] px-1 text-[10px] font-bold text-white">
+          <span className={`flex h-3.5 sm:h-4 min-w-3.5 sm:min-w-4 items-center justify-center rounded-full px-1 text-[9px] sm:text-[10px] font-bold ${isActive ? 'bg-[#2563EB] text-white' : 'bg-[#CBD5E1] text-[#1E293B]'}`}>
             {count}
           </span>
         )}
@@ -267,9 +282,14 @@ function SortDropdown({ sort, setSort }: { sort: DatasetSort, setSort: (s: Datas
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="inline-flex h-[36px] items-center gap-[10px] rounded-xl border border-[#CBD5E1] bg-[#DBEAFE] px-3 py-2 text-xs font-medium text-[#0032B8] transition-all hover:bg-[#C8DEFF]"
+        className={`inline-flex items-center gap-1 sm:gap-1.5 rounded-[4px] sm:rounded-lg border px-2 py-1 sm:px-3.5 sm:py-2 text-[10px] sm:text-xs font-normal sm:font-semibold transition-all ${
+          isActive 
+            ? 'bg-[#DBEAFE] text-[#0032B8] border-[#CBD5E1]' 
+            : 'bg-[#DBEAFE] sm:bg-[#F8FAFC] text-[#0032B8] sm:text-[#475569] border-[#CBD5E1] sm:border-[#E2E8F0] hover:bg-[#EFF6FF] hover:text-[#0032B8]'
+        }`}
       >
-        <span>Sort: {activeLabel}</span>
+        <span className="sm:hidden">Sort by</span>
+        <span className="hidden sm:inline">Sort: {activeLabel}</span>
         <ChevronDownIcon />
       </button>
 
@@ -300,7 +320,11 @@ function QualityDropdown({ quality, setQuality }: { quality: number | null, setQ
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="inline-flex h-[36px] items-center gap-[10px] rounded-xl border border-[#CBD5E1] bg-[#DBEAFE] px-3 py-2 text-xs font-medium text-[#0032B8] transition-all hover:bg-[#C8DEFF]"
+        className={`inline-flex items-center gap-1 sm:gap-1.5 rounded-[4px] sm:rounded-lg border px-2 py-1 sm:px-3.5 sm:py-2 text-[10px] sm:text-xs font-normal sm:font-semibold transition-all ${
+          isActive 
+            ? 'bg-[#DBEAFE] text-[#0032B8] border-[#CBD5E1]' 
+            : 'bg-[#DBEAFE] sm:bg-[#F8FAFC] text-[#0032B8] sm:text-[#475569] border-[#CBD5E1] sm:border-[#E2E8F0] hover:bg-[#EFF6FF] hover:text-[#0032B8]'
+        }`}
       >
         <span>Data quality score {quality !== null ? `(${quality}+)` : ''}</span>
         <ChevronDownIcon />
