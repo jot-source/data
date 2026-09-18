@@ -27,19 +27,6 @@ export function SecuritySettings() {
           </button>
         </div>
         
-        <hr className="border-gray-200" />
-
-        {/* Two factor authentication */}
-        <div className="flex items-center justify-between p-6">
-          <div>
-            <h3 className="font-medium text-gray-900">Two factor authentication</h3>
-            <p className="mt-1 text-sm text-gray-500">dds an extra step when signing in</p>
-          </div>
-          {/* Simple toggle switch placeholder */}
-          <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 transition-colors focus:outline-none">
-            <span className="inline-block h-5 w-5 translate-x-1 transform rounded-full bg-white transition-transform" />
-          </button>
-        </div>
 
         <hr className="border-gray-200" />
 

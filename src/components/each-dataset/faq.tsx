@@ -59,8 +59,13 @@ export function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0)
 
   return (
-    <div id="faq" className="scroll-mt-32 flex flex-col gap-6">
-      <h2 className="text-lg font-semibold text-[#181818]">Questions before you buy</h2>
+    <div id="faq" className="scroll-mt-32 flex flex-col gap-4 font-public-sans">
+      <div>
+        <h2 className="text-lg font-semibold text-[#181818]">Questions before you buy</h2>
+        <p className="mt-1 text-xs text-[#616161]">
+          Answers to what buyers ask most. Can&apos;t find yours? Reach out and our team will get back within a day.
+        </p>
+      </div>
 
       <div className="flex flex-col gap-3">
         {FAQS.map((faq, i) => (

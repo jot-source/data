@@ -131,9 +131,9 @@ function MegaMenuShell({
                 style={{
                   height: 44,
                   padding: '10px 16px',
-                  borderRadius: 8,
+                  borderRadius: 12,
                   background: isActive ? '#DBEAFE' : 'transparent',
-                  border: isActive ? '1px solid #BFDBFE' : '1px solid transparent',
+                  border: 'none',
                 }}
               >
                 <span
@@ -142,7 +142,7 @@ function MegaMenuShell({
                     fontWeight: isActive ? 600 : 500,
                     fontSize: 15,
                     lineHeight: '22px',
-                    color: isActive ? '#1D4ED8' : '#475569',
+                    color: isActive ? '#2563EB' : '#475569',
                   }}
                 >
                   {tab.label}
@@ -154,7 +154,7 @@ function MegaMenuShell({
                       fontWeight: 600,
                       fontSize: 14,
                       lineHeight: '20px',
-                      color: isActive ? '#1D4ED8' : '#94A3B8',
+                      color: isActive ? '#2563EB' : '#94A3B8',
                     }}
                   >
                     {String(tab.count).padStart(2, '0')}
@@ -182,19 +182,19 @@ function MegaMenuShell({
                   onClick={item.onSelect}
                   className="group flex shrink-0 items-center text-left transition-all focus:outline-none hover:border-[#2563EB] hover:shadow-[0_4px_16px_rgba(37,99,235,0.12)]"
                   style={{
-                    height: 64,
-                    minHeight: 64,
-                    padding: 8,
+                    height: 68,
+                    minHeight: 68,
+                    padding: '10px 14px',
                     gap: 14,
-                    borderRadius: 8,
+                    borderRadius: 12,
                     border: isCardSelected ? '1.5px solid #2563EB' : '1px solid #E2E8F0',
-                    boxShadow: isCardSelected ? '0px 2px 10px rgba(37, 99, 235, 0.15)' : 'none',
+                    boxShadow: isCardSelected ? '0px 4px 16px rgba(37, 99, 235, 0.12)' : 'none',
                     background: '#FFFFFF',
                   }}
                 >
                   <div
                     className="flex shrink-0 items-center justify-center text-[#2563EB] transition-colors group-hover:bg-[#DBEAFE]"
-                    style={{ width: 48, height: 48, background: isCardSelected ? '#DBEAFE' : '#EFF6FF', borderRadius: 8 }}
+                    style={{ width: 44, height: 44, background: isCardSelected ? '#DBEAFE' : '#EFF6FF', borderRadius: 10 }}
                   >
                     <GridIcon />
                   </div>
@@ -406,7 +406,7 @@ export function SiteHeader({ initialUser }: { initialUser: SessionUser | null })
 
   const rawCartCount = useCartStore((s) => s.items.length)
   const cartCount = mounted ? rawCartCount : 0
-  const isCartSelected = pathname === '/cart' || cartCount > 0
+  const isCartSelected = pathname === '/cart'
 
   // Sign-in/up happen through a *server-side* Supabase client (the Server
   // Action), so this browser client never observes them directly — the

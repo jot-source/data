@@ -1,5 +1,5 @@
 import React from 'react'
-import { Globe, Languages, Calendar, HardDrive } from 'lucide-react'
+import { Globe, Languages, Calendar, Tablet } from 'lucide-react'
 import type { DatasetDetail } from '@/types/dataset'
 
 function formatCount(n: number | null | undefined): string {
@@ -31,22 +31,22 @@ export function Specifications({ dataset }: { dataset: DatasetDetail }) {
   // Info cards
   const infoCards = [
     {
-      icon: <Globe className="h-12 w-12 text-[#2563EB] stroke-[1.75]" />,
+      icon: <Globe className="h-9 w-9 text-[#2563EB]" strokeWidth={1.4} />,
       title: 'Countries',
       detail: dataset.countries?.length > 0 ? dataset.countries.join(', ') : 'Global',
     },
     {
-      icon: <Languages className="h-12 w-12 text-[#2563EB] stroke-[1.75]" />,
+      icon: <Languages className="h-9 w-9 text-[#2563EB]" strokeWidth={1.4} />,
       title: 'Languages',
       detail: dataset.languages?.length > 0 ? dataset.languages.join(', ') : 'English',
     },
     {
-      icon: <Calendar className="h-12 w-12 text-[#2563EB] stroke-[1.75]" />,
+      icon: <Calendar className="h-9 w-9 text-[#2563EB]" strokeWidth={1.4} />,
       title: 'Collection period',
       detail: 'Jan 2023 – Mar 2026',
     },
     {
-      icon: <HardDrive className="h-12 w-12 text-[#2563EB] stroke-[1.75]" />,
+      icon: <Tablet className="h-9 w-9 text-[#2563EB]" strokeWidth={1.4} />,
       title: 'Device sources',
       detail: 'Siemens, GE, Philips imaging systems',
     },

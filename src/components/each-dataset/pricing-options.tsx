@@ -148,8 +148,13 @@ export function PricingOptions({
   }
 
   return (
-    <div id="samples" className="scroll-mt-32 flex flex-col gap-6 font-public-sans">
-      <h2 className="text-lg font-semibold text-[#181818]">Try a sample before licensing.</h2>
+    <div id="samples" className="scroll-mt-32 flex flex-col gap-4 font-public-sans">
+      <div>
+        <h2 className="text-lg font-semibold text-[#181818]">Try a sample before licensing.</h2>
+        <p className="mt-1 text-xs text-[#616161]">
+          A test packet is a representative sample of the full dataset, allowing you to validate quality, compatibility, and fit before purchasing a license.
+        </p>
+      </div>
 
       {/* ─── Card 1: Free Sample Card (Figma: bg-[#EFF6FF], border-[#2563EB], rounded-[20px], padding 24px) ─── */}
       <div className="rounded-[20px] border border-[#2563EB] bg-[#EFF6FF] p-6">
