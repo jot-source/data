@@ -65,11 +65,9 @@ export function EnterpriseConsultation() {
 
   return (
     <div
-      className="relative mt-12 overflow-hidden"
+      className="relative overflow-hidden lg:mt-12 -mx-4 lg:mx-0 rounded-none lg:rounded-[20px] bg-gradient-to-b from-[#012461] to-[#274ABA] lg:bg-[linear-gradient(90deg,#284BBB_0%,#002360_100%)]"
       style={{
         minHeight: 485,
-        borderRadius: 20,
-        background: 'linear-gradient(90deg, #284BBB 0%, #002360 99.99%)',
       }}
     >
       {/* Ellipse — bottom left */}
@@ -84,12 +82,12 @@ export function EnterpriseConsultation() {
         }}
       />
 
-      <div className="relative z-10 flex flex-col gap-8 sm:gap-10 p-5 sm:p-8 lg:min-h-[485px] lg:flex-row lg:items-center lg:justify-between lg:gap-8 lg:py-[63px] lg:pl-[56px] lg:pr-[65px]">
+      <div className="relative z-10 flex flex-col gap-6 sm:gap-10 py-6 px-4 sm:p-8 lg:min-h-[485px] lg:flex-row lg:items-center lg:justify-between lg:gap-8 lg:py-[63px] lg:pl-[56px] lg:pr-[65px]">
 
         {/* Left: heading + checklist */}
-        <div className="flex max-w-[672px] flex-col gap-6 sm:gap-8">
+        <div className="flex max-w-[672px] flex-col gap-5 sm:gap-8">
           <h2
-            className="font-public-sans text-2xl sm:text-3xl lg:text-[32px] font-bold leading-tight lg:leading-[48px] text-white"
+            className="font-public-sans text-xl sm:text-3xl lg:text-[32px] font-bold leading-tight lg:leading-[48px] text-white"
           >
             Need enterprise pricing? Schedule a consultation.
           </h2>
@@ -99,7 +97,7 @@ export function EnterpriseConsultation() {
               <li key={item} className="flex items-center gap-2.5">
                 <CheckIcon />
                 <span
-                  className="font-public-sans text-base sm:text-lg lg:text-[20px] font-semibold text-white"
+                  className="font-public-sans text-sm sm:text-lg lg:text-[20px] font-semibold text-white"
                 >
                   {item}
                 </span>

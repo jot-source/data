@@ -15,7 +15,7 @@ const DEFAULT_CART_ITEMS: CartItem[] = [
   {
     id: 'cart-1',
     title: 'Medical Imaging Annotation',
-    subtitle: '1.8M scans · DICOM/PNG · Full Dataset',
+    subtitle: '1.8M scans · DICOM/PNG',
     badge: 'Full dataset',
     price: 500,
     tags: ['1.8M scans', '9.2 quality', 'DICOM format', 'IRB-compliant'],
@@ -24,7 +24,7 @@ const DEFAULT_CART_ITEMS: CartItem[] = [
   {
     id: 'cart-2',
     title: 'Medical Imaging Annotation',
-    subtitle: '1.8M scans · DICOM/PNG · Full Dataset',
+    subtitle: '1.8M scans · DICOM/PNG',
     badge: 'Test packet',
     price: 500,
     tags: ['1.8M scans', '9.2 quality', 'DICOM format', 'IRB-compliant'],
@@ -33,7 +33,7 @@ const DEFAULT_CART_ITEMS: CartItem[] = [
   {
     id: 'cart-3',
     title: 'Medical Imaging Annotation',
-    subtitle: '1.8M scans · DICOM/PNG · Full Dataset',
+    subtitle: '1.8M scans · DICOM/PNG',
     badge: 'Full dataset',
     price: 500,
     tags: ['1.8M scans', '9.2 quality', 'DICOM format', 'IRB-compliant'],

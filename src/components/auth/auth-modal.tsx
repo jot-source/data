@@ -74,12 +74,12 @@ export function AuthModal() {
       />
 
       <div className="relative z-10 flex min-h-screen w-full flex-col md:min-h-0 md:max-w-[860px]">
-        {/* Close Button — top right inside banner on mobile, floating outside card on desktop */}
+        {/* Close Button — floating outside card on desktop, hidden on mobile */}
         <button
           type="button"
           aria-label="Close"
           onClick={handleManualClose}
-          className="absolute top-4 right-4 z-30 flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur transition-colors hover:bg-white/25 md:-top-11 md:right-0 md:h-9 md:w-9 md:bg-white/10 md:hover:bg-white/20"
+          className="hidden md:flex absolute z-30 items-center justify-center rounded-full text-white backdrop-blur transition-colors hover:bg-white/25 md:-top-11 md:right-0 md:h-9 md:w-9 md:bg-white/10 md:hover:bg-white/20"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="18" y1="6" x2="6" y2="18" />
@@ -91,8 +91,8 @@ export function AuthModal() {
         <div className="flex flex-1 flex-col overflow-hidden bg-[#1A2552] shadow-2xl shadow-black/50 md:min-h-[600px] md:flex-row md:rounded-xl md:bg-[#F8F8F8]">
           <AuthSidePanel />
           
-          {/* White form card section: rounded-t-[20px] and margin-top: -20px overlapping navy banner on mobile */}
-          <div className="auth-mobile-card relative z-10 -mt-[20px] flex flex-1 flex-col justify-center rounded-t-[20px] bg-white px-5 py-7 shadow-[0_-4px_24px_rgba(0,0,0,0.08)] sm:px-8 md:mt-0 md:rounded-none md:bg-[#F8F8F8] md:px-[60px] md:py-10 md:shadow-none text-[#111111]">
+          {/* White form card section: rounded-t-[24px] and margin-top: -20px overlapping navy banner on mobile */}
+          <div className="auth-mobile-card relative z-10 -mt-[20px] flex flex-1 flex-col justify-start rounded-t-[24px] bg-white px-4 py-6 shadow-[0_-4px_24px_rgba(0,0,0,0.08)] sm:px-8 md:mt-0 md:rounded-none md:bg-[#F8F8F8] md:px-[60px] md:py-10 md:shadow-none text-[#111111]">
             {view === 'sign-in' && <SignInForm />}
             {view === 'sign-up' && <SignUpForm />}
             {view === 'forgot-password' && <ForgotPasswordForm />}

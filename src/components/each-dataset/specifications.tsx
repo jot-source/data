@@ -60,43 +60,44 @@ export function Specifications({ dataset }: { dataset: DatasetDetail }) {
   return (
     <div id="specifications" className="scroll-mt-32 flex flex-col gap-6">
       {/* Spec Table */}
-      <div className="rounded-2xl border border-[#CBD5E1] bg-[#EFF6FF] p-5">
-        <h2 className="mb-5 text-xl font-medium text-[#181818]">Dataset specifications</h2>
-        <div className="flex flex-col md:flex-row gap-4">
+      <div className="rounded-[16px] md:rounded-2xl border border-[#E2E8F0] md:border-[#CBD5E1] bg-[#F8FAFC] md:bg-[#EFF6FF] p-4 md:p-5">
+        <h2 className="mb-4 md:mb-5 text-lg md:text-xl font-semibold md:font-medium text-[#181818]">
+          <span className="md:hidden">Specifications</span>
+          <span className="hidden md:inline">Dataset specifications</span>
+        </h2>
+        <div className="flex flex-col md:flex-row gap-0 md:gap-4">
           {/* Left column */}
-          <div className="flex-1 rounded-lg px-2 sm:px-3 py-2 sm:py-3">
+          <div className="flex-1 md:rounded-lg md:px-3 md:py-3">
             {leftSpecs.map((spec, i) => (
-              <React.Fragment key={i}>
-                <div className="flex items-center justify-between py-2.5">
+              <div key={i} className="border-b border-[#E2E8F0] md:border-[#8C8C8C]/30 md:last:border-none">
+                <div className="flex items-center justify-between py-3 md:py-2.5">
                   <span className="text-sm text-[#8C8C8C]">{spec.label}</span>
-                  <span className="text-sm font-medium text-[#181818]">{spec.value}</span>
+                  <span className="text-sm font-semibold md:font-medium text-[#181818]">{spec.value}</span>
                 </div>
-                {i < leftSpecs.length - 1 && <div className="border-b border-[#8C8C8C]/30"></div>}
-              </React.Fragment>
+              </div>
             ))}
           </div>
           {/* Right column */}
-          <div className="flex-1 rounded-lg px-2 sm:px-3 py-2 sm:py-3">
+          <div className="flex-1 md:rounded-lg md:px-3 md:py-3">
             {rightSpecs.map((spec, i) => (
-              <React.Fragment key={i}>
-                <div className="flex items-center justify-between py-2.5">
+              <div key={i} className="border-b border-[#E2E8F0] md:border-[#8C8C8C]/30 last:border-none">
+                <div className="flex items-center justify-between py-3 md:py-2.5">
                   <span className="text-sm text-[#8C8C8C]">{spec.label}</span>
-                  <span className="text-sm font-medium text-[#181818]">{spec.value}</span>
+                  <span className="text-sm font-semibold md:font-medium text-[#181818]">{spec.value}</span>
                 </div>
-                {i < rightSpecs.length - 1 && <div className="border-b border-[#8C8C8C]/30"></div>}
-              </React.Fragment>
+              </div>
             ))}
           </div>
         </div>
       </div>
 
       {/* Info Cards Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {infoCards.map((card, i) => (
-          <div key={i} className="flex flex-col items-start gap-6 rounded-xl border border-[#CBD5E1] bg-white p-6">
+          <div key={i} className="flex flex-col items-start gap-3 md:gap-6 rounded-[12px] md:rounded-xl border border-[#E2E8F0] md:border-[#CBD5E1] bg-white p-4 sm:p-6">
             <div>{card.icon}</div>
             <div className="flex flex-col gap-2">
-              <span className="text-sm font-medium text-[#181818]">{card.title}</span>
+              <span className="text-sm font-semibold md:font-medium text-[#181818]">{card.title}</span>
               <span className="text-xs text-[#616161] leading-4">{card.detail}</span>
             </div>
           </div>
@@ -104,11 +105,11 @@ export function Specifications({ dataset }: { dataset: DatasetDetail }) {
       </div>
 
       {/* AI Use Cases */}
-      <div className="rounded-2xl border border-[#CBD5E1] bg-white p-5">
-        <h2 className="mb-5 text-xl font-medium text-[#181818]">AI use cases</h2>
-        <div className="flex flex-wrap gap-4">
+      <div className="rounded-[12px] md:rounded-2xl border border-[#E2E8F0] md:border-[#CBD5E1] bg-white p-3 md:p-5 flex flex-col gap-4 md:gap-0">
+        <h2 className="md:mb-5 text-base md:text-xl font-medium text-[#181818]">AI use cases</h2>
+        <div className="flex flex-wrap gap-3 md:gap-4">
           {useCaseTags.map((tag: string, i: number) => (
-            <span key={i} className="inline-flex items-center gap-2.5 rounded-full border border-[#CBD5E1] bg-[#DBEAFE] px-6 py-2 text-sm font-medium text-[#2565EB]">
+            <span key={i} className="inline-flex items-center gap-2.5 rounded-full border border-[#CBD5E1] bg-[#DBEAFE] px-3 py-1.5 md:px-6 md:py-2 text-xs md:text-sm font-medium text-[#2565EB]">
               <span className="inline-block h-1 w-1 rounded-full bg-[#2565EB]"></span>
               {tag}
             </span>

@@ -82,7 +82,7 @@ export function MobileFiltersModal({
       <div className="fixed inset-x-0 bottom-0 top-16 z-[111] flex flex-col rounded-t-2xl bg-white shadow-2xl animate-in slide-in-from-bottom duration-300">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-[#F1F5F9] px-5 py-4">
-          <h3 className="font-public-sans text-xs font-bold tracking-wider text-[#181818] uppercase">
+          <h3 className="font-public-sans text-base font-medium text-[#2B2B2B] uppercase">
             FILTERS
           </h3>
           <button
@@ -98,11 +98,11 @@ export function MobileFiltersModal({
         {/* Content Accordion */}
         <div className="flex-1 overflow-y-auto px-5 py-3">
           {/* Industry */}
-          <div className="border-b border-[#F1F5F9] py-2.5">
+          <div className="border-b border-[#F1F5F9]">
             <button
               type="button"
               onClick={() => toggleSection('industry')}
-              className="flex w-full items-center justify-between font-public-sans text-xs font-semibold text-[#181818] py-1"
+              className="flex w-full items-center justify-between font-public-sans text-sm font-medium text-[#181818] py-3"
             >
               <div className="flex items-center gap-2">
                 <span>Industry</span>
@@ -115,29 +115,29 @@ export function MobileFiltersModal({
               <ChevronIcon open={openSection === 'industry'} />
             </button>
             {openSection === 'industry' && (
-              <div className="mt-2 flex flex-col gap-1 pl-1">
+              <div className="flex flex-col pl-1 max-h-[240px] overflow-y-auto pr-1 border-t border-[#F1F5F9] pt-2 pb-2">
                 {industryOptions.map((opt) => {
                   const isChecked = facets.industry.includes(opt.value)
                   return (
                     <label
                       key={opt.value}
                       className={cn(
-                        'flex cursor-pointer items-center justify-between rounded-lg px-2.5 py-2 transition-colors',
+                        'flex cursor-pointer items-center justify-between rounded-lg px-2 py-2 transition-colors',
                         isChecked ? 'bg-[#EFF6FF]' : 'hover:bg-[#F8FAFC]'
                       )}
                     >
-                      <span className="flex items-center gap-2.5">
+                      <span className="flex items-center gap-3">
                         <input
                           type="checkbox"
                           checked={isChecked}
                           onChange={() => toggleFacet('industry', opt.value)}
                           className="h-4 w-4 rounded border-[#CBD5E1] text-[#2563EB] focus:ring-[#2563EB]"
                         />
-                        <span className={cn('font-public-sans text-xs', isChecked ? 'font-semibold text-[#2563EB]' : 'font-normal text-[#181818]')}>
+                        <span className={cn('font-public-sans text-sm', isChecked ? 'font-medium text-[#181818]' : 'font-normal text-[#444444]')}>
                           {opt.value}
                         </span>
                       </span>
-                      <span className="font-public-sans text-xs font-mono text-[#8C8C8C]">
+                      <span className="font-public-sans text-sm text-[#8C8C8C]">
                         {String(opt.count).padStart(2, '0')}
                       </span>
                     </label>
@@ -148,11 +148,11 @@ export function MobileFiltersModal({
           </div>
 
           {/* Modality */}
-          <div className="border-b border-[#F1F5F9] py-2.5">
+          <div className="border-b border-[#F1F5F9]">
             <button
               type="button"
               onClick={() => toggleSection('modality')}
-              className="flex w-full items-center justify-between font-public-sans text-xs font-semibold text-[#181818] py-1"
+              className="flex w-full items-center justify-between font-public-sans text-sm font-medium text-[#181818] py-3"
             >
               <div className="flex items-center gap-2">
                 <span>Modality</span>
@@ -165,29 +165,29 @@ export function MobileFiltersModal({
               <ChevronIcon open={openSection === 'modality'} />
             </button>
             {openSection === 'modality' && (
-              <div className="mt-2 flex flex-col gap-1 pl-1">
+              <div className="flex flex-col pl-1 max-h-[240px] overflow-y-auto pr-1 border-t border-[#F1F5F9] pt-2 pb-2">
                 {modalityOptions.map((opt) => {
                   const isChecked = facets.modality.includes(opt.value)
                   return (
                     <label
                       key={opt.value}
                       className={cn(
-                        'flex cursor-pointer items-center justify-between rounded-lg px-2.5 py-2 transition-colors',
+                        'flex cursor-pointer items-center justify-between rounded-lg px-2 py-2 transition-colors',
                         isChecked ? 'bg-[#EFF6FF]' : 'hover:bg-[#F8FAFC]'
                       )}
                     >
-                      <span className="flex items-center gap-2.5">
+                      <span className="flex items-center gap-3">
                         <input
                           type="checkbox"
                           checked={isChecked}
                           onChange={() => toggleFacet('modality', opt.value)}
                           className="h-4 w-4 rounded border-[#CBD5E1] text-[#2563EB] focus:ring-[#2563EB]"
                         />
-                        <span className={cn('font-public-sans text-xs', isChecked ? 'font-semibold text-[#2563EB]' : 'font-normal text-[#181818]')}>
+                        <span className={cn('font-public-sans text-sm', isChecked ? 'font-medium text-[#181818]' : 'font-normal text-[#444444]')}>
                           {opt.value}
                         </span>
                       </span>
-                      <span className="font-public-sans text-xs font-mono text-[#8C8C8C]">
+                      <span className="font-public-sans text-sm text-[#8C8C8C]">
                         {String(opt.count).padStart(2, '0')}
                       </span>
                     </label>
@@ -198,11 +198,11 @@ export function MobileFiltersModal({
           </div>
 
           {/* Usecase */}
-          <div className="border-b border-[#F1F5F9] py-2.5">
+          <div className="border-b border-[#F1F5F9]">
             <button
               type="button"
               onClick={() => toggleSection('usecase')}
-              className="flex w-full items-center justify-between font-public-sans text-xs font-semibold text-[#181818] py-1"
+              className="flex w-full items-center justify-between font-public-sans text-sm font-medium text-[#181818] py-3"
             >
               <div className="flex items-center gap-2">
                 <span>Usecase</span>
@@ -215,29 +215,29 @@ export function MobileFiltersModal({
               <ChevronIcon open={openSection === 'usecase'} />
             </button>
             {openSection === 'usecase' && (
-              <div className="mt-2 flex flex-col gap-1 pl-1">
+              <div className="flex flex-col pl-1 max-h-[240px] overflow-y-auto pr-1 border-t border-[#F1F5F9] pt-2 pb-2">
                 {useCaseOptions.map((opt) => {
                   const isChecked = facets.useCase.includes(opt.value)
                   return (
                     <label
                       key={opt.value}
                       className={cn(
-                        'flex cursor-pointer items-center justify-between rounded-lg px-2.5 py-2 transition-colors',
+                        'flex cursor-pointer items-center justify-between rounded-lg px-2 py-2 transition-colors',
                         isChecked ? 'bg-[#EFF6FF]' : 'hover:bg-[#F8FAFC]'
                       )}
                     >
-                      <span className="flex items-center gap-2.5">
+                      <span className="flex items-center gap-3">
                         <input
                           type="checkbox"
                           checked={isChecked}
                           onChange={() => toggleFacet('useCase', opt.value)}
                           className="h-4 w-4 rounded border-[#CBD5E1] text-[#2563EB] focus:ring-[#2563EB]"
                         />
-                        <span className={cn('font-public-sans text-xs', isChecked ? 'font-semibold text-[#2563EB]' : 'font-normal text-[#181818]')}>
+                        <span className={cn('font-public-sans text-sm', isChecked ? 'font-medium text-[#181818]' : 'font-normal text-[#444444]')}>
                           {opt.value}
                         </span>
                       </span>
-                      <span className="font-public-sans text-xs font-mono text-[#8C8C8C]">
+                      <span className="font-public-sans text-sm text-[#8C8C8C]">
                         {String(opt.count).padStart(2, '0')}
                       </span>
                     </label>
@@ -248,11 +248,11 @@ export function MobileFiltersModal({
           </div>
 
           {/* License type */}
-          <div className="border-b border-[#F1F5F9] py-2.5">
+          <div className="border-b border-[#F1F5F9]">
             <button
               type="button"
               onClick={() => toggleSection('license')}
-              className="flex w-full items-center justify-between font-public-sans text-xs font-semibold text-[#181818] py-1"
+              className="flex w-full items-center justify-between font-public-sans text-sm font-medium text-[#181818] py-3"
             >
               <div className="flex items-center gap-2">
                 <span>License type</span>
@@ -265,29 +265,29 @@ export function MobileFiltersModal({
               <ChevronIcon open={openSection === 'license'} />
             </button>
             {openSection === 'license' && (
-              <div className="mt-2 flex flex-col gap-1 pl-1">
+              <div className="flex flex-col pl-1 max-h-[240px] overflow-y-auto pr-1 border-t border-[#F1F5F9] pt-2 pb-2">
                 {licenseOptions.map((opt) => {
                   const isChecked = facets.licenseType.includes(opt.value)
                   return (
                     <label
                       key={opt.value}
                       className={cn(
-                        'flex cursor-pointer items-center justify-between rounded-lg px-2.5 py-2 transition-colors',
+                        'flex cursor-pointer items-center justify-between rounded-lg px-2 py-2 transition-colors',
                         isChecked ? 'bg-[#EFF6FF]' : 'hover:bg-[#F8FAFC]'
                       )}
                     >
-                      <span className="flex items-center gap-2.5">
+                      <span className="flex items-center gap-3">
                         <input
                           type="checkbox"
                           checked={isChecked}
                           onChange={() => toggleFacet('licenseType', opt.value)}
                           className="h-4 w-4 rounded border-[#CBD5E1] text-[#2563EB] focus:ring-[#2563EB]"
                         />
-                        <span className={cn('font-public-sans text-xs', isChecked ? 'font-semibold text-[#2563EB]' : 'font-normal text-[#181818]')}>
+                        <span className={cn('font-public-sans text-sm', isChecked ? 'font-medium text-[#181818]' : 'font-normal text-[#444444]')}>
                           {opt.value}
                         </span>
                       </span>
-                      <span className="font-public-sans text-xs font-mono text-[#8C8C8C]">
+                      <span className="font-public-sans text-sm text-[#8C8C8C]">
                         {String(opt.count).padStart(2, '0')}
                       </span>
                     </label>
@@ -298,11 +298,11 @@ export function MobileFiltersModal({
           </div>
 
           {/* Data quality score */}
-          <div className="py-2.5">
+          <div>
             <button
               type="button"
               onClick={() => toggleSection('quality')}
-              className="flex w-full items-center justify-between font-public-sans text-xs font-semibold text-[#181818] py-1"
+              className="flex w-full items-center justify-between font-public-sans text-sm font-medium text-[#181818] py-3"
             >
               <div className="flex items-center gap-2">
                 <span>Data quality score</span>
@@ -344,14 +344,14 @@ export function MobileFiltersModal({
           <button
             type="button"
             onClick={clearAll}
-            className="flex-1 h-11 rounded-xl border border-[#CBD5E1] bg-[#F8FAFC] font-public-sans text-xs font-semibold text-[#181818] hover:bg-[#F1F5F9] transition-colors"
+            className="flex-1 h-11 rounded-lg border border-[#CBD5E1] bg-[#F8FAFC] font-public-sans text-sm font-semibold text-[#181818] hover:bg-[#F1F5F9] transition-colors"
           >
             Reset all
           </button>
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 h-11 rounded-xl bg-[#2563EB] font-public-sans text-xs font-semibold text-white hover:bg-[#1D4ED8] shadow-sm transition-colors"
+            className="flex-1 h-11 rounded-lg bg-[#2563EB] font-public-sans text-sm font-semibold text-white hover:bg-[#1D4ED8] shadow-sm transition-colors"
           >
             Save changes
           </button>

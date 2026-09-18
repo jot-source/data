@@ -23,7 +23,7 @@ export function DatasetHeading({ dataset, isLoggedIn = false, isSaved = false }:
   ].filter(Boolean) as { value: string; label: string }[]
 
   return (
-    <div className="w-full max-w-full box-border rounded-2xl bg-[#0D1B2A] p-4 sm:p-5 text-white overflow-hidden">
+    <div className="w-full max-w-full box-border rounded-[8px] sm:rounded-2xl bg-[#0D1B2A] p-4 sm:p-5 text-white overflow-hidden">
       <div className="flex flex-col gap-3 w-full max-w-full">
         {/* Top row: Badge + Save */}
         <div className="flex w-full items-center justify-between gap-2">

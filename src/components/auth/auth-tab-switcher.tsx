@@ -11,14 +11,14 @@ export function AuthTabSwitcher({ activeTab }: AuthTabSwitcherProps) {
   const { open } = useAuthModal()
 
   return (
-    <div className="mb-5 flex w-full rounded-xl bg-[#f1f3f9] p-1 md:hidden">
+    <div className="mb-5 flex w-full items-center gap-2.5 md:hidden">
       <button
         type="button"
         onClick={() => open('sign-in')}
-        className={`flex-1 rounded-lg py-2.5 text-center text-sm font-semibold transition-all ${
+        className={`flex h-10 flex-1 items-center justify-center rounded-lg text-sm font-semibold transition-all ${
           activeTab === 'sign-in'
-            ? 'bg-white text-[#111111] shadow-[0_1px_3px_rgba(0,0,0,0.1)]'
-            : 'text-[#616161] hover:text-[#111111]'
+            ? 'bg-[#2563EB] text-white shadow-sm'
+            : 'bg-[#F4F5F7] text-[#616161] hover:text-[#111111]'
         }`}
       >
         Login
@@ -26,10 +26,10 @@ export function AuthTabSwitcher({ activeTab }: AuthTabSwitcherProps) {
       <button
         type="button"
         onClick={() => open('sign-up')}
-        className={`flex-1 rounded-lg py-2.5 text-center text-sm font-semibold transition-all ${
+        className={`flex h-10 flex-1 items-center justify-center rounded-lg text-sm font-semibold transition-all ${
           activeTab === 'sign-up'
-            ? 'bg-white text-[#111111] shadow-[0_1px_3px_rgba(0,0,0,0.1)]'
-            : 'text-[#616161] hover:text-[#111111]'
+            ? 'bg-[#2563EB] text-white shadow-sm'
+            : 'bg-[#F4F5F7] text-[#616161] hover:text-[#111111]'
         }`}
       >
         Signup

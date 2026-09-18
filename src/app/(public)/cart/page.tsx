@@ -6,7 +6,6 @@ import Link from 'next/link'
 import { useCartStore } from '@/stores/cart.store'
 import { toggleSaveDataset } from '@/actions/saved-dataset.actions'
 import { useCreateCheckout } from '@/hooks/use-create-checkout'
-import { DodoOverlayModal } from '@/components/checkout/dodo-overlay-modal'
 
 export default function CartPage() {
   const [mounted, setMounted] = useState(false)
@@ -21,16 +20,14 @@ export default function CartPage() {
   const [showPolicyModal, setShowPolicyModal] = useState(false)
   const [itemToRemove, setItemToRemove] = useState<string | null>(null)
 
-  // Dodo Payments Overlay State
-  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null)
-  const [isOverlayOpen, setIsOverlayOpen] = useState(false)
+  // Dodo Payments Checkout State
   const [isProcessingCheckout, setIsProcessingCheckout] = useState(false)
 
   const checkoutMutation = useCreateCheckout({
     onSuccess: (data) => {
       setIsProcessingCheckout(false)
-      setCheckoutUrl(data.checkoutUrl)
-      setIsOverlayOpen(true)
+      // Redirect directly to standard checkout page
+      window.location.href = data.checkoutUrl
     },
     onError: (err) => {
       setIsProcessingCheckout(false)
@@ -199,20 +196,20 @@ export default function CartPage() {
                 return (
                   <div
                     key={item.id}
-                    className="relative overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white p-5 sm:p-6 shadow-sm transition-all hover:shadow-md"
+                    className="relative overflow-hidden rounded-[16px] border border-[#CBD5E1] bg-white p-4 shadow-sm transition-all hover:border-[#2563EB] flex flex-col gap-2.5"
                   >
                     {/* Header Row */}
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex items-start gap-3.5">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-start gap-3 w-full overflow-hidden">
                         {/* Icon Container */}
-                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#0F1B3D] text-white shadow-sm">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#0F1B3D] text-white shadow-sm">
                           {item.iconType === 'video' ? (
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                               <polygon points="23 7 16 12 23 17 23 7" />
                               <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
                             </svg>
                           ) : (
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                               <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
                               <circle cx="8.5" cy="8.5" r="1.5" />
                               <polyline points="21 15 16 10 5 21" />
@@ -221,11 +218,11 @@ export default function CartPage() {
                         </div>
 
                         {/* Title & Subtitle */}
-                        <div>
-                          <h3 className="font-public-sans text-base sm:text-lg font-semibold text-[#0F172A] leading-snug">
+                        <div className="flex flex-col flex-1 min-w-0 pr-2">
+                          <h3 className="font-public-sans text-sm sm:text-base font-medium text-[#181818] truncate leading-tight">
                             {item.title}
                           </h3>
-                          <p className="mt-0.5 text-xs text-[#64748B]">
+                          <p className="mt-0.5 text-xs text-[#64748B] truncate">
                             {item.subtitle}
                           </p>
                         </div>
@@ -233,10 +230,10 @@ export default function CartPage() {
 
                       {/* Pill Badge (Full dataset / Test packet) */}
                       <span
-                        className={`inline-flex shrink-0 items-center rounded-full px-3 py-1 text-xs font-semibold ${
+                        className={`inline-flex shrink-0 items-center rounded-full px-2.5 py-1 text-[11px] font-medium ${
                           item.badge === 'Full dataset'
-                            ? 'border border-[#22C55E]/40 bg-[#F0FDF4] text-[#16A34A]'
-                            : 'border border-[#9333EA]/40 bg-[#FAF5FF] text-[#7E22CE]'
+                            ? 'border border-[#22C55E]/40 bg-white text-[#16A34A]'
+                            : 'border border-[#9333EA]/40 bg-white text-[#7E22CE]'
                         }`}
                       >
                         {item.badge}
@@ -244,7 +241,7 @@ export default function CartPage() {
                     </div>
 
                     {/* Metadata Tags Row */}
-                    <div className="mt-4 flex flex-wrap items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2 border-t border-[#E2E8F0] pt-2.5">
                       <div className="inline-flex items-center gap-1.5 rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1 text-xs font-medium text-[#475569]">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -269,8 +266,8 @@ export default function CartPage() {
                         DICOM format
                       </div>
 
-                      <div className="inline-flex items-center gap-1.5 rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1 text-xs font-medium text-[#475569]">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-emerald-600">
+                      <div className="inline-flex items-center gap-1 rounded-full border border-[#E2E8F0] bg-white px-2 py-1 text-[11px] font-medium text-[#475569]">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-emerald-600">
                           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                         </svg>
                         IRB-compliant
@@ -278,26 +275,26 @@ export default function CartPage() {
                     </div>
 
                     {/* Bottom Action Bar */}
-                    <div className="mt-5 flex items-center justify-between border-t border-[#F1F5F9] pt-4">
+                    <div className="flex items-center justify-between border-t border-[#E2E8F0] pt-2.5">
                       <div className="flex items-center gap-1">
                         <button
                           type="button"
                           onClick={() => setItemToRemove(item.id)}
-                          className="font-public-sans text-sm font-normal text-[#A31A1A] transition-colors hover:text-[#7f1313] hover:underline"
+                          className="font-public-sans text-[13px] font-medium text-[#DC2626] transition-colors hover:text-[#991b1b]"
                         >
                           Remove
                         </button>
-                        <span className="text-slate-300 text-xs select-none">·</span>
+                        <span className="text-[#E2E8F0] select-none mx-2">|</span>
                         <button
                           type="button"
                           onClick={() => handleToggleWishlist(item.id)}
-                          className="font-public-sans text-sm font-normal text-[#2565EB] transition-colors hover:text-[#1d4ed8] hover:underline"
+                          className="font-public-sans text-[13px] font-medium text-[#2563EB] transition-colors hover:text-[#1d4ed8]"
                         >
                           {isWishlisted ? 'Saved to wishlist' : 'Save to wishlist'}
                         </button>
                       </div>
 
-                      <div className="font-public-sans text-2xl font-semibold leading-[32px] text-[#181818]">
+                      <div className="font-public-sans text-xl sm:text-2xl font-semibold text-[#181818]">
                         ${item.price.toLocaleString()}
                       </div>
                     </div>
@@ -321,14 +318,14 @@ export default function CartPage() {
                   {items.map((item, idx) => (
                     <div key={`${item.id}-${idx}`} className="flex items-center justify-between text-sm">
                       <div className="flex items-center gap-2 truncate max-w-[240px]">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#64748B] shrink-0">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-[#616161] shrink-0">
                           <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
                           <circle cx="8.5" cy="8.5" r="1.5" />
                           <polyline points="21 15 16 10 5 21" />
                         </svg>
-                        <span className="font-normal text-[#181818] truncate">{item.title}</span>
+                        <span className="font-normal text-[#616161] truncate">{item.title}</span>
                       </div>
-                      <span className="font-semibold text-[#181818] shrink-0">${item.price.toLocaleString()}</span>
+                      <span className="font-medium text-[#181818] shrink-0">${item.price.toLocaleString()}</span>
                     </div>
                   ))}
                 </div>
@@ -421,12 +418,12 @@ export default function CartPage() {
                   {/* Title & Copy */}
                   <div>
                     <h4
-                      className={`text-sm font-semibold ${
+                      className={`text-[13px] font-medium ${
                         ndaState === 'signed'
                           ? 'text-[#15803D]'
                           : ndaState === 'pending'
                           ? 'text-[#B45309]'
-                          : 'text-[#181818]'
+                          : 'text-[#2B2B2B]'
                       }`}
                     >
                       {ndaState === 'signed'
@@ -436,12 +433,12 @@ export default function CartPage() {
                         : 'Purchased agreement required'}
                     </h4>
                     <p
-                      className={`mt-0.5 text-xs leading-relaxed max-w-[260px] ${
+                      className={`mt-0.5 text-[11px] font-normal leading-[16px] max-w-[230px] ${
                         ndaState === 'signed'
                           ? 'text-[#166534]'
                           : ndaState === 'pending'
                           ? 'text-[#92400E]'
-                          : 'text-[#616161]'
+                          : 'text-[#8C8C8C]'
                       }`}
                     >
                       {ndaState === 'signed'
@@ -611,7 +608,7 @@ export default function CartPage() {
                 Removing this dataset will also remove any associated selections. You can add it back anytime before checkout.
               </p>
 
-              <div className="mt-5 sm:mt-8 grid grid-cols-2 gap-3">
+              <div className="mt-[44px] grid grid-cols-2 gap-3">
                 <button
                   type="button"
                   onClick={() => setItemToRemove(null)}
@@ -635,17 +632,7 @@ export default function CartPage() {
           document.body
         )}
 
-        {/* Dodo Payments Overlay Modal */}
-        <DodoOverlayModal
-          checkoutUrl={checkoutUrl}
-          isOpen={isOverlayOpen}
-          onClose={() => setIsOverlayOpen(false)}
-          onPaymentSuccess={() => {
-            setIsOverlayOpen(false)
-            useCartStore.getState().clearCart()
-            window.location.href = '/checkout/success'
-          }}
-        />
+
 
       </div>
     </main>

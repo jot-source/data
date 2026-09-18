@@ -43,21 +43,37 @@ export function StickyNav() {
   }, [activeId])
 
   return (
-    <div className="w-full max-w-full rounded-xl border border-[#CBD5E1] bg-white p-1.5 sm:p-2.5 overflow-x-auto">
-      <div className="flex w-full min-w-max sm:min-w-0 items-center justify-between gap-1 sm:gap-2">
+    <div className="w-full max-w-full overflow-x-auto sm:rounded-xl sm:border sm:border-[#CBD5E1] sm:bg-white sm:p-2.5 pb-2 sm:pb-2.5 scrollbar-hide">
+      <div className="flex w-max sm:w-full sm:min-w-0 items-center justify-start sm:justify-between gap-2">
         {NAV_ITEMS.map((item) => (
           <button
             key={item.id}
             onClick={() => scrollTo(item.id)}
             className={cn(
-              'flex shrink-0 sm:flex-1 items-center justify-center gap-1.5 sm:gap-2 rounded-lg px-2.5 sm:px-3 py-2 sm:py-3 text-xs sm:text-sm font-medium transition-colors whitespace-nowrap',
-              activeId === item.id ? 'bg-[#2563EB] text-white' : 'text-[#616161] hover:bg-[#F9FAFB] hover:text-[#181818]'
+              'flex shrink-0 sm:flex-1 items-center justify-center gap-2 rounded-[8px] sm:rounded-lg px-3 h-10 sm:h-auto sm:py-3 text-xs sm:text-sm font-medium transition-colors whitespace-nowrap',
+              activeId === item.id 
+                ? 'bg-[#2563EB] text-white border border-[#2563EB] sm:border-none' 
+                : 'bg-white text-[#2B2B2B] sm:text-[#616161] border border-[#E2E8F0] sm:border-transparent hover:bg-[#F9FAFB] sm:hover:text-[#181818]'
             )}
           >
             <span className={activeId === item.id ? 'text-white' : 'text-[#616161]'}>
               {item.icon}
             </span>
             {item.label}
+            {activeId === item.id && (
+              <span 
+                className="ml-1 text-white opacity-80 hover:opacity-100 cursor-pointer sm:hidden"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setActiveId('')
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </span>
+            )}
           </button>
         ))}
       </div>

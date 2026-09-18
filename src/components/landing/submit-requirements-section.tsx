@@ -78,57 +78,58 @@ export function SubmitRequirementsSection() {
         </div>
 
         {/* Right Side: Form Card */}
-        <div className="w-full max-w-[540px] rounded-3xl bg-white p-5 sm:p-9 shadow-2xl border border-slate-100">
-          <h3 className="mb-6 font-public-sans text-xl sm:text-2xl font-bold tracking-tight text-[#181818]">
+        <div className="w-full max-w-[540px] rounded-[16px] bg-white p-5 sm:p-6 shadow-2xl border border-slate-100">
+          <h3 className="mb-4 font-public-sans text-base font-medium text-[#2B2B2B]">
             Submit your requirements
           </h3>
+          <hr className="mb-5 border-[#ECECEC]" />
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {/* Full Name */}
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="name" className="font-public-sans text-xs font-bold uppercase tracking-wider text-[#475569]">Full name</label>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="name" className="font-public-sans text-[13px] font-normal text-[#2B2B2B]">Full Name</label>
               <input 
                 id="name"
                 name="name"
                 required
                 type="text" 
                 placeholder="E.g. Nitish Reddy"
-                className="rounded-xl border border-[#CBD5E1] bg-[#F8FAFC] px-4 py-3 font-public-sans text-sm text-[#181818] outline-none placeholder:text-[#94A3B8] focus:bg-white focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 transition-all"
+                className="h-10 rounded-lg border border-[#ECECEC] bg-white px-3 font-public-sans text-[13px] text-[#181818] outline-none placeholder:text-[#A0A0A0] focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
               />
             </div>
 
             {/* Email */}
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="email" className="font-public-sans text-xs font-bold uppercase tracking-wider text-[#475569]">Email</label>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="email" className="font-public-sans text-[13px] font-normal text-[#2B2B2B]">Email</label>
               <input 
                 id="email"
                 name="email"
                 required
                 type="email" 
                 placeholder="E.g. nitish@company.com"
-                className="rounded-xl border border-[#CBD5E1] bg-[#F8FAFC] px-4 py-3 font-public-sans text-sm text-[#181818] outline-none placeholder:text-[#94A3B8] focus:bg-white focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 transition-all"
+                className="h-10 rounded-lg border border-[#ECECEC] bg-white px-3 font-public-sans text-[13px] text-[#181818] outline-none placeholder:text-[#A0A0A0] focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
               />
             </div>
 
             {/* Data Type */}
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="dataType" className="font-public-sans text-xs font-bold uppercase tracking-wider text-[#475569]">Data Type</label>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="dataType" className="font-public-sans text-[13px] font-normal text-[#2B2B2B]">Data Type</label>
               <div className="relative">
                 <select 
                   id="dataType"
                   name="dataType"
                   required
-                  className="w-full appearance-none rounded-xl border border-[#CBD5E1] bg-[#F8FAFC] px-4 py-3 font-public-sans text-sm text-[#181818] outline-none focus:bg-white focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 transition-all"
+                  className="h-10 w-full appearance-none rounded-lg border border-[#ECECEC] bg-white px-3 font-public-sans text-[13px] text-[#181818] outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
                   defaultValue=""
                 >
-                  <option value="" disabled className="text-gray-400">Select data type</option>
+                  <option value="" disabled className="text-[#A0A0A0]">Select data type</option>
                   <option value="text">Text / NLP</option>
                   <option value="image">Image / Computer Vision</option>
                   <option value="audio">Audio / Speech</option>
                   <option value="video">Video</option>
                   <option value="other">Other / Multimodal</option>
                 </select>
-                <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#64748B]">
+                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#64748B]">
                   <svg width="12" height="7" viewBox="0 0 12 7" fill="none">
                     <path d="M1 1l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
@@ -137,36 +138,36 @@ export function SubmitRequirementsSection() {
             </div>
 
             {/* Project Description */}
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="description" className="font-public-sans text-xs font-bold uppercase tracking-wider text-[#475569]">Project Description</label>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="description" className="font-public-sans text-[13px] font-normal text-[#2B2B2B]">Project Description</label>
               <textarea 
                 id="description"
                 name="description"
                 required
                 rows={3}
                 placeholder="Describe the AI use case you are building and what data you need..."
-                className="resize-none rounded-xl border border-[#CBD5E1] bg-[#F8FAFC] px-4 py-3 font-public-sans text-sm text-[#181818] outline-none placeholder:text-[#94A3B8] focus:bg-white focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 transition-all"
+                className="resize-none h-[64px] rounded-lg border border-[#ECECEC] bg-white p-3 font-public-sans text-[13px] text-[#181818] outline-none placeholder:text-[#A0A0A0] focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
               ></textarea>
             </div>
 
             {/* Estimated Budget */}
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="budget" className="font-public-sans text-xs font-bold uppercase tracking-wider text-[#475569]">Estimated Budget</label>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="budget" className="font-public-sans text-[13px] font-normal text-[#2B2B2B]">Estimated Budget</label>
               <div className="relative">
                 <select 
                   id="budget"
                   name="budget"
                   required
-                  className="w-full appearance-none rounded-xl border border-[#CBD5E1] bg-[#F8FAFC] px-4 py-3 font-public-sans text-sm text-[#181818] outline-none focus:bg-white focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 transition-all"
+                  className="h-10 w-full appearance-none rounded-lg border border-[#ECECEC] bg-white px-3 font-public-sans text-[13px] text-[#181818] outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] transition-all"
                   defaultValue=""
                 >
-                  <option value="" disabled className="text-gray-400">Select Budget range</option>
+                  <option value="" disabled className="text-[#A0A0A0]">Select Budget range</option>
                   <option value="<5k">&lt; $5,000</option>
                   <option value="5k-25k">$5,000 - $25,000</option>
                   <option value="25k-100k">$25,000 - $100,000</option>
                   <option value="100k+">$100,000+</option>
                 </select>
-                <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#64748B]">
+                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#64748B]">
                   <svg width="12" height="7" viewBox="0 0 12 7" fill="none">
                     <path d="M1 1l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>

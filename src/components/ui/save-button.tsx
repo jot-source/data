@@ -61,14 +61,14 @@ export function SaveButton({
       onClick={handleClick}
       disabled={isPending}
       aria-label={saved ? (savedLabel ?? 'Unsave dataset') : (label ?? 'Save dataset')}
-      className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs sm:text-sm font-medium transition-all duration-200 disabled:opacity-60 cursor-pointer ${
+      className={`flex items-center gap-1.5 rounded-md font-public-sans text-xs sm:text-sm font-medium transition-all duration-200 disabled:opacity-60 cursor-pointer ${
         isDark
           ? saved
-            ? 'bg-white/20 text-white'
-            : 'bg-white/10 text-white hover:bg-white/20'
+            ? 'bg-white/20 text-white px-2.5 py-1.5'
+            : 'bg-white/10 text-white hover:bg-white/20 px-2.5 py-1.5'
           : saved
-            ? 'text-[#2563EB]'
-            : 'text-[#2B2B2B] hover:text-[#181818]'
+            ? 'text-[#2563EB] px-0 py-1 sm:px-2.5 sm:py-1.5'
+            : 'text-[#2B2B2B] hover:text-[#181818] px-0 py-1 sm:px-2.5 sm:py-1.5'
       }`}
     >
       <BookmarkIcon filled={saved} className="h-4 w-4 sm:h-5 sm:w-5" />

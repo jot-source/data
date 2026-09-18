@@ -101,12 +101,12 @@ function EmailStep({ onSent, onSignIn }: { onSent: (email: string) => void; onSi
       : 'h-[44px] w-full rounded-lg border border-[#ECECEC] bg-white px-3 text-sm text-[#111111] outline-none transition-colors focus:border-[#2563EB] font-[family-name:var(--font-public-sans)] placeholder:text-[#A0A0A0]'
 
   return (
-    <div className={`flex flex-col font-[family-name:var(--font-public-sans)] ${isEmailEntered ? 'gap-6 my-auto' : 'gap-4'}`}>
-      {/* Top Back Button (Figma: ← Back, 8px gap, 14px 600 #616161) */}
+    <div className={`flex flex-col font-[family-name:var(--font-public-sans)] ${isEmailEntered ? 'gap-8 md:gap-6 md:my-auto' : 'gap-8 md:gap-4'}`}>
+      {/* Top Back Button (Desktop only) */}
       <button
         type="button"
         onClick={onSignIn}
-        className="flex items-center gap-2 text-[14px] leading-[20px] font-semibold text-[#616161] transition-colors hover:text-[#181818] self-start"
+        className="hidden md:flex items-center gap-2 text-[14px] leading-[20px] font-semibold text-[#616161] transition-colors hover:text-[#181818] self-start"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M19 12H5M12 19l-7-7 7-7" />
@@ -137,7 +137,7 @@ function EmailStep({ onSent, onSignIn }: { onSent: (email: string) => void; onSi
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className={`flex flex-col ${isEmailEntered ? 'gap-8' : 'gap-4'}`}>
+      <form onSubmit={handleSubmit} className={`flex flex-col ${isEmailEntered ? 'gap-8' : 'gap-8 md:gap-4'}`}>
         {/* Input Field (Figma Image 4: 407×44px, #C9C9C9 border when entered, 8px radius) */}
         <div className="flex flex-col gap-1.5">
           <label htmlFor="forgot-email" className="text-sm font-medium text-[#444444]">
@@ -155,19 +155,20 @@ function EmailStep({ onSent, onSignIn }: { onSent: (email: string) => void; onSi
           {error && <p className="text-xs font-medium text-[#DC2626]">{error}</p>}
         </div>
 
-        {/* Action Button */}
         <button
           type="submit"
           disabled={loading}
           className="flex h-[44px] w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] text-sm font-semibold text-white tracking-normal transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading && <Spinner />}
-          {loading ? 'Sending…' : isEmailEntered ? 'Continue' : 'Send verification code'}
+          <span className="md:hidden">{loading ? 'Sending…' : 'Continue'}</span>
+          <span className="hidden md:inline">{loading ? 'Sending…' : isEmailEntered ? 'Continue' : 'Send verification code'}</span>
         </button>
       </form>
 
+      {/* Desktop Footer */}
       {!isEmailEntered && (
-        <p className="text-center text-sm text-[#2B2B2B]">
+        <p className="hidden md:block text-center text-sm text-[#2B2B2B]">
           Remember your password?{' '}
           <button type="button" onClick={onSignIn} className="font-semibold text-[#2563EB] transition-colors hover:text-[#1d4fd7]">
             Sign in
@@ -472,7 +473,7 @@ function NewPasswordStep({
   }
 
   return (
-    <div className="flex flex-col gap-4 font-[family-name:var(--font-public-sans)]">
+    <div className="flex h-full flex-1 flex-col gap-4 font-[family-name:var(--font-public-sans)]">
       {/* Top Back Button (Figma: ← Back, 8px gap, 14px 600 #616161) */}
       <button
         type="button"
@@ -494,9 +495,9 @@ function NewPasswordStep({
       </div>
 
       {/* Separator Line between heading block and input fields */}
-      <div className="h-px w-full bg-[#DDDDDD]" />
+      <hr className="w-full border-t border-[#DDDDDD]" />
 
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex h-full flex-1 flex-col gap-4">
         {/* Enter password */}
         <div className="flex flex-col gap-1.5">
           <label htmlFor="reset-new-password" className="text-sm font-medium text-[#444444]">Enter password</label>
@@ -549,7 +550,7 @@ function NewPasswordStep({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex h-[44px] items-center justify-center gap-2 rounded-xl bg-[#2563EB] text-sm font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+          className="mt-auto flex h-[44px] items-center justify-center gap-2 rounded-xl bg-[#2563EB] text-sm font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting && <Spinner />}
           {isSubmitting ? 'Saving…' : 'Save password'}

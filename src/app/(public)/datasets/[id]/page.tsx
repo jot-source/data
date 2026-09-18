@@ -14,6 +14,7 @@ import {
   FAQSection,
   RelatedDatasets,
   EnterpriseConsultation,
+  MobileStickyPricing,
 } from '@/components/each-dataset'
 
 export default async function DatasetDetailPage({
@@ -65,11 +66,19 @@ export default async function DatasetDetailPage({
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F7FB] text-[#181818] w-full max-w-full overflow-x-clip">
-      <div className="mx-auto w-full max-w-[1200px] px-4 sm:px-5 py-6">
+    <>
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          @media (max-width: 1023px) {
+            footer { display: none !important; }
+          }
+        `
+      }} />
+      <div className="min-h-screen bg-white sm:bg-[#F4F7FB] text-[#181818] w-full max-w-full overflow-x-clip">
+      <div className="mx-auto w-full max-w-[1200px] px-4 sm:px-5 pt-6 pb-[120px] lg:pb-6">
 
         {/* Breadcrumb */}
-        <div className="mb-6 flex flex-wrap items-center gap-2 text-sm text-[#616161]">
+        <div className="mb-6 hidden md:flex flex-wrap items-center gap-2 text-sm text-[#616161]">
           <span className="hover:text-[#181818] cursor-pointer">Home</span>
           <span className="text-[#CBD5E1]">&gt;</span>
           <span className="hover:text-[#181818] cursor-pointer">Marketplace</span>
@@ -84,7 +93,7 @@ export default async function DatasetDetailPage({
         <div className="flex flex-col lg:flex-row gap-6 items-stretch w-full max-w-full">
 
           {/* LEFT: Main content — full-width on mobile/tablet, 748px on lg screens */}
-          <div className="w-full lg:w-[748px] min-w-0 shrink-0 flex flex-col gap-6 sm:gap-8 rounded-3xl border border-[#CBD5E1] bg-white p-4 sm:p-6 box-border">
+          <div className="w-full lg:w-[748px] min-w-0 shrink-0 flex flex-col gap-6 sm:gap-8 sm:rounded-3xl sm:border sm:border-[#CBD5E1] sm:bg-white sm:p-6 box-border">
             {/* Hero heading */}
             <DatasetHeading dataset={safeDataset} isLoggedIn={isLoggedIn} isSaved={isSaved} />
 
@@ -100,14 +109,16 @@ export default async function DatasetDetailPage({
             </div>
           </div>
 
-          {/* RIGHT: Pricing sidebar — full-width on mobile/tablet, 420px on lg screens */}
-          <div className="w-full lg:w-[420px] min-w-0 shrink-0">
+          {/* RIGHT: Pricing sidebar — hidden on mobile/tablet, 420px on lg screens */}
+          <div className="hidden lg:block lg:w-[420px] min-w-0 shrink-0">
             <PricingSidebar dataset={safeDataset} isLoggedIn={isLoggedIn} owned={owned} />
           </div>
         </div>
 
-        {/* ──── Enterprise Consultation Block ──── */}
-        <EnterpriseConsultation />
+        {/* ──── Enterprise Consultation Block (Desktop only here) ──── */}
+        <div className="hidden lg:block">
+          <EnterpriseConsultation />
+        </div>
 
         {/* ──── Related Datasets — full width, 2×2 grid, gap 24px ──── */}
         <div className="mt-12">
@@ -115,5 +126,7 @@ export default async function DatasetDetailPage({
         </div>
       </div>
     </div>
+    <MobileStickyPricing dataset={safeDataset} isLoggedIn={isLoggedIn} owned={owned} />
+    </>
   )
 }

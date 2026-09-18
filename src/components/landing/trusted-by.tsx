@@ -33,10 +33,45 @@ export function TrustedBy() {
           Trusted by leading AI companies
         </h2>
 
-        <div className="flex w-full flex-wrap items-center justify-center gap-6 sm:gap-8 md:justify-between">
+        {/* Mobile View: Marquee Scroll */}
+        <div className="relative w-full overflow-hidden sm:hidden">
+          <style dangerouslySetInnerHTML={{ __html: `
+            @keyframes marquee {
+              0% { transform: translateX(0%); }
+              100% { transform: translateX(-50%); }
+            }
+            .animate-marquee {
+              animation: marquee 20s linear infinite;
+              display: flex;
+            }
+            .animate-marquee:hover {
+              animation-play-state: paused;
+            }
+          `}} />
+          
+          {/* Gradient Masks for smooth fade on edges */}
+          <div className="absolute top-0 left-0 bottom-0 w-8 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+          <div className="absolute top-0 right-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+
+          <div className="animate-marquee w-max items-center gap-8 px-4">
+            {[...BRANDS, ...BRANDS].map((brand, i) => (
+              <div key={`${brand.id}-${i}`} className="flex w-[64px] flex-col items-center gap-1.5 shrink-0">
+                <div className="flex h-[32px] items-center justify-center">
+                  {brand.mark}
+                </div>
+                <span className="font-public-sans text-[10px] leading-tight text-[#616161]">
+                  {brand.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop View: Static Grid */}
+        <div className="hidden sm:flex w-full flex-wrap items-center justify-center gap-8 md:justify-between">
           {BRANDS.map((brand) => (
-            <div key={brand.id} className="flex w-[90px] sm:w-[106px] flex-col items-center gap-2">
-              <div className="flex h-[44px] sm:h-[53px] items-center justify-center">
+            <div key={brand.id} className="flex w-[106px] flex-col items-center gap-2">
+              <div className="flex h-[53px] items-center justify-center">
                 {brand.mark}
               </div>
               <span className="font-public-sans text-[10px] leading-4 text-[#616161]">
