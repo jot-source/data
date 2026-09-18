@@ -8,6 +8,13 @@ import { useDatasetFilters, type FacetKey } from '@/stores/dataset-filters.store
 import { DatasetCard } from '@/components/search-datasets/dataset-card'
 import type { DatasetSort } from '@/validations/dataset.schema'
 
+const SORT_OPTIONS: { value: DatasetSort, label: string }[] = [
+  { value: 'recent', label: 'Last updated' },
+  { value: 'quality', label: 'Highest quality' },
+  { value: 'price_asc', label: 'Price: low to high' },
+  { value: 'price_desc', label: 'Price: high to low' },
+]
+
 export function DatasetExploreSection() {
   // Data
   const { data, isPending } = useDatasets()
@@ -47,6 +54,16 @@ export function DatasetExploreSection() {
     })
   }
 
+  if (sort && sort !== 'recent') {
+    const sortLabel = SORT_OPTIONS.find(o => o.value === sort)?.label
+    if (sortLabel) {
+      activeTags.push({
+        label: sortLabel,
+        onRemove: () => setSort('recent')
+      })
+    }
+  }
+
   return (
     <section className="w-full max-w-[100vw] overflow-x-hidden bg-[#EFF6FF] py-8 sm:py-16">
       <div className="mx-auto max-w-[1200px] px-3 sm:px-5">
@@ -54,15 +71,15 @@ export function DatasetExploreSection() {
           We got every dataset you need. Search and explore now.
         </h2>
 
-        <div className="rounded-xl sm:rounded-3xl bg-[#283350] p-2.5 sm:p-4 md:p-8">
-          {/* Search bar — magnifying glass on mobile per Figma, button on desktop */}
-          <form onSubmit={handleSearch} className="mb-3 sm:mb-6 relative flex items-center rounded-lg sm:rounded-xl bg-white p-1 sm:p-1.5 pl-3 sm:pl-4 shadow-sm border border-transparent focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-[#2563EB]/20 transition-all">
+        <div className="rounded-2xl sm:rounded-3xl bg-[#1E283D] p-4 sm:p-6 md:p-8">
+          {/* Search bar */}
+          <form onSubmit={handleSearch} className="mb-4 sm:mb-6 relative flex items-center rounded-xl bg-white p-1 sm:p-1.5 pl-4 sm:pl-5 shadow-sm border border-transparent focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-[#2563EB]/20 transition-all">
             <input
               type="text"
               value={draftSearch}
               onChange={(e) => setDraftSearch(e.target.value)}
               placeholder="Eg: search health care datasets"
-              className="flex-1 min-w-0 bg-transparent pr-2 sm:pr-3 py-1.5 sm:py-2 text-xs sm:text-sm text-[#181818] outline-none placeholder:text-[#616161] sm:placeholder:text-[#8C8C8C]"
+              className="flex-1 min-w-0 bg-transparent pr-3 py-2 text-xs sm:text-sm text-[#181818] outline-none placeholder:text-[#616161] sm:placeholder:text-[#8C8C8C]"
             />
             {/* Mobile Magnifying Glass Icon */}
             <button
@@ -78,25 +95,27 @@ export function DatasetExploreSection() {
             {/* Desktop Search Button */}
             <button
               type="submit"
-              className="hidden sm:inline-flex shrink-0 rounded-md sm:rounded-lg bg-[#2563EB] px-3 sm:px-6 py-1.5 sm:py-2.5 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-[#1D4ED8] active:scale-95"
+              className="hidden sm:inline-flex shrink-0 rounded-lg bg-[#2563EB] px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#1D4ED8] active:scale-95 cursor-pointer"
             >
               Search
             </button>
           </form>
 
           {/* Filter bar */}
-          <div className="mb-3 sm:mb-6 rounded-lg sm:rounded-2xl bg-white p-3 sm:p-5 border border-[#DDDDDD] sm:border-[#E2E8F0] shadow-sm">
-            <div className="mb-2.5 sm:mb-3.5 flex items-center justify-between border-b border-[#DDDDDD] sm:border-transparent pb-2 sm:pb-0">
-              <span className="text-xs sm:text-sm font-normal sm:font-bold text-[#181818]">Filter by</span>
-              {activeTags.length > 0 && (
-                <button type="button" onClick={clearAll} className="text-xs font-normal sm:font-semibold text-[#181818] sm:text-[#2563EB] hover:underline">
-                  Clear all
-                </button>
-              )}
+          <div className="mb-4 sm:mb-6 rounded-xl sm:rounded-2xl bg-white p-4 sm:p-5 shadow-sm">
+            <div className="mb-3.5 flex items-center justify-between">
+              <span className="text-sm sm:text-base font-semibold text-[#181818]">Filter by</span>
+              <button
+                type="button"
+                onClick={clearAll}
+                className="text-xs sm:text-sm font-normal text-[#181818] hover:text-[#2563EB] transition-colors cursor-pointer"
+              >
+                Clear all
+              </button>
             </div>
             
             {/* Filter pills */}
-            <div className="mb-1 flex flex-wrap gap-2 sm:gap-2.5">
+            <div className="flex flex-wrap gap-2 sm:gap-2.5">
               <FilterDropdown 
                 label="Industry" 
                 count={facets.industry.length}
@@ -137,14 +156,14 @@ export function DatasetExploreSection() {
 
             {/* Active tags */}
             {activeTags.length > 0 && (
-              <div className="flex flex-wrap gap-2 pt-2.5 border-t border-[#F1F5F9] mt-2.5">
+              <div className="flex flex-wrap gap-2 pt-3 mt-3 border-t border-[#F1F5F9]">
                 {activeTags.map((tag, i) => (
                   <span
                     key={i}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-[#BFDBFE] bg-[#EFF6FF] px-2.5 py-1 text-[11px] font-medium text-[#1E40AF]"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#DBEAFE] px-3 py-1.5 text-xs font-medium text-[#1E3A8A]"
                   >
                     {tag.label}
-                    <button type="button" onClick={tag.onRemove} className="text-[#0032B8] hover:opacity-75">
+                    <button type="button" onClick={tag.onRemove} className="text-[#1E3A8A] hover:text-black ml-0.5">
                       <XIcon />
                     </button>
                   </span>
@@ -154,7 +173,7 @@ export function DatasetExploreSection() {
           </div>
 
           {/* Results count */}
-          <p className="mb-3 sm:mb-4 text-[10px] sm:text-sm font-normal sm:font-semibold text-white">
+          <p className="mb-3 sm:mb-4 text-xs sm:text-sm font-normal sm:font-semibold text-white">
             {isPending ? 'Loading...' : `${data?.pagination.total || 0} datasets match your results`}
           </p>
 
@@ -165,15 +184,14 @@ export function DatasetExploreSection() {
             ))}
           </div>
 
-          {/* View all button — 143x32 white with blue border on mobile, rich blue on tablet/desktop */}
-          <div className="mt-5 sm:mt-8 flex justify-center">
+          {/* View all button — White button with blue text per Figma screenshot */}
+          <div className="mt-6 sm:mt-8 flex justify-center">
             <Link
               href="/datasets"
-              className="inline-flex h-8 sm:h-auto w-[143px] sm:w-auto items-center justify-center gap-2 rounded-lg sm:rounded-xl border border-[#2563EB] bg-white sm:bg-[#2563EB] px-3 sm:px-8 py-1.5 sm:py-3.5 font-public-sans text-xs sm:text-sm font-normal sm:font-semibold text-[#2565EB] sm:text-white shadow-none sm:shadow-[0_4px_14px_rgba(37,99,235,0.35)] transition-all hover:bg-[#EFF6FF] sm:hover:bg-[#1D4ED8] active:scale-[0.98]"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#CBD5E1] bg-white px-6 py-2.5 font-public-sans text-xs sm:text-sm font-medium text-[#2563EB] shadow-xs transition-all hover:bg-slate-50 active:scale-[0.98]"
             >
-              View all datasets
-              <span className="hidden sm:inline">({data?.pagination.total || 0})</span>
-              <ArrowRightIcon />
+              <span>View all {data?.pagination.total || 16} Datasets</span>
+              <ChevronRightIcon />
             </Link>
           </div>
         </div>
@@ -225,15 +243,11 @@ function FilterDropdown({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={`inline-flex items-center gap-1 sm:gap-1.5 rounded-[4px] sm:rounded-lg border px-2 py-1 sm:px-3.5 sm:py-2 text-[10px] sm:text-xs font-normal sm:font-semibold transition-all ${
-          isActive 
-            ? 'bg-[#DBEAFE] text-[#0032B8] border-[#CBD5E1]' 
-            : 'bg-[#DBEAFE] sm:bg-[#F8FAFC] text-[#0032B8] sm:text-[#475569] border-[#CBD5E1] sm:border-[#E2E8F0] hover:bg-[#EFF6FF] hover:text-[#0032B8]'
-        }`}
+        className="inline-flex items-center gap-1.5 rounded-lg sm:rounded-xl bg-[#DBEAFE] px-3.5 py-2 text-xs sm:text-sm font-medium text-[#2563EB] hover:bg-[#BFDBFE] transition-colors cursor-pointer"
       >
         <span>{label}</span>
         {count > 0 && (
-          <span className={`flex h-3.5 sm:h-4 min-w-3.5 sm:min-w-4 items-center justify-center rounded-full px-1 text-[9px] sm:text-[10px] font-bold ${isActive ? 'bg-[#2563EB] text-white' : 'bg-[#CBD5E1] text-[#1E293B]'}`}>
+          <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#0B1528] text-white text-[10px] font-bold">
             {count}
           </span>
         )}
@@ -263,34 +277,21 @@ function FilterDropdown({
   )
 }
 
-const SORT_OPTIONS: { value: DatasetSort, label: string }[] = [
-  { value: 'recent', label: 'Last updated' },
-  { value: 'quality', label: 'Highest quality' },
-  { value: 'price_asc', label: 'Price: low to high' },
-  { value: 'price_desc', label: 'Price: high to low' },
-]
-
 function SortDropdown({ sort, setSort }: { sort: DatasetSort, setSort: (s: DatasetSort) => void }) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, () => setOpen(false))
 
-  const activeLabel = SORT_OPTIONS.find(o => o.value === sort)?.label
-  const isActive = sort !== 'recent' || open
+  const activeLabel = SORT_OPTIONS.find(o => o.value === sort)?.label || 'Last updated'
 
   return (
     <div className="relative" ref={ref}>
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={`inline-flex items-center gap-1 sm:gap-1.5 rounded-[4px] sm:rounded-lg border px-2 py-1 sm:px-3.5 sm:py-2 text-[10px] sm:text-xs font-normal sm:font-semibold transition-all ${
-          isActive 
-            ? 'bg-[#DBEAFE] text-[#0032B8] border-[#CBD5E1]' 
-            : 'bg-[#DBEAFE] sm:bg-[#F8FAFC] text-[#0032B8] sm:text-[#475569] border-[#CBD5E1] sm:border-[#E2E8F0] hover:bg-[#EFF6FF] hover:text-[#0032B8]'
-        }`}
+        className="inline-flex items-center gap-1.5 rounded-lg sm:rounded-xl bg-[#DBEAFE] px-3.5 py-2 text-xs sm:text-sm font-medium text-[#2563EB] hover:bg-[#BFDBFE] transition-colors cursor-pointer"
       >
-        <span className="sm:hidden">Sort by</span>
-        <span className="hidden sm:inline">Sort: {activeLabel}</span>
+        <span>Sort: {activeLabel}</span>
         <ChevronDownIcon />
       </button>
 
@@ -316,20 +317,14 @@ function QualityDropdown({ quality, setQuality }: { quality: number | null, setQ
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, () => setOpen(false))
 
-  const isActive = quality !== null || open
-
   return (
     <div className="relative" ref={ref}>
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={`inline-flex items-center gap-1 sm:gap-1.5 rounded-[4px] sm:rounded-lg border px-2 py-1 sm:px-3.5 sm:py-2 text-[10px] sm:text-xs font-normal sm:font-semibold transition-all ${
-          isActive 
-            ? 'bg-[#DBEAFE] text-[#0032B8] border-[#CBD5E1]' 
-            : 'bg-[#DBEAFE] sm:bg-[#F8FAFC] text-[#0032B8] sm:text-[#475569] border-[#CBD5E1] sm:border-[#E2E8F0] hover:bg-[#EFF6FF] hover:text-[#0032B8]'
-        }`}
+        className="inline-flex items-center gap-1.5 rounded-lg sm:rounded-xl bg-[#DBEAFE] px-3.5 py-2 text-xs sm:text-sm font-medium text-[#2563EB] hover:bg-[#BFDBFE] transition-colors cursor-pointer"
       >
-        <span>Data quality score {quality !== null ? `(${quality}+)` : ''}</span>
+        <span>Data quality score{quality !== null ? ` (${quality}+)` : ''}</span>
         <ChevronDownIcon />
       </button>
 
@@ -354,7 +349,7 @@ function QualityDropdown({ quality, setQuality }: { quality: number | null, setQ
 
 function ChevronDownIcon() {
   return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
       <path d="m6 9 6 6 6-6" />
     </svg>
   )
@@ -380,7 +375,7 @@ function ArrowRightIcon() {
 
 function ChevronRightIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
       <path d="m9 18 6-6-6-6" />
     </svg>
   )
