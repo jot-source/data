@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useCartStore } from '@/stores/cart.store'
 import { useDatasetActions } from '@/hooks/use-dataset-actions'
 import type { DatasetDetail } from '@/types/dataset'
+import { EnterpriseConsultation } from './enterprise-consultation'
 
 export function PricingOptions({
   dataset,
@@ -148,16 +149,16 @@ export function PricingOptions({
   }
 
   return (
-    <div id="samples" className="scroll-mt-32 flex flex-col gap-4 font-public-sans">
+    <div id="samples" className="scroll-mt-32 flex flex-col gap-4 font-public-sans -mx-4 px-4 py-5 bg-[#DBEAFE] md:mx-0 md:px-0 md:py-0 md:bg-transparent">
       <div>
-        <h2 className="text-lg font-semibold text-[#181818]">Try a sample before licensing.</h2>
-        <p className="mt-1 text-xs text-[#616161]">
+        <h2 className="text-base md:text-lg font-semibold text-[#181818]">Try a sample before licensing.</h2>
+        <p className="mt-1 hidden md:block text-xs text-[#616161]">
           A test packet is a representative sample of the full dataset, allowing you to validate quality, compatibility, and fit before purchasing a license.
         </p>
       </div>
 
-      {/* ─── Card 1: Free Sample Card (Figma: bg-[#EFF6FF], border-[#2563EB], rounded-[20px], padding 24px) ─── */}
-      <div className="rounded-[20px] border border-[#2563EB] bg-[#EFF6FF] p-6">
+      {/* ─── Card 1: Free Sample Card ─── */}
+      <div className="rounded-[16px] md:rounded-[20px] border border-[#2563EB] bg-white md:bg-[#EFF6FF] p-4 md:p-6">
         <div className="flex flex-col md:flex-row items-stretch gap-6 md:gap-8">
           {/* Left: Details (Figma: 303px width, gap 24px) */}
           <div className="w-full md:w-[303px] shrink-0 flex flex-col justify-between gap-6">
@@ -306,8 +307,8 @@ export function PricingOptions({
         </div>
       )}
 
-      {/* ─── Card 2: Enterprise Test Packet Card (Figma: bg-white, border-[#CBD5E1], rounded-[20px], padding 24px) ─── */}
-      <div className="rounded-[20px] border border-[#CBD5E1] bg-white p-6">
+      {/* ─── Card 2: Enterprise Test Packet Card ─── */}
+      <div className="rounded-[16px] md:rounded-[20px] border border-[#2563EB] md:border-[#CBD5E1] bg-white p-4 md:p-6">
         <div className="flex flex-col md:flex-row items-stretch gap-6 md:gap-8">
           {/* Left: Details (Figma: 303px width, gap 24px) */}
           <div className="w-full md:w-[303px] shrink-0 flex flex-col justify-between gap-6">
@@ -361,20 +362,39 @@ export function PricingOptions({
                   <span>Download dataset</span>
                 </button>
               ) : (
-                <button
-                  onClick={handleAddToCartTestPacket}
-                  className={`w-full md:w-auto flex items-center justify-center gap-2 rounded-lg px-6 py-3 font-public-sans text-[14px] leading-[20px] font-semibold text-white transition-all active:scale-[0.99] shadow-xs ${
-                    isTestPacketInCart
-                      ? 'bg-emerald-600 hover:bg-emerald-700'
-                      : 'bg-[#2563EB] hover:bg-[#1D4ED8]'
-                  }`}
-                >
-                  <span>{isTestPacketInCart ? '✓ Added to cart' : 'Add to cart'}</span>
-                </button>
+                <div className="flex flex-row md:flex-col items-center md:items-start gap-3 w-full">
+                  <button
+                    type="button"
+                    onClick={handleAddToCartTestPacket}
+                    className="flex items-center justify-center shrink-0 w-[48px] h-[48px] md:hidden rounded-lg border border-[#2563EB] text-[#2563EB] hover:bg-[#EFF6FF] transition-colors"
+                    aria-label="Add to cart"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="9" cy="21" r="1"></circle>
+                      <circle cx="20" cy="21" r="1"></circle>
+                      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                  </button>
+                  <button
+                    onClick={handleAddToCartTestPacket}
+                    className={`w-full flex-1 md:w-auto flex items-center justify-center gap-2 rounded-lg h-[48px] md:h-auto md:px-6 md:py-3 font-public-sans text-[14px] leading-[20px] font-semibold text-white transition-all active:scale-[0.99] shadow-xs ${
+                      isTestPacketInCart
+                        ? 'bg-emerald-600 hover:bg-emerald-700'
+                        : 'bg-[#2563EB] hover:bg-[#1D4ED8]'
+                    }`}
+                  >
+                    <span>{isTestPacketInCart ? '✓ Added to cart' : 'Proceed to buy'}</span>
+                  </button>
+                </div>
               )}
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Enterprise Consultation Block (Mobile only here) */}
+      <div className="block lg:hidden mt-4 md:mt-8">
+        <EnterpriseConsultation />
       </div>
 
       {/* "Added to cart" Figma Spec Floating Popup rendered via Portal directly on document.body */}

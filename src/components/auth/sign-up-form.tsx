@@ -3,6 +3,7 @@
 //   1. credentials → 2. email OTP verification → 3. (skippable) profile setup
 'use client'
 
+import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
@@ -142,26 +143,33 @@ function CredentialsStep({ onSignUp, onLogin }: { onSignUp: (email: string) => v
 
   return (
     <div className="flex flex-col gap-5">
+      {/* Mobile Header */}
+      <div className="flex flex-col gap-1 md:hidden">
+        <h1 className="font-public-sans text-2xl font-semibold leading-8 text-[#111111]">Create account</h1>
+        <p className="text-xs leading-4 text-[#616161]">Access datasets, samples, and downloads.</p>
+      </div>
+
       {/* Mobile Tab Switcher */}
       <AuthTabSwitcher activeTab="sign-up" />
 
       {/* Desktop Header */}
       <div className="hidden flex-col gap-1 md:flex">
-        <h1 className="text-2xl font-semibold leading-8 text-[#111111]">Create account</h1>
+        <h1 className="text-2xl font-semibold leading-8 text-[#111111] font-public-sans">Create account</h1>
         <p className="text-xs leading-4 text-[#616161]">Access datasets, samples, and downloads.</p>
       </div>
 
-      {/* Signup with Google (full width touch target 48px height) */}
+      {/* Desktop Continue with Google */}
       <button
         type="button"
         onClick={handleGoogle}
-        className="flex h-12 w-full items-center justify-center gap-2 rounded-lg border border-[#DDDDDD] bg-white px-8 text-sm font-medium text-[#181818] transition-colors hover:bg-[#fafafa]"
+        className="hidden h-12 w-full items-center justify-center gap-2 rounded-lg border border-[#DDDDDD] bg-white px-8 text-sm font-medium text-[#181818] transition-colors hover:bg-[#fafafa] md:flex"
       >
         <GoogleIcon />
-        Signup with Google
+        Continue with Google
       </button>
 
-      <div className="flex items-center gap-3">
+      {/* Desktop Divider */}
+      <div className="hidden items-center gap-3 md:flex">
         <div className="h-px flex-1 bg-[#DDDDDD]" />
         <span className="text-xs text-[#8C8C8C]">Or Signup with email</span>
         <div className="h-px flex-1 bg-[#DDDDDD]" />
@@ -249,20 +257,35 @@ function CredentialsStep({ onSignUp, onLogin }: { onSignUp: (email: string) => v
           {isSubmitting && <Spinner />}
           {isSubmitting ? 'Creating account…' : 'Create account'}
         </button>
+
+        {/* Mobile Signup with Google (Moved to bottom) */}
+        <button
+          type="button"
+          onClick={handleGoogle}
+          className="mt-1 flex h-12 w-full items-center justify-center gap-2 rounded-lg border border-[#DDDDDD] bg-white px-8 text-sm font-medium text-[#181818] transition-colors hover:bg-[#fafafa] md:hidden"
+        >
+          <GoogleIcon />
+          Continue with Google
+        </button>
+
+        {/* Desktop Footer */}
+        <div className="hidden flex-col items-center gap-4 md:flex">
+          <p className="text-center text-sm text-[#2B2B2B]">
+            Already have an account?{' '}
+            <button
+              type="button"
+              onClick={onLogin}
+              className="font-medium text-[#2563EB] transition-colors hover:text-[#1d4fd7]"
+            >
+              Login
+            </button>
+          </p>
+          <p className="text-center text-xs text-[#8C8C8C]">
+            By continuing you agreed to <a href="#" className="text-[#2563EB] hover:underline">Terms of service</a> and <a href="#" className="text-[#2563EB] hover:underline">privacy policy</a>
+          </p>
+        </div>
       </form>
 
-      <p className="text-center text-sm text-[#2B2B2B]">
-        Already have an account?{' '}
-        <button type="button" onClick={onLogin} className="font-medium text-[#2563EB] transition-colors hover:text-[#1d4fd7]">
-          Login
-        </button>
-      </p>
-
-      <p className="text-center text-xs text-[#8C8C8C]">
-        By continuing you agreed to{' '}
-        <a href="/terms" className="text-[#2563EB] hover:underline">Terms of service</a> and{' '}
-        <a href="/privacy" className="text-[#2563EB] hover:underline">privacy policy</a>
-      </p>
     </div>
   )
 }
@@ -376,21 +399,24 @@ function OtpStep({ email, onVerified, onBack }: { email: string; onVerified: () 
   const isResendCapped = resendCount >= 5
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex h-full flex-1 flex-col gap-5">
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-semibold leading-8 text-[#111111]">Check your inbox</h1>
         <p className="text-xs leading-4 text-[#616161]">We sent a 6-digit code to</p>
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-1.5 text-sm font-medium text-[#111111] hover:text-[#2563EB]"
+          className="mt-1 flex items-center gap-1.5 font-public-sans text-[13px] font-normal text-[#181818] hover:text-[#2563EB]"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="2" y="4" width="20" height="16" rx="2" />
-            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-          </svg>
+          <Image
+            src="/logo/Email.png"
+            alt="Email"
+            width={20}
+            height={20}
+            className="h-5 w-5 object-contain"
+          />
           {email}
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8C8C8C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M12 20h9" />
             <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
           </svg>
@@ -419,24 +445,25 @@ function OtpStep({ email, onVerified, onBack }: { email: string; onVerified: () 
         {error && <p className="text-xs font-medium text-[#DC2626]">{error}</p>}
       </div>
 
-      <p className="text-xs text-[#8C8C8C]">
-        Didn&apos;t receive code? Resend in{' '}
-        <span className="text-[#2563EB]">{mm}:{ss}</span>{'   '}
+      <div className="flex items-center justify-between text-xs text-[#8C8C8C]">
+        <span>
+          Didn&apos;t receive code? Resend in <span className="text-[#2563EB]">{mm}:{ss}</span>
+        </span>
         <button
           type="button"
           onClick={handleResend}
           disabled={seconds > 0 || isResendCapped}
-          className="font-medium text-[#2563EB] disabled:text-[#A0A0A0] disabled:no-underline hover:underline"
+          className="font-medium text-[#8C8C8C] transition-colors hover:text-[#111111] disabled:cursor-not-allowed disabled:opacity-60"
         >
           Resend code
         </button>
-      </p>
+      </div>
 
       <button
         type="button"
         onClick={handleConfirm}
         disabled={loading}
-        className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#2563EB] text-base font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+        className="mt-auto flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#2563EB] text-base font-semibold text-white transition-all hover:bg-[#1d4fd7] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
       >
         {loading && <Spinner />}
         {loading ? 'Confirming…' : 'Confirm'}

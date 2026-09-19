@@ -74,17 +74,17 @@ export function HowItWorksSection() {
     <section id="how-it-works" ref={sectionRef} className="w-full max-w-[100vw] overflow-x-hidden scroll-mt-4 bg-white sm:bg-[#F5F8FF] py-8 sm:py-24 border-t border-[#CBD5E1]">
       <div className="mx-auto max-w-[1200px] px-4 sm:px-5 flex flex-col items-center">
 
-        {/* Section Header */}
-        <h2 className="mb-3 sm:mb-4 text-center font-public-sans text-2xl sm:text-[40px] md:text-[48px] font-bold leading-tight text-[#181818]">
+        {/* Section Header (Hidden on Mobile) */}
+        <h2 className="hidden sm:block mb-3 sm:mb-4 text-center font-public-sans text-2xl sm:text-[40px] md:text-[48px] font-bold leading-tight text-[#181818]">
           How it works
         </h2>
-        <p className="mb-10 sm:mb-16 text-center font-public-sans text-sm sm:text-lg md:text-xl font-normal leading-relaxed text-[#616161] max-w-2xl px-2">
+        <p className="hidden sm:block mb-10 sm:mb-16 text-center font-public-sans text-sm sm:text-lg md:text-xl font-normal leading-relaxed text-[#616161] max-w-2xl px-2">
           A simple, transparent path from finding the right data to getting it in your hands.
         </p>
 
         {/* Mobile View (< sm): Vertical Stepper per Figma */}
         <div className="flex w-full flex-col sm:hidden">
-          <h2 className="mb-6 text-left font-public-sans text-[18px] font-semibold leading-tight text-[#181818]">
+          <h2 className="mb-6 text-center font-public-sans text-[18px] font-semibold leading-tight text-[#181818]">
             How it works
           </h2>
 

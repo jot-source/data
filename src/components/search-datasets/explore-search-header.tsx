@@ -43,7 +43,7 @@ export function ExploreSearchHeader() {
     <div
       className={cn(
         'sticky top-[64px] z-40 shrink-0 transition-colors duration-300 ease-in-out font-public-sans',
-        isScrolled ? 'pointer-events-none bg-transparent' : 'bg-[linear-gradient(90deg,#212F58_0%,#1B2237_50%,#212F58_100%)]'
+        isScrolled ? 'pointer-events-none bg-[#F5F7FA] md:bg-transparent' : 'bg-[linear-gradient(90deg,#212F58_0%,#1B2237_50%,#212F58_100%)]'
       )}
     >
       <div className="mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-12">
@@ -57,10 +57,10 @@ export function ExploreSearchHeader() {
         >
           <h1
             className={cn(
-              'overflow-hidden font-public-sans font-bold text-white transition-all duration-300 ease-in-out',
+              'overflow-hidden font-public-sans font-medium text-white transition-all duration-300 ease-in-out',
               isScrolled
                 ? 'h-0 text-[0px] opacity-0 mb-0'
-                : 'h-auto text-2xl sm:text-3xl lg:text-4xl opacity-100 mb-6'
+                : 'h-auto text-base opacity-100 mb-6'
             )}
           >
             Search and explore datasets
@@ -69,7 +69,7 @@ export function ExploreSearchHeader() {
           <form
             onSubmit={handleSubmit}
             className={cn(
-              'relative flex h-11 sm:h-[56px] items-center rounded-xl bg-white p-1 sm:p-1.5 pl-3.5 sm:pl-5 transition-all duration-300 ease-in-out',
+              'relative flex h-11 sm:h-[56px] items-center rounded-[8px] sm:rounded-xl bg-white p-1 sm:p-1.5 pl-3.5 sm:pl-5 transition-all duration-300 ease-in-out',
               isScrolled
                 ? 'w-full max-w-[1000px] border border-[#CBD5E1] shadow-xs focus-within:border-[#2563EB] focus-within:ring-2 focus-within:ring-[#2563EB]/20'
                 : 'mx-auto max-w-2xl border border-white/20 shadow-xl focus-within:ring-2 focus-within:ring-[#2563EB]/30'

@@ -80,7 +80,7 @@ export function ProviderCtaSection() {
           {/* Button */}
           <button
             onClick={() => openAuth('sign-up')}
-            className="relative z-10 shrink-0 inline-flex h-11 sm:h-14 w-[120px] sm:w-auto sm:min-w-[148px] items-center justify-center rounded-lg sm:rounded-xl bg-[#F1F5F9] sm:bg-[#E9F0FD] px-4 sm:px-8 font-public-sans text-xs sm:text-base font-semibold text-[#181818] sm:text-[#2565EB] shadow-md transition-transform hover:scale-105 active:scale-95 focus:outline-none"
+            className="relative z-10 shrink-0 inline-flex h-11 sm:h-14 w-full sm:w-auto sm:min-w-[148px] items-center justify-center rounded-lg sm:rounded-xl bg-[#F1F5F9] sm:bg-[#E9F0FD] px-4 sm:px-8 font-public-sans text-sm sm:text-base font-semibold text-[#181818] sm:text-[#2565EB] shadow-md transition-transform hover:scale-105 active:scale-95 focus:outline-none"
           >
             Join now
           </button>

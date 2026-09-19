@@ -63,15 +63,7 @@ html {
   scrollbar-color: #CBD5E1 transparent;
 }
 
-/* Responsive adjustments for onboarding/login modal below 768px */
-@media (max-width: 768px) {
-  .auth-mobile-card {
-    border-radius: 20px 20px 0 0;
-    margin-top: -20px;
-    width: 100%;
-    box-sizing: border-box;
-  }
-}
+
 
 
 

@@ -79,6 +79,12 @@ export function SignInForm() {
 
   return (
     <div className="flex flex-col gap-5">
+      {/* Mobile Header */}
+      <div className="flex flex-col gap-1 md:hidden">
+        <h1 className="font-public-sans text-2xl font-semibold leading-8 text-[#111111]">Welcome</h1>
+        <p className="text-xs leading-4 text-[#616161]">Access datasets, samples, and downloads.</p>
+      </div>
+
       {/* Mobile Tab Switcher */}
       <AuthTabSwitcher activeTab="sign-in" />
 
@@ -88,11 +94,11 @@ export function SignInForm() {
         <p className="text-xs leading-4 text-[#616161]">Access datasets, samples, and downloads.</p>
       </div>
 
-      {/* Continue with Google (full width touch target 48px height) */}
+      {/* Desktop Continue with Google */}
       <button
         type="button"
         onClick={handleGoogle}
-        className="flex h-12 w-full items-center justify-center gap-2 rounded-lg border border-[#DDDDDD] bg-white px-8 text-sm font-medium text-[#181818] transition-colors hover:bg-[#fafafa]"
+        className="hidden h-12 w-full items-center justify-center gap-2 rounded-lg border border-[#DDDDDD] bg-white px-8 text-sm font-medium text-[#181818] transition-colors hover:bg-[#fafafa] md:flex"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z" />
@@ -103,13 +109,12 @@ export function SignInForm() {
         Continue with Google
       </button>
 
-      {/* Divider */}
-      <div className="flex items-center gap-3">
+      {/* Desktop Divider */}
+      <div className="hidden items-center gap-3 md:flex">
         <div className="h-px flex-1 bg-[#DDDDDD]" />
         <span className="text-xs text-[#8C8C8C]">Or login with email</span>
         <div className="h-px flex-1 bg-[#DDDDDD]" />
       </div>
-
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
         {/* Email */}
         <div className="flex flex-col gap-1.5">
@@ -195,8 +200,23 @@ export function SignInForm() {
           {isSubmitting ? 'Signing in…' : 'Login'}
         </button>
 
-        {/* Footer */}
-        <p className="text-center text-sm text-[#2B2B2B]">
+        {/* Mobile Continue with Google (Moved to bottom) */}
+        <button
+          type="button"
+          onClick={handleGoogle}
+          className="mt-1 flex h-12 w-full items-center justify-center gap-2 rounded-lg border border-[#DDDDDD] bg-white px-8 text-sm font-medium text-[#181818] transition-colors hover:bg-[#fafafa] md:hidden"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z" />
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z" />
+            <path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84z" />
+            <path fill="#EA4335" d="M12 4.75c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 1.46 14.97.5 12 .5A11 11 0 0 0 2.18 7.06l3.66 2.84C6.71 6.68 9.14 4.75 12 4.75z" />
+          </svg>
+          Continue with Google
+        </button>
+
+        {/* Desktop Footer */}
+        <p className="hidden text-center text-sm text-[#2B2B2B] md:block">
           Dont have an account?{' '}
           <button
             type="button"

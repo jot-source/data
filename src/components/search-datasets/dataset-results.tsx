@@ -117,7 +117,7 @@ export function DatasetResults({
           <button
             type="button"
             onClick={() => setFilterModalOpen(true)}
-            className="flex items-center gap-1.5 rounded-lg border border-[#CBD5E1] bg-white px-3 py-1.5 font-public-sans text-xs font-medium text-[#181818] shadow-2xs hover:bg-[#F8FAFC] transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 rounded-[6px] border border-[#CBD5E1] bg-white px-3 py-1.5 font-public-sans text-xs font-medium text-[#181818] shadow-2xs hover:bg-[#F8FAFC] transition-colors cursor-pointer"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="4" y1="21" x2="4" y2="14" />
@@ -143,7 +143,7 @@ export function DatasetResults({
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as DatasetSort)}
-              className="appearance-none rounded-lg border border-[#CBD5E1] bg-white pl-3 pr-6 py-1.5 font-public-sans text-xs font-medium text-[#181818] shadow-2xs focus:outline-none cursor-pointer"
+              className="appearance-none rounded-[6px] border border-[#CBD5E1] bg-white pl-3 pr-6 py-1.5 font-public-sans text-xs font-medium text-[#181818] shadow-2xs focus:outline-none cursor-pointer"
             >
               <option value="recent">Sort by: Recent</option>
               <option value="quality">Sort by: Quality</option>

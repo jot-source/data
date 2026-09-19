@@ -458,31 +458,35 @@ export function SiteHeader({ initialUser }: { initialUser: SessionUser | null })
       <div className="flex items-center md:hidden">
         {pathname?.startsWith('/datasets') ? (
           <Link
-            href="/"
-            className="flex items-center gap-1.5 font-public-sans text-sm font-semibold text-[#181818] hover:text-[#2563EB] transition-colors"
+            href={pathname === '/datasets' ? '/' : '/datasets'}
+            className="flex items-center gap-3 font-public-sans text-base font-medium text-[#2B2B2B] hover:text-[#2563EB] transition-colors"
           >
             <svg
-              width="18"
-              height="18"
+              width="24"
+              height="24"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
+              stroke="#666666"
+              strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
             >
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
-            <span>Search</span>
+            <span>{pathname === '/datasets' ? 'Search' : 'Dataset details'}</span>
           </Link>
         ) : (
           <button
             type="button"
             onClick={() => setMobileNavOpen(true)}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#CBD5E1] bg-white text-[#181818] transition-colors hover:bg-[#F8FAFC] text-xl leading-none select-none cursor-pointer"
+            className="flex h-10 w-10 items-center justify-center rounded-lg text-[#181818] transition-colors hover:bg-[#F8FAFC] shrink-0"
             aria-label="Open navigation drawer"
           >
-            ☰
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
           </button>
         )}
       </div>
@@ -628,31 +632,41 @@ export function SiteHeader({ initialUser }: { initialUser: SessionUser | null })
 
       {/* Mobile Top Header Right (< 768px): Cart button (40px x 40px - Figma spec) */}
       <div className="flex items-center md:hidden">
-        <Link
-          href="/cart"
-          className="relative flex h-10 w-10 items-center justify-center rounded-[8px] border border-[#CBD5E1] bg-[#EFF6FF] text-[#616161] hover:bg-[#DBEAFE] hover:text-[#1E293B] transition-colors shrink-0"
-          aria-label="Cart"
-        >
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+        {user ? (
+          <Link
+            href="/cart"
+            className="relative flex h-10 w-10 items-center justify-center rounded-[8px] border border-[#CBD5E1] bg-white text-[#616161] hover:bg-[#F8FAFC] hover:text-[#181818] transition-colors shrink-0"
+            aria-label="Cart"
           >
-            <circle cx="9" cy="21" r="1" />
-            <circle cx="20" cy="21" r="1" />
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-          </svg>
-          {cartCount > 0 && (
-            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#2563EB] text-white text-[10px] font-bold ring-1 ring-white shadow-sm">
-              {cartCount}
-            </span>
-          )}
-        </Link>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="9" cy="21" r="1" />
+              <circle cx="20" cy="21" r="1" />
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+            </svg>
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#2563EB] text-white text-[10px] font-bold ring-1 ring-white shadow-sm">
+                {cartCount}
+              </span>
+            )}
+          </Link>
+        ) : (
+          <button
+            type="button"
+            onClick={() => open('sign-up')}
+            className="rounded-lg bg-[#2563EB] px-4 py-1.5 font-public-sans text-sm font-medium text-white transition-colors hover:bg-[#1d4ed8]"
+          >
+            Get started
+          </button>
+        )}
       </div>
 
       {/* Mobile Slide-In Left Drawer (< 768px) per Figma Design */}
@@ -665,10 +679,10 @@ export function SiteHeader({ initialUser }: { initialUser: SessionUser | null })
           />
 
           {/* Drawer Panel */}
-          <div className="fixed inset-y-0 left-0 z-[101] flex w-[300px] max-w-[85vw] flex-col justify-between bg-white p-5 shadow-2xl overflow-y-auto">
+          <div className="fixed inset-y-0 left-0 z-[101] flex w-[280px] max-w-[85vw] flex-col justify-between bg-white p-4 shadow-2xl overflow-y-auto">
             <div className="flex flex-col">
               {/* Header: Brand Logo + Close Button */}
-              <div className="flex items-center justify-between pb-4 border-b border-[#F1F5F9]">
+              <div className="flex items-center justify-between pb-3.5 border-b border-[#ECECEC]">
                 <BrandLogo />
                 <button
                   type="button"
@@ -682,22 +696,28 @@ export function SiteHeader({ initialUser }: { initialUser: SessionUser | null })
 
               {/* Navigation Menu */}
               <div className="flex flex-col mt-4">
-                <span className="mb-2 font-public-sans text-xs font-semibold uppercase tracking-wider text-[#8C8C8C]">
-                  Browse datasets
-                </span>
+                <div className="pb-2.5 mb-2 border-b border-[#ECECEC]">
+                  <span className="font-public-sans text-sm font-medium text-[#181818]">
+                    Browse datasets
+                  </span>
+                </div>
 
                 {/* Domain Accordion */}
-                <div className="mb-2">
+                <div className={`mb-2 transition-all ${drawerAccordion === 'domain' ? 'rounded-xl border border-[#E2E8F0] bg-white overflow-hidden' : ''}`}>
                   <button
                     type="button"
                     onClick={() => setDrawerAccordion(drawerAccordion === 'domain' ? null : 'domain')}
-                    className="flex w-full items-center justify-between rounded-lg bg-[#EFF6FF] px-3.5 py-2.5 font-public-sans text-sm font-medium text-[#181818] hover:bg-[#DBEAFE] transition-colors"
+                    className={`flex w-full items-center justify-between px-3 py-2 font-public-sans text-sm font-medium transition-colors ${
+                      drawerAccordion === 'domain'
+                        ? 'bg-[#EFF6FF] text-[#181818] border-b border-[#E2E8F0] rounded-none'
+                        : 'text-[#181818] hover:bg-[#F8FAFC] rounded-xl'
+                    }`}
                   >
                     <span>Domain</span>
                     <Chevron open={drawerAccordion === 'domain'} />
                   </button>
                   {drawerAccordion === 'domain' && (
-                    <div className="mt-1.5 flex flex-col gap-1 pl-2 pr-1">
+                    <div className="flex flex-col gap-1 p-2 bg-white">
                       {[
                         { label: 'Healthcare', count: '32', value: 'Healthcare' },
                         { label: 'Conversational AI', count: '18', value: 'Conversational AI' },
@@ -723,17 +743,21 @@ export function SiteHeader({ initialUser }: { initialUser: SessionUser | null })
                 </div>
 
                 {/* Modality Accordion */}
-                <div className="mb-2">
+                <div className={`mb-2 transition-all ${drawerAccordion === 'modality' ? 'rounded-xl border border-[#E2E8F0] bg-white overflow-hidden' : ''}`}>
                   <button
                     type="button"
                     onClick={() => setDrawerAccordion(drawerAccordion === 'modality' ? null : 'modality')}
-                    className="flex w-full items-center justify-between rounded-lg border border-[#F1F5F9] bg-white px-3.5 py-2.5 font-public-sans text-sm font-medium text-[#181818] hover:bg-[#F8FAFC] transition-colors"
+                    className={`flex w-full items-center justify-between px-3 py-2 font-public-sans text-sm font-medium transition-colors ${
+                      drawerAccordion === 'modality'
+                        ? 'bg-[#EFF6FF] text-[#181818] border-b border-[#E2E8F0] rounded-none'
+                        : 'text-[#181818] hover:bg-[#F8FAFC] rounded-xl'
+                    }`}
                   >
                     <span>Modality</span>
                     <Chevron open={drawerAccordion === 'modality'} />
                   </button>
                   {drawerAccordion === 'modality' && (
-                    <div className="mt-1.5 flex flex-col gap-1 pl-2 pr-1">
+                    <div className="flex flex-col gap-1 p-2 bg-white">
                       {[
                         { label: 'Text / NLP', count: '24', value: 'Text' },
                         { label: 'Computer Vision', count: '16', value: 'Image' },
@@ -759,17 +783,21 @@ export function SiteHeader({ initialUser }: { initialUser: SessionUser | null })
                 </div>
 
                 {/* Usecase Accordion */}
-                <div className="mb-2">
+                <div className={`mb-2 transition-all ${drawerAccordion === 'usecase' ? 'rounded-xl border border-[#E2E8F0] bg-white overflow-hidden' : ''}`}>
                   <button
                     type="button"
                     onClick={() => setDrawerAccordion(drawerAccordion === 'usecase' ? null : 'usecase')}
-                    className="flex w-full items-center justify-between rounded-lg border border-[#F1F5F9] bg-white px-3.5 py-2.5 font-public-sans text-sm font-medium text-[#181818] hover:bg-[#F8FAFC] transition-colors"
+                    className={`flex w-full items-center justify-between px-3 py-2 font-public-sans text-sm font-medium transition-colors ${
+                      drawerAccordion === 'usecase'
+                        ? 'bg-[#EFF6FF] text-[#181818] border-b border-[#E2E8F0] rounded-none'
+                        : 'text-[#181818] hover:bg-[#F8FAFC] rounded-xl'
+                    }`}
                   >
                     <span>Usecase</span>
                     <Chevron open={drawerAccordion === 'usecase'} />
                   </button>
                   {drawerAccordion === 'usecase' && (
-                    <div className="mt-1.5 flex flex-col gap-1 pl-2 pr-1">
+                    <div className="flex flex-col gap-1 p-2 bg-white">
                       {[
                         { label: 'Healthcare Diagnosis', count: '14' },
                         { label: 'Fraud Detection', count: '09' },
@@ -793,75 +821,91 @@ export function SiteHeader({ initialUser }: { initialUser: SessionUser | null })
                   )}
                 </div>
 
-                <div className="my-3 border-t border-[#F1F5F9]" />
+                {/* Line Separator after Browse Datasets - removed to match Figma */}
+                <div className="mb-2" />
 
                 {/* How it works */}
-                <Link
-                  href="/#how-it-works"
-                  onClick={() => setMobileNavOpen(false)}
-                  className="py-2.5 px-1 font-public-sans text-sm font-medium text-[#181818] hover:text-[#2563EB] transition-colors"
-                >
-                  How it works
-                </Link>
+                <div className="mb-2">
+                  <Link
+                    href="/#how-it-works"
+                    onClick={() => setMobileNavOpen(false)}
+                    className="flex w-full items-center px-3 py-2 rounded-xl font-public-sans text-sm font-medium text-[#181818] hover:bg-[#F8FAFC] transition-colors"
+                  >
+                    How it works
+                  </Link>
+                </div>
 
                 {/* Custom dataset */}
-                <Link
-                  href="/#customize"
-                  onClick={() => setMobileNavOpen(false)}
-                  className="py-2.5 px-1 font-public-sans text-sm font-medium text-[#181818] hover:text-[#2563EB] transition-colors"
-                >
-                  Custom dataset
-                </Link>
+                <div className="mb-2">
+                  <Link
+                    href="/#customize"
+                    onClick={() => setMobileNavOpen(false)}
+                    className="flex w-full items-center px-3 py-2 rounded-xl font-public-sans text-sm font-medium text-[#181818] hover:bg-[#F8FAFC] transition-colors"
+                  >
+                    Custom dataset
+                  </Link>
+                </div>
 
                 {/* Resources Accordion */}
-                <div className="mt-1">
+                <div className={`mb-2 transition-all ${drawerAccordion === 'resources' ? 'rounded-xl border border-[#E2E8F0] bg-white overflow-hidden' : ''}`}>
                   <button
                     type="button"
                     onClick={() => setDrawerAccordion(drawerAccordion === 'resources' ? null : 'resources')}
-                    className="flex w-full items-center justify-between py-2.5 px-1 font-public-sans text-sm font-medium text-[#181818] hover:text-[#2563EB] transition-colors"
+                    className={`flex w-full items-center justify-between px-3 py-2 font-public-sans text-sm font-medium transition-colors ${
+                      drawerAccordion === 'resources'
+                        ? 'bg-[#EFF6FF] text-[#181818] border-b border-[#E2E8F0] rounded-none'
+                        : 'text-[#181818] hover:bg-[#F8FAFC] rounded-xl'
+                    }`}
                   >
                     <span>Resources</span>
                     <Chevron open={drawerAccordion === 'resources'} />
                   </button>
                   {drawerAccordion === 'resources' && (
-                    <div className="mt-1 flex flex-col gap-1 pl-3 pb-2">
-                      <Link href="/about" onClick={() => setMobileNavOpen(false)} className="py-1 text-xs text-[#64748B] hover:text-[#2563EB]">About Macgence</Link>
-                      <Link href="/#customize" onClick={() => setMobileNavOpen(false)} className="py-1 text-xs text-[#64748B] hover:text-[#2563EB]">API Documentation</Link>
-                      <Link href="/about" onClick={() => setMobileNavOpen(false)} className="py-1 text-xs text-[#64748B] hover:text-[#2563EB]">Terms of Service</Link>
+                    <div className="flex flex-col gap-2 p-2 bg-white">
+                      <Link href="/about" onClick={() => setMobileNavOpen(false)} className="block rounded-md py-2 px-2 font-public-sans text-sm text-[#475569] hover:bg-[#F1F5F9] hover:text-[#181818] transition-colors">About Macgence</Link>
+                      <Link href="/#customize" onClick={() => setMobileNavOpen(false)} className="block rounded-md py-2 px-2 font-public-sans text-sm text-[#475569] hover:bg-[#F1F5F9] hover:text-[#181818] transition-colors">API Documentation</Link>
+                      <Link href="/about" onClick={() => setMobileNavOpen(false)} className="block rounded-md py-2 px-2 font-public-sans text-sm text-[#475569] hover:bg-[#F1F5F9] hover:text-[#181818] transition-colors">Terms of Service</Link>
                     </div>
                   )}
                 </div>
               </div>
             </div>
 
-            {/* Bottom Profile Card */}
-            <div className="pt-4 border-t border-[#F1F5F9] mt-6">
+            {/* Bottom Profile Card (Figma SS 2 spec) */}
+            <div className="mt-auto pt-6 -mx-4 -mb-4">
               {user ? (
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col">
+                  <div className="px-4 pb-4">
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        await supabase.auth.signOut()
+                        setMobileNavOpen(false)
+                        router.refresh()
+                      }}
+                      className="w-full text-center px-2 py-2 font-public-sans text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                    >
+                      Logout
+                    </button>
+                  </div>
                   <Link
                     href="/profile"
                     onClick={() => setMobileNavOpen(false)}
-                    className="flex items-center justify-between rounded-xl bg-[#EFF6FF] border border-[#BFDBFE] p-3 hover:bg-[#DBEAFE] transition-colors"
+                    className="flex w-full items-center justify-between bg-[#EFF6FF] border-t border-[#ECECEC] px-4 py-3 hover:bg-[#DBEAFE] transition-colors cursor-pointer"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#0F1B3D] text-white font-semibold text-xs shadow-xs">
-                        {user.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#1E293B] text-[#10B981] shrink-0 shadow-xs">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                          <circle cx="12" cy="7" r="4" />
+                        </svg>
                       </div>
-                      <span className="font-public-sans text-sm font-semibold text-[#181818]">My profile</span>
+                      <span className="font-public-sans text-sm font-medium text-[#0032B8]">My profile</span>
                     </div>
-                    <span className="text-[#2563EB] font-bold text-base">›</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0032B8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M9 18l6-6-6-6" />
+                    </svg>
                   </Link>
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      await supabase.auth.signOut()
-                      setMobileNavOpen(false)
-                      router.refresh()
-                    }}
-                    className="w-full text-left px-2 py-1 font-public-sans text-xs text-red-600 hover:underline"
-                  >
-                    Logout
-                  </button>
                 </div>
               ) : (
                 <button
@@ -870,15 +914,20 @@ export function SiteHeader({ initialUser }: { initialUser: SessionUser | null })
                     setMobileNavOpen(false)
                     open('sign-in')
                   }}
-                  className="w-full flex items-center justify-between rounded-xl bg-[#EFF6FF] border border-[#BFDBFE] p-3 hover:bg-[#DBEAFE] transition-colors cursor-pointer"
+                  className="w-full flex items-center justify-between bg-[#EFF6FF] border-t border-[#ECECEC] px-4 py-3 hover:bg-[#DBEAFE] transition-colors cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#0F1B3D] text-white font-semibold text-xs shadow-xs">
-                      <UserIcon />
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#1E293B] text-[#10B981] shrink-0 shadow-xs">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                      </svg>
                     </div>
-                    <span className="font-public-sans text-sm font-semibold text-[#181818]">My profile</span>
+                    <span className="font-public-sans text-sm font-medium text-[#0032B8]">My profile</span>
                   </div>
-                  <span className="text-[#2563EB] font-bold text-base">›</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0032B8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 18l6-6-6-6" />
+                  </svg>
                 </button>
               )}
             </div>

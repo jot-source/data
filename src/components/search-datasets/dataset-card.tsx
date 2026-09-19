@@ -12,7 +12,7 @@ const MAX_VISIBLE_LANGUAGES = 2
 
 function StatChip({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
-    <span className="inline-flex items-center gap-1 sm:gap-1.5 rounded-full border border-[#DDDDDD] sm:border-[#E2E8F0] bg-[#EFF6FF] sm:bg-[#F8FAFC] px-2.5 py-0.5 sm:py-1 font-public-sans text-[10px] sm:text-xs font-normal sm:font-medium text-[#2B2B2B] sm:text-[#475569]">
+    <span className="inline-flex items-center gap-1 sm:gap-1.5 rounded-full border-[0.5px] border-[#E2E8F0] bg-white sm:bg-[#F8FAFC] px-3 py-1 font-public-sans text-[11px] sm:text-xs font-normal sm:font-medium text-[#475569]">
       {icon}
       {label}
     </span>
@@ -99,7 +99,7 @@ export function DatasetCard({ dataset, isLoggedIn = false, isSaved = false }: Da
   const extraLanguages = Math.max(languages.length - MAX_VISIBLE_LANGUAGES, 0)
 
   return (
-    <div className="flex h-full flex-col justify-between rounded-lg sm:rounded-2xl border border-[#DDDDDD] sm:border-[#E2E8F0] bg-white p-3 sm:p-5 shadow-sm transition-all duration-200 hover:border-[#CBD5E1] hover:shadow-md">
+    <div className="flex h-full flex-col justify-between rounded-[12px] sm:rounded-2xl border border-[#E2E8F0] bg-white p-3 sm:p-5 shadow-none sm:shadow-sm transition-all duration-200 hover:border-[#CBD5E1] hover:shadow-md">
       {/* Frame 1: Header */}
       <div className="flex items-start justify-between gap-2.5 sm:gap-3">
         <div className="flex items-start gap-2 sm:gap-3">
@@ -121,8 +121,8 @@ export function DatasetCard({ dataset, isLoggedIn = false, isSaved = false }: Da
         )}
       </div>
 
-      {/* Frame 2: Stat Chips with middle line separator */}
-      <div className="my-2.5 sm:my-3 border-t border-[#DDDDDD] sm:border-[#F1F5F9] pt-2.5 sm:pt-3.5">
+      {/* Frame 2: Stat Chips */}
+      <div className="my-2.5 sm:my-3">
         <div className="flex flex-wrap gap-1.5 sm:gap-2">
           {recordCount !== null && (
             <StatChip
@@ -138,8 +138,8 @@ export function DatasetCard({ dataset, isLoggedIn = false, isSaved = false }: Da
         </div>
       </div>
 
-      {/* Frame 3: Metadata with middle line separator */}
-      <div className="mt-auto border-t border-[#DDDDDD] sm:border-[#F1F5F9] pt-2.5 sm:pt-3.5 font-public-sans text-[10px] sm:text-xs text-[#8C8C8C] sm:text-[#64748B]">
+      {/* Frame 3: Metadata */}
+      <div className="mt-auto font-public-sans text-[10px] sm:text-xs text-[#8C8C8C] sm:text-[#64748B]">
         <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1.5 sm:gap-y-2">
           {countries.length > 0 && (
             <div className="flex items-center gap-1">
@@ -178,7 +178,7 @@ export function DatasetCard({ dataset, isLoggedIn = false, isSaved = false }: Da
       </div>
 
       {/* Frame 4: Actions with middle line separator */}
-      <div className="mt-2.5 sm:mt-3.5 flex items-center justify-between border-t border-[#DDDDDD] sm:border-[#F1F5F9] pt-2.5 sm:pt-3.5">
+      <div className="mt-2.5 sm:mt-3.5 -mx-3 sm:-mx-5 px-3 sm:px-5 flex items-center justify-between border-t border-[#E2E8F0] pt-2.5 sm:pt-3.5">
         <SaveButton
           datasetId={dataset.id}
           initialSaved={isSaved}
@@ -189,7 +189,7 @@ export function DatasetCard({ dataset, isLoggedIn = false, isSaved = false }: Da
         />
         <Link
           href={`/datasets/${slug}`}
-          className="flex items-center gap-1 rounded-md sm:rounded-lg border border-transparent sm:border-[#BFDBFE] bg-transparent sm:bg-[#EFF6FF] px-2 py-1 sm:px-4 sm:py-2 font-public-sans text-xs sm:text-sm font-medium sm:font-semibold text-[#2565EB] sm:text-[#2563EB] transition-all hover:text-[#1D4ED8] sm:hover:bg-[#2563EB] sm:hover:text-white"
+          className="flex items-center gap-1 rounded-md sm:rounded-lg border border-transparent sm:border-[#BFDBFE] bg-transparent sm:bg-[#EFF6FF] px-0 py-1 sm:px-4 sm:py-2 font-public-sans text-[13px] sm:text-sm font-medium sm:font-semibold text-[#2563EB] transition-all hover:text-[#1D4ED8] sm:hover:bg-[#2563EB] sm:hover:text-white"
         >
           <span className="sm:hidden">View</span>
           <span className="hidden sm:inline">View dataset</span>
